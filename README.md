@@ -23,3 +23,14 @@
 - SOLAPI SMS API
 
 ---
+## 컨벤션
+- 브랜치 컨벤션 (main / dev / 개인 브랜치)
+- 커밋 컨벤션 (AngularJS Commit Convention)
+- 이슈 컨벤션 (ISSUE_TEMPLATE)
+- PR / Merge 컨벤션
+- 패키지 / 디렉토리 컨벤션
+- 클래스 / 메서드 / 변수 네이밍 컨벤션
+- API / URI 컨벤션
+- 코드 스타일 컨벤션
+- CI / CD 컨벤션
+위의 컨벤션을 준수하면서 프로젝트를 진행하였습니다.
