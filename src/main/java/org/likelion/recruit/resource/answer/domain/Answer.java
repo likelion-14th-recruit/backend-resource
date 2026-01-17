@@ -24,11 +24,11 @@ public class Answer extends BaseTimeEntity {
     private String content;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "question_id")
+    @JoinColumn(name = "question_id", nullable = false)
     private Question question;
 
     @ManyToOne(fetch = LAZY)
-    @JoinColumn(name = "application_id")
+    @JoinColumn(name = "application_id", nullable = false)
     private Application application;
 
     private Answer(String content, Question question, Application application) {
