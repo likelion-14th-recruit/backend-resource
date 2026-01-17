@@ -21,9 +21,6 @@ public class ExecutiveMember extends BaseTimeEntity {
     private String name;
 
     @Column(nullable = false)
-    private Integer cohort;
-
-    @Column(nullable = false)
     private String imageUrl;
 
     @Enumerated(EnumType.STRING)
@@ -34,15 +31,14 @@ public class ExecutiveMember extends BaseTimeEntity {
     @Column(nullable = false)
     private Position position;
 
-    private ExecutiveMember(String name, Integer cohort, String imageUrl, Part part, Position position) {
+    private ExecutiveMember(String name, String imageUrl, Part part, Position position) {
         this.name = name;
-        this.cohort = cohort;
         this.imageUrl = imageUrl;
         this.part = part;
         this.position = position;
     }
 
-    public static ExecutiveMember create(String name, Integer cohort, String imageUrl, Part part, Position position) {
-        return new ExecutiveMember(name, cohort, imageUrl, part, position);
+    public static ExecutiveMember create(String name, String imageUrl, Part part, Position position) {
+        return new ExecutiveMember(name, imageUrl, part, position);
     }
 }
