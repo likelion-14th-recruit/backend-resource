@@ -21,7 +21,7 @@ public class Application extends BaseTimeEntity {
     @Column(name = "application_id")
     private Long id;
 
-    @Column(nullable = false, updatable = false, unique = true, length = 39)
+    @Column(nullable = false, updatable = false, unique = true, length = 40)
     private String publicId;
 
     @Column(nullable = false)
@@ -42,7 +42,7 @@ public class Application extends BaseTimeEntity {
     private String doubleMajor;
 
     @Column(nullable = false)
-    private String semester;
+    private Integer semester;
 
     private boolean submitted;
 
@@ -80,11 +80,14 @@ public class Application extends BaseTimeEntity {
     @Column(nullable = false)
     private PassStatus passStatus;
 
+    /**
+     * 생성 메서드
+     */
     private Application(String name, String studentNumber, String phoneNumber, String passwordHash,
-                       String major, String doubleMajor, String semester, boolean submitted,
+                       String major, String doubleMajor, Integer semester, boolean submitted,
                        LocalDateTime submittedAt, AcademicStatus academicStatus, Part part,
                        PassStatus passStatus) {
-        this.publicId = "app" + UUID.randomUUID();
+        this.publicId = "app-" + UUID.randomUUID();
         this.name = name;
         this.studentNumber = studentNumber;
         this.phoneNumber = phoneNumber;
@@ -99,11 +102,19 @@ public class Application extends BaseTimeEntity {
         this.passStatus = passStatus;
     }
 
-    public static Application create(String name, String studentNumber, String phoneNumber, String password,
-                        String major, String doubleMajor, String semester, boolean submitted,
-                        LocalDateTime submittedAt, AcademicStatus academicStatus, Part part){
-        return new Application(name, studentNumber, phoneNumber, password, major, doubleMajor,
-                semester, submitted, submittedAt, academicStatus, part, PassStatus.PENDING);
+    // 임시저장
+    public static Application create(String name, String studentNumber, String phoneNumber, String passwordHash,
+                        String major, String doubleMajor, Integer semester, AcademicStatus academicStatus, Part part){
+        return new Application(name, studentNumber, phoneNumber, passwordHash, major, doubleMajor,
+                semester, false, null, academicStatus, part, PassStatus.PENDING);
+    }
+
+    /**
+     * 비즈니스 메서드
+     */
+    public void submit(){
+        this.submitted = true;
+        this.submittedAt = LocalDateTime.now();
     }
 
 }
