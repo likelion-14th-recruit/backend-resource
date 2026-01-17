@@ -1,4 +1,4 @@
-package org.likelion.recruit.resource.interviewTime.domain;
+package org.likelion.recruit.resource.interview.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
