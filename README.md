@@ -34,3 +34,10 @@
 - 코드 스타일 컨벤션
 - CI / CD 컨벤션
 위의 컨벤션을 준수하면서 프로젝트를 진행하였습니다.
+
+---
+## 브랜치 규칙
+- Classic Branch Protection Rule을 사용하였습니다.
+- main(배포용), dev(개발용) 브랜치는 관리자를 포함하여 직접 push를 금지합니다.
+- 따라서 오직 ISSUE 기반으로 PR 및 Merge을 진행하였습니다.
+- ci-dev, ci-main, cd-main에 실패하면 Merge를 차단하였습니다.
