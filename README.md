@@ -13,7 +13,7 @@
 ---
 ## 기술 스택
 - Java 21
-- Spring Boot 4.0.1
+- Spring Boot 3.5.6
 - Spring Data JPA
 - HikariCP (JDBC Connection Pool)
 - Querydsl
