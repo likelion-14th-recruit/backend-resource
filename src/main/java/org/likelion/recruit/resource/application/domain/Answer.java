@@ -1,12 +1,10 @@
-package org.likelion.recruit.resource.answer.domain;
+package org.likelion.recruit.resource.application.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.common.domain.BaseTimeEntity;
-import org.likelion.recruit.resource.question.domain.Question;
 
 import static jakarta.persistence.FetchType.*;
 

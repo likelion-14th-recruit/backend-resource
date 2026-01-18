@@ -1,4 +1,4 @@
-package org.likelion.recruit.resource.question.domain;
+package org.likelion.recruit.resource.application.domain;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
