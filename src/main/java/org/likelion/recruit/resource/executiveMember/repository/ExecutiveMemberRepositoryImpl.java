@@ -26,8 +26,8 @@ public class ExecutiveMemberRepositoryImpl implements ExecutiveMemberCustom {
                 executiveMember.imageUrl,
                 executiveMember.name,
                 executiveMember.cohort,
-                executiveMember.part,
-                executiveMember.position))
+                executiveMember.position,
+                                executiveMember.part))
                 .from(executiveMember)
                 .where(
                         partEq(command.getPart())
