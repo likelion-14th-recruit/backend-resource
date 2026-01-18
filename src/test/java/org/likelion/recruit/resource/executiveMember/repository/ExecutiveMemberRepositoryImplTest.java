@@ -1,12 +1,10 @@
 package org.likelion.recruit.resource.executiveMember.repository;
 
-import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.likelion.recruit.resource.common.config.QuerydslConfig;
 import org.likelion.recruit.resource.common.domain.Part;
-import org.likelion.recruit.resource.common.querydsl.TestQuerydslConfig;
 import org.likelion.recruit.resource.executiveMember.domain.ExecutiveMember;
 import org.likelion.recruit.resource.executiveMember.domain.Position;
 import org.likelion.recruit.resource.executiveMember.dto.command.MemberSearchCommand;
@@ -18,12 +16,11 @@ import org.springframework.context.annotation.Import;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @Import({
         ExecutiveMemberRepositoryImpl.class,
-        TestQuerydslConfig.class})
+        QuerydslConfig.class})
 public class ExecutiveMemberRepositoryImplTest {
 
     @Autowired
