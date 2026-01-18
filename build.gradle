@@ -38,10 +38,34 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
+    // h2
+    testImplementation 'com.h2database:h2'
+
+    // querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'com.querydsl:querydsl-core:5.0.0'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
     // message API
     implementation 'com.solapi:sdk:1.0.3'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+test {
+    doFirst {
+        def dotenv = file('.env')
+        if (dotenv.exists()) {
+            dotenv.eachLine { line ->
+                if (!line.trim().isEmpty() && !line.startsWith("#")) {
+                    def (key, value) = line.split("=", 2)
+                    environment key, value
+                }
+            }
+        }
+    }
 }
