@@ -8,7 +8,6 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.executiveMember.domain.Position;
-import org.likelion.recruit.resource.executiveMember.domain.QExecutiveMember;
 import org.likelion.recruit.resource.executiveMember.dto.command.MemberSearchCommand;
 import org.likelion.recruit.resource.executiveMember.dto.result.MemberSearchResult;
 
@@ -17,7 +16,7 @@ import java.util.List;
 import static org.likelion.recruit.resource.executiveMember.domain.QExecutiveMember.executiveMember;
 
 @RequiredArgsConstructor
-public class ExecutiveMemberImpl implements ExecutiveMemberCustom {
+public class ExecutiveMemberRepositoryImpl implements ExecutiveMemberCustom {
 
     private final JPAQueryFactory queryFactory;
 
