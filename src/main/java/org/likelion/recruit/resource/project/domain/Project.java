@@ -19,9 +19,6 @@ public class Project extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer cohort;
 
-    @Column(nullable = false)
-    private String category;
-
     @Column(name = "image_url", nullable = false)
     private String imageUrl;
 
@@ -31,15 +28,14 @@ public class Project extends BaseTimeEntity {
     @Column(name = "instagram_url", nullable = false)
     private String instagramUrl;
 
-    private Project(Integer cohort, String category, String imageUrl, String description, String instagramUrl) {
+    private Project(Integer cohort, String imageUrl, String description, String instagramUrl) {
         this.cohort = cohort;
-        this.category = category;
         this.imageUrl = imageUrl;
         this.description = description;
         this.instagramUrl = instagramUrl;
     }
 
-    public static Project create(Integer cohort, String category, String imageUrl, String description, String instagramUrl) {
-        return new Project(cohort, category, imageUrl, description, instagramUrl);
+    public static Project create(Integer cohort, String imageUrl, String description, String instagramUrl) {
+        return new Project(cohort, imageUrl, description, instagramUrl);
     }
 }
