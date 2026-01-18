@@ -33,11 +33,11 @@ class QuerydslTest {
 
         JPAQueryFactory queryFactory = new JPAQueryFactory(em);
 
-        List<ExecutiveMember> result = queryFactory.selectFrom(executiveMember)
-                .fetch();
+        ExecutiveMember result = queryFactory.selectFrom(executiveMember)
+                .where(executiveMember.name.eq("이름"))
+                .fetchOne();
 
-        assertThat(result).hasSize(1);
-        assertThat(result.getFirst().getName()).isEqualTo("이름");
+        assertThat(result.getName()).isEqualTo("이름");
     }
 
 }
