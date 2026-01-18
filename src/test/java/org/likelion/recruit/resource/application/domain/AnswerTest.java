@@ -1,18 +1,10 @@
-package org.likelion.recruit.resource.answer.domain;
+package org.likelion.recruit.resource.application.domain;
 
 import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.common.domain.Part;
-import org.likelion.recruit.resource.question.domain.Question;
-import org.likelion.recruit.resource.question.repository.QuestionRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 class AnswerTest {
 

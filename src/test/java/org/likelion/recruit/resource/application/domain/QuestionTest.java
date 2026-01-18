@@ -1,8 +1,7 @@
-package org.likelion.recruit.resource.question.domain;
+package org.likelion.recruit.resource.application.domain;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.likelion.recruit.resource.question.domain.Question.Type;
+import org.likelion.recruit.resource.application.domain.Question.Type;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
