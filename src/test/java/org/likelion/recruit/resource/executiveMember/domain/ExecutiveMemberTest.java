@@ -12,13 +12,15 @@ class ExecutiveMemberTest {
     @Test
     public void createExecutiveMember() {
         String name = "김지오";
+        Integer cohort = 14;
         String imageUrl = "https://image_url";
         Part part = Part.BACKEND;
         Position position = Position.PRESIDENT;
 
-        ExecutiveMember executiveMember = ExecutiveMember.create(name, imageUrl, part, position);
+        ExecutiveMember executiveMember = ExecutiveMember.create(name, cohort, imageUrl, part, position);
 
         assertThat(executiveMember.getName()).isEqualTo(name);
+        assertThat(executiveMember.getCohort()).isEqualTo(cohort);
         assertThat(executiveMember.getImageUrl()).isEqualTo(imageUrl);
         assertThat(executiveMember.getPart()).isEqualTo(part);
         assertThat(executiveMember.getPosition()).isEqualTo(position);
