@@ -5,11 +5,14 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.likelion.recruit.resource.common.config.QuerydslConfig;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.executiveMember.domain.ExecutiveMember;
 import org.likelion.recruit.resource.executiveMember.domain.Position;
 import org.likelion.recruit.resource.executiveMember.domain.QExecutiveMember;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -17,8 +20,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.likelion.recruit.resource.executiveMember.domain.QExecutiveMember.executiveMember;
 
-@SpringBootTest
-@Transactional
+@DataJpaTest
+@Import(QuerydslConfig.class)
 class QuerydslTest {
 
     @PersistenceContext
