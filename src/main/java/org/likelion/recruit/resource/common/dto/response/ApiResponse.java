@@ -1,8 +1,10 @@
 package org.likelion.recruit.resource.common.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
 
 @Getter
+@JsonPropertyOrder({"success", "code", "message", "data"})
 public class ApiResponse<T> {
     private boolean success;
     private String code;
