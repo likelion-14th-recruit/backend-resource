@@ -2,6 +2,7 @@ package org.likelion.recruit.resource.common.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Getter;
+import org.likelion.recruit.resource.common.exception.ErrorCode;
 
 @Getter
 @JsonPropertyOrder({"success", "code", "message", "data"})
@@ -28,11 +29,16 @@ public class ApiResponse<T> {
         return new ApiResponse<>(true, "SUCCESS", message, data);
     }
 
-    public static <T> ApiResponse<T> failure(String message, T data) {
-        return new ApiResponse<>(false, "SERVER_ERROR", message, data);
-    }
-
     public static <T> ApiResponse<T> success(String message) {
         return new ApiResponse<>(true, "SUCCESS", message, null);
+    }
+
+    public static <T> ApiResponse<T> error(String code, String message) {
+        return new ApiResponse<>(false, code, message, null);
+    }
+
+    public static <T> ApiResponse<T> error(ErrorCode errorCode) {
+        return new ApiResponse<>(false, errorCode.name(), errorCode.getMessage(), null
+        );
     }
 }
