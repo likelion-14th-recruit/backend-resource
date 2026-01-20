@@ -19,7 +19,7 @@ public class Verification extends BaseTimeEntity {
     @Column(nullable = false, unique = true)
     private String phoneNumber;
 
-    private String code;
+    private Integer code;
 
     private boolean verified;
 
@@ -35,7 +35,7 @@ public class Verification extends BaseTimeEntity {
     // 편의 메서드
     public Integer makeCode(){
         int code = randomNumber();
-        this.code = String.valueOf(code);
+        this.code = code;
 
         return code;
     }
