@@ -14,5 +14,7 @@ public interface ApplicationRepository extends JpaRepository<Application,Long> {
     @Query("select ap.part from Application ap where ap.publicId = :publicId")
     Optional<Part> findTypeByPublicId(@Param("publicId") String publicId);
 
+    Optional<Application> findByPublicId(String publicId);
+
 
 }
