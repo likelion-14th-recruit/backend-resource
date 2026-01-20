@@ -33,9 +33,11 @@ public class Verification extends BaseTimeEntity {
     }
 
     // 편의 메서드
-    public void makeCode(){
+    public Integer makeCode(){
         int code = randomNumber();
         this.code = String.valueOf(code);
+
+        return code;
     }
 
     public void verify(){
@@ -46,8 +48,10 @@ public class Verification extends BaseTimeEntity {
         return (int)(Math.random() * 90000000) + 10000000;
     }
 
-    public void renewCode(){
-        makeCode();
+    public Integer renewCode(){
+        Integer code = makeCode();
         this.verified = false;
+
+        return code;
     }
 }
