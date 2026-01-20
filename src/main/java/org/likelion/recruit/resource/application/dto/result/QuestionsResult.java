@@ -8,12 +8,12 @@ import java.util.List;
 
 @Getter
 @Builder
-public class QuestionCommonResult {
+public class QuestionsResult {
 
     private List<QuestionCommonDto> questions;
 
-    public static QuestionCommonResult from(List<QuestionCommonDto> questions){
-        return QuestionCommonResult.builder()
+    public static QuestionsResult from(List<QuestionCommonDto> questions){
+        return QuestionsResult.builder()
                 .questions(questions)
                 .build();
     }
