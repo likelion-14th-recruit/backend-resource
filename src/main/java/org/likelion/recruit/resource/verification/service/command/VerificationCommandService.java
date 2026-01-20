@@ -6,6 +6,7 @@ import org.likelion.recruit.resource.common.exception.ErrorCode;
 import org.likelion.recruit.resource.common.util.PhoneNumberUtils;
 import org.likelion.recruit.resource.message.service.command.MessageCommandService;
 import org.likelion.recruit.resource.verification.domain.Verification;
+import org.likelion.recruit.resource.verification.dto.command.VerifyConfirmCommand;
 import org.likelion.recruit.resource.verification.dto.command.VerifyPhoneCommand;
 import org.likelion.recruit.resource.verification.repository.VerificationRepository;
 import org.springframework.stereotype.Service;
@@ -37,5 +38,21 @@ public class VerificationCommandService {
         verificationRepository.save(verification);
 
         messageCommandService.sendMessage(phoneNumber, code);
+    }
+
+    public void confirmVerificationCode(VerifyConfirmCommand command) {
+        String phoneNumber = PhoneNumberUtils.normalize(command.getPhoneNumber());
+
+        Verification verification = verificationRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new BusinessException(ErrorCode.VERIFICATION_NOT_FOUND));
+
+        if (verification.isVerified()) {
+            throw new BusinessException(ErrorCode.VERIFICATION_ALREADY_COMPLETED);
+        }
+        if (verification.getCode() == null ||
+                !verification.getCode().equals(command.getCode())) {
+            throw new BusinessException(ErrorCode.INVALID_VERIFICATION_CODE);
+        }
+        verification.verify();
     }
 }
