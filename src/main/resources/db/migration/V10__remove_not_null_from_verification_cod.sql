@@ -1,0 +1,2 @@
+ALTER TABLE verification
+    ALTER COLUMN code DROP NOT NULL;

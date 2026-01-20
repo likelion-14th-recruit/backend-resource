@@ -9,9 +9,11 @@ import org.likelion.recruit.resource.verification.domain.Verification;
 import org.likelion.recruit.resource.verification.dto.command.VerifyPhoneCommand;
 import org.likelion.recruit.resource.verification.repository.VerificationRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class VerificationCommandService {
 
     private final VerificationRepository verificationRepository;
@@ -31,9 +33,9 @@ public class VerificationCommandService {
         }
 
         Verification verification = Verification.create(phoneNumber);
+        Integer code = verification.makeCode();
         verificationRepository.save(verification);
 
-        Integer code = verification.makeCode();
         messageCommandService.sendMessage(phoneNumber, code);
     }
 }
