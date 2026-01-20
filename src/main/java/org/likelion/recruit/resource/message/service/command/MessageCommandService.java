@@ -33,7 +33,7 @@ public class MessageCommandService {
         this.messageService = SolapiClient.INSTANCE.createInstance(apiKey, apiSecret);
     }
 
-    public void sendMessage(String phoneNumber, String code) {
+    public void sendMessage(String phoneNumber, Integer code) {
 
             Message msg = new Message();
             msg.setFrom(senderNumber);
