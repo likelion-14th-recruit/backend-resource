@@ -15,6 +15,8 @@ import org.likelion.recruit.resource.application.service.command.ApplicationComm
 import org.likelion.recruit.resource.application.service.query.ApplicationQueryService;
 import org.likelion.recruit.resource.application.service.query.QuestionQueryService;
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
+import org.likelion.recruit.resource.interview.dto.request.InterviewAvailableRequest;
+import org.likelion.recruit.resource.interview.service.command.InterviewAvailableCommandService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +30,7 @@ public class ApplicationController {
     private final ApplicationQueryService applicationQueryService;
     private final QuestionQueryService questionQueryService;
     private final AnswerCommandService answerCommandService;
+    private final InterviewAvailableCommandService interviewAvailableCommandService;
 
     /**
      * 지원서 인적사항 생성하기
@@ -59,5 +62,16 @@ public class ApplicationController {
         answerCommandService.createAnswers(req.getApplicationPublicId(), req.getAnswers());
 
         return ResponseEntity.ok(ApiResponse.success("지원서 답변을 저장하였습니다."));
+    }
+
+    /**
+     * 면접 가능 시간 생성하기
+     */
+    @PostMapping("/{application-public-id}/interview-available")
+    public ResponseEntity<ApiResponse<Void>> createInterviewAvailable(@PathVariable("application-public-id") String publicId,
+                                                                      @RequestBody InterviewAvailableRequest request){
+        interviewAvailableCommandService.createInterviewAvailable(publicId, request.getInterviewTimeIds());
+
+        return ResponseEntity.ok(ApiResponse.success("면접 가능 시간을 저장하였습니다."));
     }
 }
