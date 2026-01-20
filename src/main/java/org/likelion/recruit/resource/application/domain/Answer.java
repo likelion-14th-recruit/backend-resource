@@ -38,4 +38,11 @@ public class Answer extends BaseTimeEntity {
     public static Answer create(String content, Question question, Application application) {
         return new Answer(content, question, application);
     }
+
+    // 편의 메서드
+
+    public void updateContent(String content) {
+        this.content = content;
+    }
+
 }
