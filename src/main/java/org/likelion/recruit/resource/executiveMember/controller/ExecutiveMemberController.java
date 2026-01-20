@@ -20,7 +20,7 @@ public class ExecutiveMemberController {
     private final ExecutiveMemberQueryService executiveMemberQueryService;
 
     /**
-     * 운영진 검색 조회
+     * 운영진 검색 조회하기
      */
     @GetMapping
     public ResponseEntity<ApiResponse<List<MemberSearchResponse>>> searchMembers(MemberSearchRequest request) {

@@ -20,6 +20,9 @@ public class ProjectController {
 
     private final ProjectQueryService projectQueryService;
 
+    /**
+     * 프로젝트 검색 조회하기
+     */
     @GetMapping
     public ResponseEntity<ApiResponse<SliceResponse<ProjectSearchResult>>> searchProjects(ProjectSearchRequest request,
                                                                                           @PageableDefault(size = 15) Pageable pageable) {

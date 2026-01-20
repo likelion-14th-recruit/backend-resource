@@ -29,6 +29,9 @@ public class ApplicationController {
     private final QuestionQueryService questionQueryService;
     private final AnswerCommandService answerCommandService;
 
+    /**
+     * 지원서 인적사항 생성하기
+     */
     @PostMapping
     public ResponseEntity<ApiResponse<PublicIdResponse>> createApplication(@Valid @RequestBody ApplicationCreateRequest request){
         String publicId = applicationCommandService.createApplication(ApplicationCreateCommand.from(request));
@@ -38,6 +41,9 @@ public class ApplicationController {
                 .body(ApiResponse.success("지원서 인적사항이 생성되었습니다.", PublicIdResponse.from(result)));
     }
 
+    /**
+     * 지원서 질문 조회하기
+     */
     @GetMapping("/questions/{application-public-id}")
     public ResponseEntity<ApiResponse<QuestionsResponse>> getQuestions(@PathVariable("application-public-id") String publicId){
         QuestionsResult results = questionQueryService.getQuestions(publicId);
@@ -45,6 +51,9 @@ public class ApplicationController {
         return ResponseEntity.ok(ApiResponse.success("지원서 질문을 조회하였습니다.", QuestionsResponse.from(results)));
     }
 
+    /**
+     * 지원서 답변 저장하기
+     */
     @PostMapping("/answers")
     public ResponseEntity<ApiResponse<AnswersRequest>> createAnswers(@RequestBody AnswersRequest req){
         answerCommandService.createAnswers(req.getApplicationPublicId(), req.getAnswers());

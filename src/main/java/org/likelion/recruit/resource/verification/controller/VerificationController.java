@@ -20,6 +20,9 @@ public class VerificationController {
 
     private final VerificationCommandService verificationCommandService;
 
+    /**
+     * 인증 코드 전송하기
+     */
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> sendVerificationCode(@RequestBody VerifyPhoneRequest req) {
         verificationCommandService.sendVerificationCode(VerifyPhoneCommand.from(req));
@@ -27,6 +30,9 @@ public class VerificationController {
         return ResponseEntity.ok(ApiResponse.success("인증번호 발송에 성공하였습니다."));
     }
 
+    /**
+     * 인증 코드 확인하기
+     */
     @PostMapping("/confirm")
     public ResponseEntity<ApiResponse<Void>> confirmVerificationCode(@RequestBody VerifyConfirmRequest req) {
         verificationCommandService.confirmVerificationCode(VerifyConfirmCommand.from(req));
