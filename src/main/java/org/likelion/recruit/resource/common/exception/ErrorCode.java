@@ -17,6 +17,9 @@ public enum ErrorCode {
     VERIFICATION_REQUIRED(HttpStatus.BAD_REQUEST, "전화번호 인증이 필요합니다."),
     VERIFICATION_NOT_FOUND(HttpStatus.NOT_FOUND, "Verification not found"),
 
+    //interview
+    INTERVIEW_TIME_NOT_EXISTS(HttpStatus.NOT_FOUND, "인터뷰 시간이 존재하지 않습니다."),
+
     //application
     APPLICATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 지원서가 존재합니다."),
     APPLICATION_NOT_EXISTS(HttpStatus.NOT_FOUND, "지원서가 존재하지 않습니다."),

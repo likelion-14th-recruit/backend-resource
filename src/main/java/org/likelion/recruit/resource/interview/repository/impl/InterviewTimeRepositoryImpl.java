@@ -1,11 +1,10 @@
-package org.likelion.recruit.resource.interview.repository;
+package org.likelion.recruit.resource.interview.repository.impl;
 
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.likelion.recruit.resource.interview.domain.QInterviewTime;
-import org.likelion.recruit.resource.interview.dto.query.InterviewTimeDto;
 import org.likelion.recruit.resource.interview.dto.query.InterviewTimeQueryDto;
+import org.likelion.recruit.resource.interview.repository.custom.InterviewTimeRepositoryCustom;
 
 import java.util.List;
 
