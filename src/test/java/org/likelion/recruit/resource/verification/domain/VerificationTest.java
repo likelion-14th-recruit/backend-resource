@@ -25,7 +25,7 @@ class VerificationTest {
         Verification verification = Verification.create(phoneNumber);
 
         verification.makeCode();
-        Integer code = Integer.parseInt(verification.getCode());
+        Integer code = verification.getCode();
 
         assertThat(verification.getCode()).isNotNull();
         assertThat(code).isBetween(10000000,99999999);
