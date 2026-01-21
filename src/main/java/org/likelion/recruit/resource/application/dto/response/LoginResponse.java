@@ -7,11 +7,13 @@ import org.likelion.recruit.resource.application.dto.result.LoginResult;
 @Getter
 @Builder
 public class LoginResponse {
+    private String applicationPublicId;
     private String phoneNumber;
     private Integer passwordLength;
 
     public static LoginResponse from(LoginResult result){
         return LoginResponse.builder()
+                .applicationPublicId(result.getApplicationPublicId())
                 .phoneNumber(result.getPhoneNumber())
                 .passwordLength(result.getPasswordLength())
                 .build();
