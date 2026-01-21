@@ -8,6 +8,9 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 public enum ErrorCode {
 
+    //request
+    INVALID_REQUEST_FORMAT(HttpStatus.BAD_REQUEST, "REQUEST 요청이 올바르지 않습니다."),
+
     //solapi
     SMS_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "문자 전송에 실패했습니다."),
 

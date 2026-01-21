@@ -2,8 +2,8 @@ package org.likelion.recruit.resource.application.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.likelion.recruit.resource.application.dto.command.AnswerCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
+import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
 import org.likelion.recruit.resource.application.dto.request.AnswersRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationCreateRequest;
 import org.likelion.recruit.resource.application.dto.response.ApplicationDetailResponse;
@@ -22,6 +22,8 @@ import org.likelion.recruit.resource.interview.service.command.InterviewAvailabl
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -87,5 +89,17 @@ public class ApplicationController {
         ApplicationDetailResult result = applicationQueryService.getApplicationDetail(publicId, passwordLength);
         return ResponseEntity.ok(ApiResponse.success("지원서 인적사항을 조회하였습니다.",
                 ApplicationDetailResponse.from(result)));
+    }
+
+    /**
+     * 지원서 인적사항 수정하기
+     */
+    @PatchMapping("/{application-public-id}")
+    public ResponseEntity<ApiResponse<Void>> updateApplication(
+            @PathVariable("application-public-id") String publicId,
+            @RequestBody Map<String, Object> body){
+
+        applicationCommandService.updateApplication(publicId, ApplicationUpdateCommand.from(body));
+        return ResponseEntity.ok(ApiResponse.success("지원서 인적사항을 수정하였습니다."));
     }
 }
