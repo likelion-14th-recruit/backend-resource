@@ -8,8 +8,6 @@ import java.util.List;
 @Data
 public class AnswersRequest {
 
-    private String applicationPublicId;
-
     private List<AnswerCommand> answers;
 
 }

@@ -61,9 +61,10 @@ public class ApplicationController {
     /**
      * 지원서 답변 저장하기
      */
-    @PostMapping("/answers")
-    public ResponseEntity<ApiResponse<AnswersRequest>> createAnswers(@RequestBody AnswersRequest req){
-        answerCommandService.createAnswers(req.getApplicationPublicId(), req.getAnswers());
+    @PostMapping("/{application-public-id}/answers")
+    public ResponseEntity<ApiResponse<AnswersRequest>> createAnswers(@PathVariable("application-public-id") String publicId,
+                                                                     @RequestBody AnswersRequest req){
+        answerCommandService.createAnswers(publicId, req.getAnswers());
 
         return ResponseEntity.ok(ApiResponse.success("지원서 답변을 저장하였습니다."));
     }
