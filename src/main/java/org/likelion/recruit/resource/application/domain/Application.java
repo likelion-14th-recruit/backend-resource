@@ -117,4 +117,9 @@ public class Application extends BaseTimeEntity {
         this.submittedAt = LocalDateTime.now();
     }
 
+    public void changePassword(String passwordHash){
+        this.passwordHash = passwordHash;
+    }
+
+
 }

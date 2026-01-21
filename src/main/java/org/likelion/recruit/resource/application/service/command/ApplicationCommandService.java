@@ -31,7 +31,7 @@ public class ApplicationCommandService {
             throw new BusinessException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
-        if (!verificationRepository.existsByPhoneNumberAndVerifiedTrue(phoneNumber)){
+        if (!verificationRepository.existsByPhoneNumberAndVerifiedTrue(phoneNumber)) {
             throw new BusinessException(ErrorCode.VERIFICATION_REQUIRED);
         }
 
@@ -39,6 +39,22 @@ public class ApplicationCommandService {
                 phoneNumber, passwordHash, command.getMajor(), command.getDoubleMajor(),
                 command.getSemester(), command.getAcademicStatus(), command.getPart());
         applicationRepository.save(application);
+
+        return application.getPublicId();
+    }
+
+    public String resetPassword(String reqPhoneNumber, String password) {
+        String phoneNumber = PhoneNumberUtils.normalize(reqPhoneNumber);
+
+        if (!verificationRepository.findVerifiedByPhoneNumber(phoneNumber)) {
+            throw new BusinessException(ErrorCode.VERIFICATION_REQUIRED);
+        }
+
+        Application application = applicationRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+
+        String passwordHash = passwordEncoder.encode(password);
+        application.changePassword(passwordHash);
 
         return application.getPublicId();
     }
