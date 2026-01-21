@@ -6,8 +6,10 @@ import org.likelion.recruit.resource.application.dto.command.AnswerCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
 import org.likelion.recruit.resource.application.dto.request.AnswersRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationCreateRequest;
+import org.likelion.recruit.resource.application.dto.response.ApplicationDetailResponse;
 import org.likelion.recruit.resource.application.dto.response.PublicIdResponse;
 import org.likelion.recruit.resource.application.dto.response.QuestionsResponse;
+import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
 import org.likelion.recruit.resource.application.dto.result.PublicIdResult;
 import org.likelion.recruit.resource.application.dto.result.QuestionsResult;
 import org.likelion.recruit.resource.application.service.command.AnswerCommandService;
@@ -73,5 +75,17 @@ public class ApplicationController {
         interviewAvailableCommandService.createInterviewAvailable(publicId, request.getInterviewTimeIds());
 
         return ResponseEntity.ok(ApiResponse.success("면접 가능 시간을 저장하였습니다."));
+    }
+
+    /**
+     * 지원서 인적사항 조회하기
+     */
+    @GetMapping("/{application-public-id}")
+    public ResponseEntity<ApiResponse<ApplicationDetailResponse>> getApplicationDetail(
+            @PathVariable("application-public-id") String publicId,
+            @RequestParam("password-length") Integer passwordLength){
+        ApplicationDetailResult result = applicationQueryService.getApplicationDetail(publicId, passwordLength);
+        return ResponseEntity.ok(ApiResponse.success("지원서 인적사항을 조회하였습니다.",
+                ApplicationDetailResponse.from(result)));
     }
 }
