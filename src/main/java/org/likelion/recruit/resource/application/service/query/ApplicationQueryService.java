@@ -2,13 +2,18 @@ package org.likelion.recruit.resource.application.service.query;
 
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
+import org.likelion.recruit.resource.application.dto.command.ApplicationSearchCommand;
 import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
+import org.likelion.recruit.resource.application.dto.result.ApplicationSearchResult;
 import org.likelion.recruit.resource.application.dto.result.LoginResult;
 import org.likelion.recruit.resource.application.dto.result.PublicIdResult;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
 import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
 import org.likelion.recruit.resource.common.util.PhoneNumberUtils;
+import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +25,7 @@ public class ApplicationQueryService {
 
     private final ApplicationRepository applicationRepository;
     private final PasswordEncoder passwordEncoder;
+    private final InterviewAvailableRepository interviewAvailableRepository;
 
     public PublicIdResult getPublicId(String publicId) {
         return PublicIdResult.from(publicId);
@@ -44,5 +50,9 @@ public class ApplicationQueryService {
 
     public ApplicationDetailResult getApplicationDetail(String publicId, Integer passwordLength) {
         return applicationRepository.getDetail(publicId, passwordLength);
+    }
+
+    public Page<ApplicationSearchResult> searchApplications(ApplicationSearchCommand command, Pageable pageable){
+        return applicationRepository.searchApplications(command, pageable);
     }
 }

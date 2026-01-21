@@ -8,24 +8,23 @@ import org.likelion.recruit.resource.common.domain.Part;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Builder
 public class ApplicationSearchCommand {
     private Part part;
     private Application.PassStatus passStatus;
-    private LocalDate date;
+    private List<LocalDate> dates;
     private LocalTime startTime;
-    private LocalTime endTime;
     private String name;
 
     public static ApplicationSearchCommand from(ApplicationSearchRequest req){
         return ApplicationSearchCommand.builder()
                 .part(req.getPart())
                 .passStatus(req.getPassStatus())
-                .date(req.getDate())
+                .dates(req.getDates())
                 .startTime(req.getStartTime())
-                .endTime(req.getEndTime())
                 .name(req.getName())
                 .build();
     }

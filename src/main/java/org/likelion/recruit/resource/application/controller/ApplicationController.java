@@ -3,25 +3,24 @@ package org.likelion.recruit.resource.application.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
+import org.likelion.recruit.resource.application.dto.command.ApplicationSearchCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
 import org.likelion.recruit.resource.application.dto.request.AnswersRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationCreateRequest;
-import org.likelion.recruit.resource.application.dto.response.AnswersResponse;
-import org.likelion.recruit.resource.application.dto.response.ApplicationDetailResponse;
-import org.likelion.recruit.resource.application.dto.response.PublicIdResponse;
-import org.likelion.recruit.resource.application.dto.response.QuestionsResponse;
-import org.likelion.recruit.resource.application.dto.result.AnswersResult;
-import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
-import org.likelion.recruit.resource.application.dto.result.PublicIdResult;
-import org.likelion.recruit.resource.application.dto.result.QuestionsResult;
+import org.likelion.recruit.resource.application.dto.request.ApplicationSearchRequest;
+import org.likelion.recruit.resource.application.dto.response.*;
+import org.likelion.recruit.resource.application.dto.result.*;
 import org.likelion.recruit.resource.application.service.command.AnswerCommandService;
 import org.likelion.recruit.resource.application.service.command.ApplicationCommandService;
 import org.likelion.recruit.resource.application.service.query.AnswerQueryService;
 import org.likelion.recruit.resource.application.service.query.ApplicationQueryService;
 import org.likelion.recruit.resource.application.service.query.QuestionQueryService;
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
+import org.likelion.recruit.resource.common.dto.response.PageResponse;
 import org.likelion.recruit.resource.interview.dto.request.InterviewAvailableRequest;
 import org.likelion.recruit.resource.interview.service.command.InterviewAvailableCommandService;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -118,5 +117,13 @@ public class ApplicationController {
 
         applicationCommandService.updateApplication(publicId, ApplicationUpdateCommand.from(body));
         return ResponseEntity.ok(ApiResponse.success("지원서 인적사항을 수정하였습니다."));
+    }
+
+    @GetMapping
+    public ResponseEntity<ApiResponse<PageResponse<ApplicationSearchResponse>>> searchApplications(ApplicationSearchRequest req,  Pageable pageable){
+        Page<ApplicationSearchResult> results = applicationQueryService.searchApplications(ApplicationSearchCommand.from(req), pageable);
+        Page<ApplicationSearchResponse> resultsResponse =  results.map(ApplicationSearchResponse::from);
+
+        return ResponseEntity.ok(ApiResponse.success("지원서 검색에 성공하였습니다.", PageResponse.from(resultsResponse)));
     }
 }
