@@ -38,6 +38,6 @@ public class ApplicationQueryService {
 
         Integer passwordLength = password.length();
 
-        return LoginResult.of(normPhoneNumber, passwordLength);
+        return LoginResult.of(application.getPublicId(), phoneNumber, passwordLength);
     }
 }
