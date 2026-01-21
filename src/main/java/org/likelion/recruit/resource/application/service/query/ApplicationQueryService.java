@@ -2,6 +2,7 @@ package org.likelion.recruit.resource.application.service.query;
 
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
+import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
 import org.likelion.recruit.resource.application.dto.result.LoginResult;
 import org.likelion.recruit.resource.application.dto.result.PublicIdResult;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
@@ -39,5 +40,9 @@ public class ApplicationQueryService {
         Integer passwordLength = password.length();
 
         return LoginResult.of(application.getPublicId(), phoneNumber, passwordLength);
+    }
+
+    public ApplicationDetailResult getApplicationDetail(String publicId, Integer passwordLength) {
+        return applicationRepository.getDetail(publicId, passwordLength);
     }
 }
