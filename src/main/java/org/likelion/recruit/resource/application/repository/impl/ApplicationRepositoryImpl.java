@@ -57,6 +57,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
                         application.publicId,
                         application.name,
                         application.studentNumber,
+                        application.phoneNumber,
                         application.part,
                         application.passStatus
                 ))
@@ -65,7 +66,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
                         application.submitted.eq(true),
                         partEq(command.getPart()),
                         passStatusEq(command.getPassStatus()),
-                        nameContains(command.getName()),
+                        nameOrPhoneEndsWith(command.getSearch()),
                         interviewAvailableExists(command)
                 )
                 .orderBy(
@@ -84,7 +85,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
                                 application.submitted.eq(true),
                                 partEq(command.getPart()),
                                 passStatusEq(command.getPassStatus()),
-                                nameContains(command.getName()),
+                                nameOrPhoneEndsWith(command.getSearch()),
                                 interviewAvailableExists(command)
                         );
 
@@ -113,8 +114,10 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
         return interviewTime.startTime.eq(time);
     }
 
-    private BooleanExpression nameContains(String name) {
-        return name == null ? null : application.name.contains(name);
+    private BooleanExpression nameOrPhoneEndsWith(String search) {
+        if (search == null) return null;
+        return application.name.endsWith(search)
+                .or(application.phoneNumber.endsWith(search));
     }
 
     private BooleanExpression interviewAvailableExists(ApplicationSearchCommand command) {
