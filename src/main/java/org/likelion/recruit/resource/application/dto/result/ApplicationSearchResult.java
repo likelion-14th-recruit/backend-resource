@@ -10,13 +10,15 @@ public class ApplicationSearchResult {
     private String applicationPublicId;
     private String name;
     private String studentNumber;
+    private String phoneNumber;
     private Part part;
     private PassStatus passStatus;
 
-    public ApplicationSearchResult(String applicationPublicId, String name, String studentNumber, Part part, PassStatus passStatus) {
+    public ApplicationSearchResult(String applicationPublicId, String name, String studentNumber, String phoneNumber, Part part, PassStatus passStatus) {
         this.applicationPublicId = applicationPublicId;
         this.name = name;
         this.studentNumber = studentNumber;
+        this.phoneNumber = phoneNumber;
         this.part = part;
         this.passStatus = passStatus;
     }

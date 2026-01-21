@@ -119,6 +119,9 @@ public class ApplicationController {
         return ResponseEntity.ok(ApiResponse.success("지원서 인적사항을 수정하였습니다."));
     }
 
+    /**
+     * 지원서 검색 조회하기
+     */
     @GetMapping
     public ResponseEntity<ApiResponse<PageResponse<ApplicationSearchResponse>>> searchApplications(ApplicationSearchRequest req,  Pageable pageable){
         Page<ApplicationSearchResult> results = applicationQueryService.searchApplications(ApplicationSearchCommand.from(req), pageable);

@@ -16,5 +16,5 @@ public class ApplicationSearchRequest {
     private PassStatus passStatus;
     private List<LocalDate> dates;
     private LocalTime startTime;
-    private String name;
+    private String search;
 }

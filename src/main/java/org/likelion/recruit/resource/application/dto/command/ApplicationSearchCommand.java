@@ -17,7 +17,7 @@ public class ApplicationSearchCommand {
     private Application.PassStatus passStatus;
     private List<LocalDate> dates;
     private LocalTime startTime;
-    private String name;
+    private String search;
 
     public static ApplicationSearchCommand from(ApplicationSearchRequest req){
         return ApplicationSearchCommand.builder()
@@ -25,7 +25,7 @@ public class ApplicationSearchCommand {
                 .passStatus(req.getPassStatus())
                 .dates(req.getDates())
                 .startTime(req.getStartTime())
-                .name(req.getName())
+                .search(req.getSearch())
                 .build();
     }
 }
