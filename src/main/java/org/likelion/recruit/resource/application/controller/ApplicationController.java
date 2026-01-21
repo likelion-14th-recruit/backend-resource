@@ -51,7 +51,7 @@ public class ApplicationController {
     /**
      * 지원서 질문 조회하기
      */
-    @GetMapping("/questions/{application-public-id}")
+    @GetMapping("/{application-public-id}/questions")
     public ResponseEntity<ApiResponse<QuestionsResponse>> getQuestions(@PathVariable("application-public-id") String publicId){
         QuestionsResult results = questionQueryService.getQuestions(publicId);
 
