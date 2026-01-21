@@ -1,14 +1,11 @@
 package org.likelion.recruit.resource.application.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.likelion.recruit.resource.application.dto.command.AnswerCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
 import org.likelion.recruit.resource.application.dto.request.AnswersRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationCreateRequest;
-import org.likelion.recruit.resource.application.dto.request.ApplicationUpdateRequest;
 import org.likelion.recruit.resource.application.dto.response.ApplicationDetailResponse;
 import org.likelion.recruit.resource.application.dto.response.PublicIdResponse;
 import org.likelion.recruit.resource.application.dto.response.QuestionsResponse;
@@ -26,6 +23,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/applications")
@@ -36,7 +35,6 @@ public class ApplicationController {
     private final QuestionQueryService questionQueryService;
     private final AnswerCommandService answerCommandService;
     private final InterviewAvailableCommandService interviewAvailableCommandService;
-    private final ObjectMapper objectMapper;
 
     /**
      * 지원서 인적사항 생성하기
@@ -97,10 +95,11 @@ public class ApplicationController {
      * 지원서 인적사항 수정하기
      */
     @PatchMapping("/{application-public-id}")
-    public ResponseEntity<ApiResponse<Void>> updateApplication(@PathVariable("application-public-id") String publicId,
-                                                               @RequestBody JsonNode body){
-        applicationCommandService.updateApplication(publicId, ApplicationUpdateCommand.from(request));
+    public ResponseEntity<ApiResponse<Void>> updateApplication(
+            @PathVariable("application-public-id") String publicId,
+            @RequestBody Map<String, Object> body){
 
+        applicationCommandService.updateApplication(publicId, ApplicationUpdateCommand.from(body));
         return ResponseEntity.ok(ApiResponse.success("지원서 인적사항을 수정하였습니다."));
     }
 }

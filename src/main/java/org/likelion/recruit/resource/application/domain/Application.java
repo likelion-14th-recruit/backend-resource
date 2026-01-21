@@ -127,27 +127,29 @@ public class Application extends BaseTimeEntity {
         updateName(command.getName());
         updateStudentNumber(command.getStudentNumber());
         updateMajor(command.getMajor());
-        if(command.
-        updateDoubleMajor(command.getDoubleMajor());
         updateAcademicStatus(command.getAcademicStatus());
         updateSemester(command.getSemester());
         updatePart(command.getPart());
+
+        if(command.getHasDoubleMajor()){
+            updateDoubleMajor(command.getDoubleMajor());
+        }
     }
 
     private void updateName(String name) {
-        if (name != null) {
+        if(name != null) {
             this.name = name;
         }
     }
 
     private void updateStudentNumber(String studentNumber) {
-        if (studentNumber != null) {
+        if(studentNumber != null) {
             this.studentNumber = studentNumber;
         }
     }
 
     private void updateMajor(String major) {
-        if (major != null) {
+        if(major != null) {
             this.major = major;
         }
     }
@@ -157,19 +159,19 @@ public class Application extends BaseTimeEntity {
     }
 
     private void updateAcademicStatus(AcademicStatus academicStatus) {
-        if (academicStatus != null) {
+        if(academicStatus != null) {
             this.academicStatus = academicStatus;
         }
     }
 
     private void updateSemester(Integer semester) {
-        if (semester != null) {
+        if(semester != null) {
             this.semester = semester;
         }
     }
 
     private void updatePart(Part part) {
-        if (part != null) {
+        if(part != null) {
             this.part = part;
         }
     }
