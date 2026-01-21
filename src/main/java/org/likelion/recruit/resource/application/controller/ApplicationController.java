@@ -6,14 +6,17 @@ import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCo
 import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
 import org.likelion.recruit.resource.application.dto.request.AnswersRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationCreateRequest;
+import org.likelion.recruit.resource.application.dto.response.AnswersResponse;
 import org.likelion.recruit.resource.application.dto.response.ApplicationDetailResponse;
 import org.likelion.recruit.resource.application.dto.response.PublicIdResponse;
 import org.likelion.recruit.resource.application.dto.response.QuestionsResponse;
+import org.likelion.recruit.resource.application.dto.result.AnswersResult;
 import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
 import org.likelion.recruit.resource.application.dto.result.PublicIdResult;
 import org.likelion.recruit.resource.application.dto.result.QuestionsResult;
 import org.likelion.recruit.resource.application.service.command.AnswerCommandService;
 import org.likelion.recruit.resource.application.service.command.ApplicationCommandService;
+import org.likelion.recruit.resource.application.service.query.AnswerQueryService;
 import org.likelion.recruit.resource.application.service.query.ApplicationQueryService;
 import org.likelion.recruit.resource.application.service.query.QuestionQueryService;
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
@@ -34,6 +37,7 @@ public class ApplicationController {
     private final ApplicationQueryService applicationQueryService;
     private final QuestionQueryService questionQueryService;
     private final AnswerCommandService answerCommandService;
+    private final AnswerQueryService answerQueryService;
     private final InterviewAvailableCommandService interviewAvailableCommandService;
 
     /**
@@ -67,6 +71,18 @@ public class ApplicationController {
         answerCommandService.createAnswers(publicId, req.getAnswers());
 
         return ResponseEntity.ok(ApiResponse.success("지원서 답변을 저장하였습니다."));
+    }
+
+    /**
+     * 지원서 답변 조회하기
+     */
+    @GetMapping("/{application-public-id}/answers")
+    public ResponseEntity<ApiResponse<AnswersResponse>> getAnswers(
+            @PathVariable("application-public-id") String publicId) {
+        AnswersResult result = answerQueryService.getAnswers(publicId);
+        return ResponseEntity.ok(ApiResponse.success(
+                "지원서 답변을 조회하였습니다.",
+                AnswersResponse.from(result)));
     }
 
     /**
