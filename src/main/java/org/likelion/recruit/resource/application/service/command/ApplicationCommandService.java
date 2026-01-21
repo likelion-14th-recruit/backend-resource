@@ -3,6 +3,7 @@ package org.likelion.recruit.resource.application.service.command;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
+import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
 import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
@@ -57,5 +58,12 @@ public class ApplicationCommandService {
         application.changePassword(passwordHash);
 
         return application.getPublicId();
+    }
+
+    public void updateApplication(String publicId, ApplicationUpdateCommand command) {
+        Application application = applicationRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+
+        application.update(command);
     }
 }

@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
 import org.likelion.recruit.resource.common.domain.BaseTimeEntity;
 import org.likelion.recruit.resource.common.domain.Part;
+import org.likelion.recruit.resource.common.exception.BusinessException;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -119,6 +121,57 @@ public class Application extends BaseTimeEntity {
 
     public void changePassword(String passwordHash){
         this.passwordHash = passwordHash;
+    }
+
+    public void update(ApplicationUpdateCommand command) {
+        updateName(command.getName());
+        updateStudentNumber(command.getStudentNumber());
+        updateMajor(command.getMajor());
+        if(command.
+        updateDoubleMajor(command.getDoubleMajor());
+        updateAcademicStatus(command.getAcademicStatus());
+        updateSemester(command.getSemester());
+        updatePart(command.getPart());
+    }
+
+    private void updateName(String name) {
+        if (name != null) {
+            this.name = name;
+        }
+    }
+
+    private void updateStudentNumber(String studentNumber) {
+        if (studentNumber != null) {
+            this.studentNumber = studentNumber;
+        }
+    }
+
+    private void updateMajor(String major) {
+        if (major != null) {
+            this.major = major;
+        }
+    }
+
+    private void updateDoubleMajor(String doubleMajor) {
+        this.doubleMajor = doubleMajor;
+    }
+
+    private void updateAcademicStatus(AcademicStatus academicStatus) {
+        if (academicStatus != null) {
+            this.academicStatus = academicStatus;
+        }
+    }
+
+    private void updateSemester(Integer semester) {
+        if (semester != null) {
+            this.semester = semester;
+        }
+    }
+
+    private void updatePart(Part part) {
+        if (part != null) {
+            this.part = part;
+        }
     }
 
 
