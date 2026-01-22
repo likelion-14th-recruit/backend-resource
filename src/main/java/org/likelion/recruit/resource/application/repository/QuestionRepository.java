@@ -5,4 +5,5 @@ import org.likelion.recruit.resource.application.repository.custom.QuestionRepos
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface QuestionRepository extends JpaRepository<Question, Long>, QuestionRepositoryCustom {
+    long countByType(Question.Type type);
 }

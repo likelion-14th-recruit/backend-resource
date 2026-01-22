@@ -2,7 +2,9 @@ package org.likelion.recruit.resource.application.controller;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -73,5 +75,24 @@ class ApplicationControllerTest {
                 .andExpect(jsonPath("$.data.applicationPublicId").value(publicId))
                 .andExpect(jsonPath("$.data.answers[0].questionId").value(1))
                 .andExpect(jsonPath("$.data.answers[0].content").value("안녕하세요"));
+    }
+
+    @Test
+    @DisplayName("지원서 최종 제출을 하면 200 OK와 성공 메시지를 반환")
+    void submitApplication_Api_Success() throws Exception {
+        // given
+        String publicId = "app-7c4ec3c9-c31f-4e31-bd48-a4377ea63850";
+
+        // 리턴값이 void인 서비스 메서드 모킹
+        willDoNothing().given(applicationCommandService).submitApplication(publicId);
+
+        // when & then
+        mockMvc.perform(post("/applications/{application-public-id}/submit", publicId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.code").value("SUCCESS"))
+                .andExpect(jsonPath("$.message").value("지원서가 성공적으로 제출되었습니다."))
+                .andExpect(jsonPath("$.data").isEmpty());
     }
 }

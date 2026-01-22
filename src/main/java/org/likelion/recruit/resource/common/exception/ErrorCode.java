@@ -27,7 +27,8 @@ public enum ErrorCode {
     APPLICATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 지원서가 존재합니다."),
     APPLICATION_NOT_EXISTS(HttpStatus.NOT_FOUND, "지원서가 존재하지 않습니다."),
     QUESTION_NOT_EXISTS(HttpStatus.NOT_FOUND, "질문이 존재하지 않습니다."),
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다.");
+    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다."),
+    APPLICATION_INCOMPLETE(HttpStatus.BAD_REQUEST, "모든 필수 질문에 답변해야 제출이 가능합니다.");
     private final HttpStatus status;
     private final String message;
 }
