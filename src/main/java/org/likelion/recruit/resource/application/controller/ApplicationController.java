@@ -143,4 +143,13 @@ public class ApplicationController {
 
         return ResponseEntity.ok(ApiResponse.success("지원서 검색에 성공하였습니다.", PageResponse.from(resultsResponse)));
     }
+
+    /**
+     * 지원서 최종 제출 API
+     */
+    @PostMapping("/{application-public-id}/submit")
+    public ResponseEntity<ApiResponse<Void>> submitApplication(@PathVariable("application-public-id") String publicId) {
+        applicationCommandService.submitApplication(publicId);
+        return ResponseEntity.ok(ApiResponse.success("지원서가 성공적으로 제출되었습니다."));
+    }
 }

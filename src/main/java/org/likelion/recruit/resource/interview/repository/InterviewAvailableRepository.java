@@ -12,11 +12,13 @@ import java.util.List;
 public interface InterviewAvailableRepository extends JpaRepository<InterviewAvailable, Long> {
 
     @Query("select count(ia) > 0 from InterviewAvailable ia where ia.interviewTime.id = :interviewTimeId and ia.application.id = :applicationId")
-    boolean existsByInterviewTimeAndApplication(Long  interviewTimeId, Long applicationId);
+    boolean existsByInterviewTimeAndApplication(@Param("interviewTimeId") Long interviewTimeId, @Param("applicationId") Long applicationId);
 
     @Modifying(flushAutomatically = true, clearAutomatically = true)
     @Query("delete from InterviewAvailable ia where ia.application.id = :applicationId")
     void deleteByApplicationId(@Param("applicationId") Long applicationId);
+
+    boolean existsByApplication(Application application);
 
     @EntityGraph(attributePaths = {"interviewTime"})
     List<InterviewAvailable> findAllByApplication(Application application);
