@@ -28,4 +28,16 @@ public class InterviewAssignmentController {
 
         return ResponseEntity.ok(ApiResponse.success("V1 모델 생성",InterviewAssignmentResponse.from(result)));
     }
+
+    /**
+     * 면접 배정 실행 V2
+     */
+    @GetMapping("/v2")
+    public ResponseEntity<ApiResponse<InterviewAssignmentResponse>> assignInterviewV2() {
+
+        AssignmentResult result =
+                interviewAssignmentService.assignInterviewV2();
+
+        return ResponseEntity.ok(ApiResponse.success("V1 모델 생성",InterviewAssignmentResponse.from(result)));
+    }
 }

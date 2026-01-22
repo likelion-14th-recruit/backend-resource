@@ -1,8 +1,9 @@
-package org.likelion.recruit.resource.recommend.common.engine;
+package org.likelion.recruit.resource.recommend.common.engine.v1;
 
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.recommend.common.context.AssignmentContext;
+import org.likelion.recruit.resource.recommend.common.engine.AssignmentEngine;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 public class AssignmentEngineV1 implements AssignmentEngine {
 
     @Override
-    public void assignV1(AssignmentContext context) {
+    public void assign(AssignmentContext context) {
 
         for (InterviewTime time : context.getInterviewTimes()) {
 

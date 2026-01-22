@@ -3,6 +3,7 @@ package org.likelion.recruit.resource.recommend.common.context;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 
+import java.time.LocalDate;
 import java.util.*;
 
 public class AssignmentContext {
@@ -86,6 +87,14 @@ public class AssignmentContext {
         return Collections.unmodifiableSet(unAssignedApplications);
     }
 
+    // 이 날짜에 이미 배정된 인터뷰 시간들 조회
+    public List<InterviewTime> getAssignedTimesOnDate(LocalDate date) {
+        return assignments.entrySet().stream()
+                .filter(entry -> entry.getValue() != null &&
+                                entry.getKey().getDate().equals(date))
+                .map(Map.Entry::getKey)
+                .toList();
+    }
     // 면접 시간 조회
     public List<InterviewTime> getInterviewTimes() {
         return interviewTimes;
