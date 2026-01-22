@@ -176,5 +176,9 @@ public class Application extends BaseTimeEntity {
         }
     }
 
-
+    public void updatePassStatus(PassStatus passStatus) {
+        if(passStatus != null) {
+            this.passStatus = passStatus;
+        }
+    }
 }
