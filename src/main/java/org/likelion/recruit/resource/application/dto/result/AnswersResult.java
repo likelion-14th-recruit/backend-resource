@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import org.likelion.recruit.resource.application.domain.Answer;
+import org.likelion.recruit.resource.application.domain.Application;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class AnswersResult {
     public static class AnswerInfo {
         private Long questionId;
         private String content;
+
         public static AnswerInfo from(Answer answer) {
             return new AnswerInfo(
                     answer.getQuestion().getId(),
@@ -28,11 +30,12 @@ public class AnswersResult {
         }
     }
 
-    //서비스 조회 데이터 -> Result 객체 변환
-    public static AnswersResult of(String publicId, List<AnswerInfo> answers) {
+    public static AnswersResult from(Application application, List<Answer> answers) {
         return AnswersResult.builder()
-                .applicationPublicId(publicId)
-                .answers(answers)
+                .applicationPublicId(application.getPublicId())
+                .answers(answers.stream()
+                        .map(AnswerInfo::from)
+                        .toList())
                 .build();
     }
 }
