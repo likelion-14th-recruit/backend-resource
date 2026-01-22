@@ -18,7 +18,10 @@ import org.likelion.recruit.resource.application.service.query.QuestionQueryServ
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
 import org.likelion.recruit.resource.common.dto.response.PageResponse;
 import org.likelion.recruit.resource.interview.dto.request.InterviewAvailableRequest;
+import org.likelion.recruit.resource.interview.dto.response.InterviewAvailableResponse;
+import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableResult;
 import org.likelion.recruit.resource.interview.service.command.InterviewAvailableCommandService;
+import org.likelion.recruit.resource.interview.service.query.InterviewAvailableQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -38,7 +41,7 @@ public class ApplicationController {
     private final AnswerCommandService answerCommandService;
     private final AnswerQueryService answerQueryService;
     private final InterviewAvailableCommandService interviewAvailableCommandService;
-
+    private final InterviewAvailableQueryService interviewAvailableQueryService;
     /**
      * 지원서 인적사항 생성하기
      */
@@ -93,6 +96,17 @@ public class ApplicationController {
         interviewAvailableCommandService.createInterviewAvailable(publicId, request.getInterviewTimeIds());
 
         return ResponseEntity.ok(ApiResponse.success("면접 가능 시간을 저장하였습니다."));
+    }
+
+    /**
+     * 면접 가능 시간 조회하기
+     */
+    @GetMapping("/{application-public-id}/interview-available")
+    public ResponseEntity<ApiResponse<InterviewAvailableResponse>> getInterviewAvailable(@PathVariable("application-public-id") String publicId) {
+        InterviewAvailableResult result = interviewAvailableQueryService.getInterviewAvailable(publicId);
+        return ResponseEntity.ok(ApiResponse.success(
+                "선택한 면접 가능 시간 조회가 완료되었습니다.",
+                InterviewAvailableResponse.from(result)));
     }
 
     /**
