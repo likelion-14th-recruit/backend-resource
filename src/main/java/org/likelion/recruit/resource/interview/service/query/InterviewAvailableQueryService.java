@@ -5,6 +5,7 @@ import org.likelion.recruit.resource.application.repository.ApplicationRepositor
 import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
 import org.likelion.recruit.resource.interview.domain.InterviewAvailable;
+import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableDetailResult;
 import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableResult;
 import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepository;
 import org.springframework.stereotype.Service;
@@ -27,4 +28,16 @@ public class InterviewAvailableQueryService {
 
         return InterviewAvailableResult.from(availables);
     }
+
+    public InterviewAvailableDetailResult getInterviewAvailableDetail(String applicationPublicId) {
+
+        Application application = applicationRepository.findByPublicId(applicationPublicId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+
+        List<InterviewAvailable> availables =
+                interviewAvailableRepository.findAllByApplication(application);
+
+        return InterviewAvailableDetailResult.from(availables);
+    }
+
 }

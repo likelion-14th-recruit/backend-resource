@@ -20,7 +20,9 @@ import org.likelion.recruit.resource.application.service.query.QuestionQueryServ
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
 import org.likelion.recruit.resource.common.dto.response.PageResponse;
 import org.likelion.recruit.resource.interview.dto.request.InterviewAvailableRequest;
+import org.likelion.recruit.resource.interview.dto.response.InterviewAvailableDetailResponse;
 import org.likelion.recruit.resource.interview.dto.response.InterviewAvailableResponse;
+import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableDetailResult;
 import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableResult;
 import org.likelion.recruit.resource.interview.service.command.InterviewAvailableCommandService;
 import org.likelion.recruit.resource.interview.service.query.InterviewAvailableQueryService;
@@ -166,4 +168,17 @@ public class ApplicationController {
         applicationCommandService.updatePassStatus(publicId, PassStatusUpdateCommand.from(request));
         return ResponseEntity.ok(ApiResponse.success("지원 결과를 변경하였습니다."));
     }
+
+    /**
+     * 인터뷰 상세 시간 전체 조회하기
+     */
+    @GetMapping("/{application-public-id}/detail-interview-available")
+    public ResponseEntity<ApiResponse<InterviewAvailableDetailResponse>> getInterviewAvailableDetail(
+            @PathVariable("application-public-id") String publicId
+    ){
+        InterviewAvailableDetailResult result=interviewAvailableQueryService.getInterviewAvailableDetail(publicId);
+
+        return ResponseEntity.ok(ApiResponse.success("지원자 면접가능 시간 상세 조회하였습니다.",InterviewAvailableDetailResponse.from(result)));
+    }
+
 }
