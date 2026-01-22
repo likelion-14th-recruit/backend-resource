@@ -8,7 +8,11 @@ import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepo
 import org.likelion.recruit.resource.interview.repository.InterviewTimeRepository;
 import org.likelion.recruit.resource.recommend.common.context.AssignmentContext;
 import org.likelion.recruit.resource.recommend.common.engine.AssignmentEngine;
-import org.likelion.recruit.resource.recommend.common.engine.AssignmentEngineV1;
+import org.likelion.recruit.resource.recommend.common.engine.ScoringModel;
+import org.likelion.recruit.resource.recommend.common.engine.ScoringWeight;
+import org.likelion.recruit.resource.recommend.common.engine.v1.AssignmentEngineV1;
+import org.likelion.recruit.resource.recommend.common.engine.v2.AssignmentEngineV2;
+import org.likelion.recruit.resource.recommend.common.engine.v2.ScoringModelV2;
 import org.likelion.recruit.resource.recommend.dto.result.AssignmentResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,7 +23,7 @@ import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class InterviewAssignmentService {
 
     private final ApplicationRepository applicationRepository;
@@ -28,6 +32,29 @@ public class InterviewAssignmentService {
 
     public AssignmentResult assignInterviewV1() {
 
+        AssignmentContext context = buildAssignmentContext();
+
+        // 배정 엔진 선택 및 실행
+        AssignmentEngine assignmentEngine = new AssignmentEngineV1();
+        assignmentEngine.assign(context);
+
+        return AssignmentResult.from(context);
+    }
+
+    public AssignmentResult assignInterviewV2() {
+
+        AssignmentContext context = buildAssignmentContext();
+
+        // 배정 엔진 선택 및 실행
+        ScoringModel scoringModel = new ScoringModelV2(ScoringWeight.defaultWeight());
+
+        AssignmentEngine assignmentEngine = new AssignmentEngineV2(scoringModel);
+        assignmentEngine.assign(context);
+
+        return AssignmentResult.from(context);
+    }
+
+    private AssignmentContext buildAssignmentContext(){
         // 배정 대상 지원자 조회
         // submitted == true && passStatus == DOCUMENT_PASSED
         Set<Application> applications = applicationRepository.findInterviewTargets();
@@ -42,12 +69,8 @@ public class InterviewAssignmentService {
 
 
         // AssignmentContext 생성
-        AssignmentContext context = new AssignmentContext(applications, interviewTimes, availabilityMap);
-
-        // 배정 엔진 선택 및 실행
-        AssignmentEngine assignmentEngine = new AssignmentEngineV1();
-        assignmentEngine.assignV1(context);
-
-        return AssignmentResult.from(context);
+        return new AssignmentContext(applications, interviewTimes, availabilityMap);
     }
+
+
 }
