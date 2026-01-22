@@ -2,6 +2,7 @@ package org.likelion.recruit.resource.recommend.common.engine.v2;
 
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
+import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.recommend.common.context.AssignmentContext;
 import org.likelion.recruit.resource.recommend.common.engine.ScoringModel;
@@ -32,7 +33,11 @@ public class ScoringModelV2 implements ScoringModel {
         // Part 조합 점수
         if (a.getPart() == b.getPart()) {
             score += weight.samePartReward;
-        } else {
+        }
+        else if (isDesignBackend(a, b)) {
+            score += weight.designBackendPenalty;
+        }
+        else {
             score += weight.diffPartReward;
         }
         score += timeCompactnessScore(time, context);
@@ -81,6 +86,11 @@ public class ScoringModelV2 implements ScoringModel {
                 })
                 .max()
                 .orElse(0.0);
+    }
+
+    private boolean isDesignBackend(Application a, Application b) {
+        return (a.getPart() == Part.PRODUCT_DESIGN && b.getPart() == Part.BACKEND)
+                || (a.getPart() == Part.BACKEND && b.getPart() == Part.PRODUCT_DESIGN);
     }
 
 }
