@@ -1,5 +1,6 @@
 package org.likelion.recruit.resource.recommend.dto.response;
 
+import lombok.Data;
 import lombok.Getter;
 import org.likelion.recruit.resource.recommend.dto.common.InterviewTimeAssignmentResponse;
 import org.likelion.recruit.resource.recommend.dto.common.UnAssignedApplicationResponse;
@@ -7,13 +8,13 @@ import org.likelion.recruit.resource.recommend.dto.result.AssignmentResult;
 
 import java.util.List;
 
-@Getter
+@Data
 public class InterviewAssignmentResponse {
 
-    private final List<InterviewTimeAssignmentResponse> assignments;
-    private final List<UnAssignedApplicationResponse> unAssignedApplications;
+    private List<InterviewTimeAssignmentResponse> assignments;
+    private List<UnAssignedApplicationResponse> unAssignedApplications;
 
-    private InterviewAssignmentResponse(List<InterviewTimeAssignmentResponse> assignments,
+    public InterviewAssignmentResponse(List<InterviewTimeAssignmentResponse> assignments,
             List<UnAssignedApplicationResponse> unAssignedApplications) {
         this.assignments = assignments;
         this.unAssignedApplications = unAssignedApplications;

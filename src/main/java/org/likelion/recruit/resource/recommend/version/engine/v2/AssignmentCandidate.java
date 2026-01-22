@@ -1,4 +1,4 @@
-package org.likelion.recruit.resource.recommend.common.engine.v2;
+package org.likelion.recruit.resource.recommend.version.engine.v2;
 
 import lombok.Getter;
 import org.likelion.recruit.resource.application.domain.Application;

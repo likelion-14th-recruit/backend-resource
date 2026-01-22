@@ -7,8 +7,11 @@ import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.repository.custom.InterviewAvailableRepositoryCustom;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.*;
 
+import static org.likelion.recruit.resource.application.domain.QApplication.application;
 import static org.likelion.recruit.resource.interview.domain.QInterviewAvailable.interviewAvailable;
 
 @RequiredArgsConstructor
@@ -37,6 +40,19 @@ public class InterviewAvailableRepositoryImpl implements InterviewAvailableRepos
         }
 
         return availabilityMap;
+    }
+
+    @Override
+    public boolean existsAvailable(String publicId, Long interviewTimeId) {
+        return queryFactory
+                .selectOne()
+                .from(interviewAvailable)
+                .join(interviewAvailable.application, application)
+                .where(
+                        application.publicId.eq(publicId),
+                        interviewAvailable.interviewTime.id.eq(interviewTimeId)
+                )
+                .fetchFirst() != null;
     }
 
 }

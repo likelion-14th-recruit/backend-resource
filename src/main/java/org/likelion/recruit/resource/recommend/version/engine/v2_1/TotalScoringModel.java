@@ -1,9 +1,9 @@
-package org.likelion.recruit.resource.recommend.common.engine.v2_1;
+package org.likelion.recruit.resource.recommend.version.engine.v2_1;
 
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
-import org.likelion.recruit.resource.recommend.common.context.AssignmentContext;
-import org.likelion.recruit.resource.recommend.common.engine.ScoringModel;
+import org.likelion.recruit.resource.recommend.context.AssignmentContext;
+import org.likelion.recruit.resource.recommend.version.engine.ScoringModel;
 
 import java.util.List;
 import java.util.Map;

@@ -1,12 +1,12 @@
-package org.likelion.recruit.resource.recommend.common.engine.v2_1.config;
+package org.likelion.recruit.resource.recommend.version.engine.v2_1.config;
 
-import org.likelion.recruit.resource.recommend.common.engine.AssignmentEngine;
-import org.likelion.recruit.resource.recommend.common.engine.ScoringModel;
-import org.likelion.recruit.resource.recommend.common.engine.v2.AssignmentEngineV2;
-import org.likelion.recruit.resource.recommend.common.engine.v2_1.PartCompatibilityScore;
-import org.likelion.recruit.resource.recommend.common.engine.v2_1.SoloPenaltyScore;
-import org.likelion.recruit.resource.recommend.common.engine.v2_1.TimeDensityScore;
-import org.likelion.recruit.resource.recommend.common.engine.v2_1.TotalScoringModel;
+import org.likelion.recruit.resource.recommend.version.engine.AssignmentEngine;
+import org.likelion.recruit.resource.recommend.version.engine.ScoringModel;
+import org.likelion.recruit.resource.recommend.version.engine.v2.AssignmentEngineV2;
+import org.likelion.recruit.resource.recommend.version.engine.v2_1.PartCompatibilityScore;
+import org.likelion.recruit.resource.recommend.version.engine.v2_1.SoloPenaltyScore;
+import org.likelion.recruit.resource.recommend.version.engine.v2_1.TimeDensityScore;
+import org.likelion.recruit.resource.recommend.version.engine.v2_1.TotalScoringModel;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

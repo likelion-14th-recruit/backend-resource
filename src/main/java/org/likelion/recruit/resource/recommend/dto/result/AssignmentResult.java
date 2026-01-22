@@ -3,7 +3,7 @@ package org.likelion.recruit.resource.recommend.dto.result;
 import lombok.Getter;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
-import org.likelion.recruit.resource.recommend.common.context.AssignmentContext;
+import org.likelion.recruit.resource.recommend.context.AssignmentContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;

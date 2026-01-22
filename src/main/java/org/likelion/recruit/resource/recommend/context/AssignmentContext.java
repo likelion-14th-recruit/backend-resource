@@ -1,4 +1,4 @@
-package org.likelion.recruit.resource.recommend.common.context;
+package org.likelion.recruit.resource.recommend.context;
 
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
@@ -99,6 +99,7 @@ public class AssignmentContext {
     public List<InterviewTime> getInterviewTimes() {
         return interviewTimes;
     }
+
 
     /**
      *  상태 변경 메서드
