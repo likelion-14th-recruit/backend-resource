@@ -62,18 +62,22 @@ public class AssignmentEngineV2 implements AssignmentEngine {
             }
         }
 
-        for (Application a : unAssigned) {
+        boolean hasPairCandidate = !result.isEmpty();
 
-            if (!context.isAvailable(a, time)) continue;
+        if (!hasPairCandidate) {
+            for (Application a : unAssigned) {
 
-            double score =
-                    scoringModel.scoreSingle(a, time, context);
+                if (!context.isAvailable(a, time)) continue;
 
-            result.add(new AssignmentCandidate(
-                    time,
-                    List.of(a),
-                    score
-            ));
+                double score =
+                        scoringModel.scoreSingle(a, time, context);
+
+                result.add(new AssignmentCandidate(
+                        time,
+                        List.of(a),
+                        score
+                ));
+            }
         }
 
         return result;
