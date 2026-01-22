@@ -23,17 +23,12 @@ public class AnswerQueryService {
     /**
      * 지원서 답변 조회하기
      */
-    public AnswersResult getAnswers(String publicId){
+    public AnswersResult getAnswers(String publicId) {
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
 
         List<Answer> answers = answerRepository.findAllByApplication(application);
 
-        List<AnswersResult.AnswerInfo> answerInfos = answerRepository.findAllByApplication(application)
-                .stream()
-                .map(AnswersResult.AnswerInfo::from)
-                .toList();
-
-        return AnswersResult.of(application.getPublicId(), answerInfos);
+        return AnswersResult.from(application, answers);
     }
 }

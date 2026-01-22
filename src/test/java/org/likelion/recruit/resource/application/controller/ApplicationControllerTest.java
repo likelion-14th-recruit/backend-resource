@@ -62,13 +62,25 @@ class ApplicationControllerTest {
     @DisplayName("공개 ID로 지원서 답변을 조회하면 200 ok와 응답 반환")
     void getAnswers_Api_Success() throws Exception {
         String publicId = "app-7c4ec3c9-c31f-4e31-bd48-a4377ea63850";
-        AnswersResult mockResult = AnswersResult.of(
-                publicId,
-                List.of(new AnswersResult.AnswerInfo(1L, "안녕하세요"))
+
+        // 1. 테스트에 사용할 mock 데이터(AnswerInfo 리스트) 직접 생성
+        List<AnswersResult.AnswerInfo> answerInfos = List.of(
+                new AnswersResult.AnswerInfo(1L, "안녕하세요"),
+                new AnswersResult.AnswerInfo(2L, "Buenos dias!"),
+                new AnswersResult.AnswerInfo(3L, "Buenas tardes!"),
+                new AnswersResult.AnswerInfo(6L, "Buenas tardes!")
         );
 
+        // 2. 빌더를 사용하여 mockResult 생성
+        AnswersResult mockResult = AnswersResult.builder()
+                .applicationPublicId(publicId)
+                .answers(answerInfos)
+                .build();
+
+        // 3. 서비스 모킹
         given(answerQueryService.getAnswers(anyString())).willReturn(mockResult);
 
+        // when, then
         mockMvc.perform(get("/applications/{application-public-id}/answers", publicId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
