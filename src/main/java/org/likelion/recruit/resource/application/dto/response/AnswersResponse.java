@@ -1,5 +1,6 @@
 package org.likelion.recruit.resource.application.dto.response;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,24 +10,26 @@ import java.util.List;
 
 @Getter
 @Builder
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AnswersResponse {
-    private String applicationPublicId;
     private List<AnswerDetail> answers;
+
+    public static AnswersResponse from(AnswersResult result) {
+        return AnswersResponse.builder()
+                .answers(result.getAnswers().stream()
+                        .map(AnswerDetail::from)
+                        .toList())
+                .build();
+    }
 
     @Getter
     @AllArgsConstructor
     public static class AnswerDetail {
         private Long questionId;
         private String content;
-    }
 
-    //Result -> Response
-    public static AnswersResponse from(AnswersResult result) {
-        return AnswersResponse.builder()
-                .applicationPublicId(result.getApplicationPublicId())
-                .answers(result.getAnswers().stream()
-                        .map(info -> new AnswerDetail(info.getQuestionId(), info.getContent()))
-                        .toList())
-                .build();
+        public static AnswerDetail from(AnswersResult.AnswerInfo info) {
+            return new AnswerDetail(info.getQuestionId(), info.getContent());
+        }
     }
 }

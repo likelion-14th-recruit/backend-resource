@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationSearchCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
+import org.likelion.recruit.resource.application.dto.command.PassStatusUpdateCommand;
 import org.likelion.recruit.resource.application.dto.request.AnswersRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationCreateRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationSearchRequest;
+import org.likelion.recruit.resource.application.dto.request.PassStatusUpdateRequest;
 import org.likelion.recruit.resource.application.dto.response.*;
 import org.likelion.recruit.resource.application.dto.result.*;
 import org.likelion.recruit.resource.application.service.command.AnswerCommandService;
@@ -18,7 +20,12 @@ import org.likelion.recruit.resource.application.service.query.QuestionQueryServ
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
 import org.likelion.recruit.resource.common.dto.response.PageResponse;
 import org.likelion.recruit.resource.interview.dto.request.InterviewAvailableRequest;
+import org.likelion.recruit.resource.interview.dto.response.InterviewAvailableDetailResponse;
+import org.likelion.recruit.resource.interview.dto.response.InterviewAvailableResponse;
+import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableDetailResult;
+import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableResult;
 import org.likelion.recruit.resource.interview.service.command.InterviewAvailableCommandService;
+import org.likelion.recruit.resource.interview.service.query.InterviewAvailableQueryService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -38,7 +45,7 @@ public class ApplicationController {
     private final AnswerCommandService answerCommandService;
     private final AnswerQueryService answerQueryService;
     private final InterviewAvailableCommandService interviewAvailableCommandService;
-
+    private final InterviewAvailableQueryService interviewAvailableQueryService;
     /**
      * 지원서 인적사항 생성하기
      */
@@ -96,6 +103,17 @@ public class ApplicationController {
     }
 
     /**
+     * 면접 가능 시간 조회하기
+     */
+    @GetMapping("/{application-public-id}/interview-available")
+    public ResponseEntity<ApiResponse<InterviewAvailableResponse>> getInterviewAvailable(@PathVariable("application-public-id") String publicId) {
+        InterviewAvailableResult result = interviewAvailableQueryService.getInterviewAvailable(publicId);
+        return ResponseEntity.ok(ApiResponse.success(
+                "선택한 면접 가능 시간 조회가 완료되었습니다.",
+                InterviewAvailableResponse.from(result)));
+    }
+
+    /**
      * 지원서 인적사항 조회하기
      */
     @GetMapping("/{application-public-id}")
@@ -129,4 +147,38 @@ public class ApplicationController {
 
         return ResponseEntity.ok(ApiResponse.success("지원서 검색에 성공하였습니다.", PageResponse.from(resultsResponse)));
     }
+
+    /**
+     * 지원서 최종 제출 API
+     */
+    @PostMapping("/{application-public-id}/submit")
+    public ResponseEntity<ApiResponse<Void>> submitApplication(@PathVariable("application-public-id") String publicId) {
+        applicationCommandService.submitApplication(publicId);
+        return ResponseEntity.ok(ApiResponse.success("지원서가 성공적으로 제출되었습니다."));
+    }
+
+    /**
+     * passStatus 변경
+     */
+    @PatchMapping("/{application-public-id}/pass-status")
+    public ResponseEntity<ApiResponse<Void>> updatePassStatus(
+            @PathVariable("application-public-id") String publicId,
+            @RequestBody PassStatusUpdateRequest request){
+
+        applicationCommandService.updatePassStatus(publicId, PassStatusUpdateCommand.from(request));
+        return ResponseEntity.ok(ApiResponse.success("지원 결과를 변경하였습니다."));
+    }
+
+    /**
+     * 인터뷰 상세 시간 전체 조회하기
+     */
+    @GetMapping("/{application-public-id}/detail-interview-available")
+    public ResponseEntity<ApiResponse<InterviewAvailableDetailResponse>> getInterviewAvailableDetail(
+            @PathVariable("application-public-id") String publicId
+    ){
+        InterviewAvailableDetailResult result=interviewAvailableQueryService.getInterviewAvailableDetail(publicId);
+
+        return ResponseEntity.ok(ApiResponse.success("지원자 면접가능 시간 상세 조회하였습니다.",InterviewAvailableDetailResponse.from(result)));
+    }
+
 }

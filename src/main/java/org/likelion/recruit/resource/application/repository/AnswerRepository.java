@@ -11,4 +11,5 @@ import java.util.List;
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
     Optional<Answer> findByApplicationAndQuestion(Application application, Question question);
     List<Answer> findAllByApplication(Application application);
+    long countByApplication(Application application);
 }
