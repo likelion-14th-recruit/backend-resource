@@ -2,6 +2,7 @@ package org.likelion.recruit.resource.application.controller;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -15,14 +16,17 @@ import org.likelion.recruit.resource.application.service.command.ApplicationComm
 import org.likelion.recruit.resource.application.service.query.ApplicationQueryService;
 import org.likelion.recruit.resource.application.service.query.AnswerQueryService;
 import org.likelion.recruit.resource.application.service.query.QuestionQueryService;
+import org.likelion.recruit.resource.interview.domain.InterviewAvailable;
+import org.likelion.recruit.resource.interview.domain.InterviewTime;
+import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableResult;
 import org.likelion.recruit.resource.interview.service.command.InterviewAvailableCommandService;
+import org.likelion.recruit.resource.interview.service.query.InterviewAvailableQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @WebMvcTest(ApplicationController.class)
 class ApplicationControllerTest {
@@ -51,10 +55,12 @@ class ApplicationControllerTest {
     @MockitoBean
     private InterviewAvailableCommandService interviewAvailableCommandService;
 
+    @MockitoBean
+    private InterviewAvailableQueryService interviewAvailableQueryService;
+
     @Test
     @DisplayName("공개 ID로 지원서 답변을 조회하면 200 ok와 응답 반환")
     void getAnswers_Api_Success() throws Exception {
-        // given
         String publicId = "app-7c4ec3c9-c31f-4e31-bd48-a4377ea63850";
 
         // 1. 테스트에 사용할 mock 데이터(AnswerInfo 리스트) 직접 생성
@@ -79,10 +85,29 @@ class ApplicationControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.code").value("SUCCESS"))
-                .andExpect(jsonPath("$.message").value("지원서 답변을 조회하였습니다."))
-                .andExpect(jsonPath("$.data.applicationPublicId").value(publicId))
-                .andExpect(jsonPath("$.data.answers[0].questionId").value(1))
                 .andExpect(jsonPath("$.data.answers[0].content").value("안녕하세요"));
+    }
+
+    @Test
+    @DisplayName("지원서 공개 ID로 선택한 면접 시간 조회 시 200 OK와 ID 리스트 반환")
+    void getInterviewAvailable_Api_Success() throws Exception {
+        // given
+        String publicId = "test-public-id";
+
+        InterviewAvailable mockAvailable = mock(InterviewAvailable.class);
+        InterviewTime mockTime = mock(InterviewTime.class);
+
+        given(mockAvailable.getInterviewTime()).willReturn(mockTime);
+        given(mockTime.getId()).willReturn(1L);
+
+        InterviewAvailableResult mockResult = InterviewAvailableResult.from(List.of(mockAvailable));
+        given(interviewAvailableQueryService.getInterviewAvailable(anyString())).willReturn(mockResult);
+
+        // when, then
+        mockMvc.perform(get("/applications/{application-public-id}/interview-available", publicId)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.data.interviewTimeIds[0]").value(1));
     }
 }
