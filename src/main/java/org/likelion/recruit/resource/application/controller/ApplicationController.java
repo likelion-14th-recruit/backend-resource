@@ -158,7 +158,7 @@ public class ApplicationController {
     /**
      * passStatus 변경
      */
-    @PatchMapping("/applications/{application-public-id}/pass-status")
+    @PatchMapping("/{application-public-id}/pass-status")
     public ResponseEntity<ApiResponse<Void>> updatePassStatus(
             @PathVariable("application-public-id") String publicId,
             @RequestBody PassStatusUpdateRequest request){

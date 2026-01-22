@@ -120,7 +120,7 @@ public class ApplicationCommandService {
     public void updatePassStatus(String publicId, PassStatusUpdateCommand command){
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
-        Application.PassStatus newStatus = Application.PassStatus.valueOf(command.passStatus().toUpperCase());
+        Application.PassStatus newStatus = Application.PassStatus.valueOf(command.getPassStatus().toUpperCase());
         application.updatePassStatus(newStatus);
     }
 }
