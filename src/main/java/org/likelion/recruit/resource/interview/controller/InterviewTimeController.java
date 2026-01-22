@@ -32,4 +32,6 @@ public class InterviewTimeController {
 
         return ResponseEntity.ok(ApiResponse.success("인터뷰 시간 전체 조회에 성공하였습니다.", responses));
     }
+
+
 }
