@@ -56,12 +56,13 @@ public class ScoringModelV2 implements ScoringModel {
 
     private double timeCompactnessScore(InterviewTime candidate, AssignmentContext context) {
 
-        // 같은 날짜에 이미 배정된 시간들
         List<InterviewTime> assignedTimes = context.getAssignedTimesOnDate(candidate.getDate());
 
         if (assignedTimes.isEmpty()) {
             return 0.0;
         }
+
+        final long SLOT_GAP_MINUTES = 30; // 20분 면접 + 10분 휴식
 
         return assignedTimes.stream()
                 .mapToDouble(t -> {
@@ -70,13 +71,14 @@ public class ScoringModelV2 implements ScoringModel {
                             candidate.getStartTime()
                     ).toMinutes());
 
-                    if (diff <= 10) return weight.timeCompactReward;
-                    if (diff <= 30) return weight.timeCompactReward / 2;
-                    return 0;
+                    if (diff == SLOT_GAP_MINUTES) return weight.timeCompactReward;          // 바로 다음 슬롯
+                    if (diff == SLOT_GAP_MINUTES * 2) return weight.timeCompactReward / 2; // 한 칸 띄움
+                    return 0.0;
                 })
                 .max()
                 .orElse(0.0);
     }
+
 
     private boolean isDesignBackend(Application a, Application b) {
         return (a.getPart() == Part.PRODUCT_DESIGN && b.getPart() == Part.BACKEND)

@@ -29,6 +29,7 @@ public class InterviewAssignmentService {
     private final ApplicationRepository applicationRepository;
     private final InterviewTimeRepository interviewTimeRepository;
     private final InterviewAvailableRepository interviewAvailableRepository;
+    private final AssignmentEngine assignmentEngine;
 
     public AssignmentResult assignInterviewV1() {
 
@@ -49,6 +50,15 @@ public class InterviewAssignmentService {
         ScoringModel scoringModel = new ScoringModelV2(ScoringWeight.defaultWeight());
 
         AssignmentEngine assignmentEngine = new AssignmentEngineV2(scoringModel);
+        assignmentEngine.assign(context);
+
+        return AssignmentResult.from(context);
+    }
+
+    public AssignmentResult assignInterviewV21() {
+
+        AssignmentContext context = buildAssignmentContext();
+
         assignmentEngine.assign(context);
 
         return AssignmentResult.from(context);

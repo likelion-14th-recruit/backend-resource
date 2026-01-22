@@ -90,8 +90,8 @@ public class AssignmentContext {
     // 이 날짜에 이미 배정된 인터뷰 시간들 조회
     public List<InterviewTime> getAssignedTimesOnDate(LocalDate date) {
         return assignments.entrySet().stream()
-                .filter(entry -> entry.getValue() != null &&
-                                entry.getKey().getDate().equals(date))
+                .filter(entry -> entry.getKey().getDate().equals(date))
+                .filter(entry -> entry.getValue() != null && !entry.getValue().isEmpty()) // 핵심
                 .map(Map.Entry::getKey)
                 .toList();
     }
