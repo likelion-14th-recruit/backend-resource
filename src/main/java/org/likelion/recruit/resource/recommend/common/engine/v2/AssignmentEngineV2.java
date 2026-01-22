@@ -36,10 +36,7 @@ public class AssignmentEngineV2 implements AssignmentEngine {
         }
     }
 
-    private List<AssignmentCandidate> generateCandidates(
-            InterviewTime time,
-            AssignmentContext context
-    ) {
+    private List<AssignmentCandidate> generateCandidates(InterviewTime time, AssignmentContext context) {
         List<AssignmentCandidate> result = new ArrayList<>();
         List<Application> unAssigned =
                 new ArrayList<>(context.getUnAssignedApplications());
@@ -82,18 +79,13 @@ public class AssignmentEngineV2 implements AssignmentEngine {
         return result;
     }
 
-    private AssignmentCandidate pickBestCandidate(
-            List<AssignmentCandidate> candidates
-    ) {
+    private AssignmentCandidate pickBestCandidate(List<AssignmentCandidate> candidates) {
         return candidates.stream()
                 .max(Comparator.comparingDouble(AssignmentCandidate::getScore))
                 .orElseThrow();
     }
 
-    private void apply(
-            AssignmentCandidate candidate,
-            AssignmentContext context
-    ) {
+    private void apply(AssignmentCandidate candidate, AssignmentContext context) {
         for (Application app : candidate.getApplications()) {
             context.assign(app, candidate.getTime());
         }

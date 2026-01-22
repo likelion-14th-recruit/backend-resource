@@ -17,15 +17,10 @@ public class ScoringModelV2 implements ScoringModel {
     private final ScoringWeight weight;
 
     @Override
-    public double scorePair(
-            Application a,
-            Application b,
-            InterviewTime time,
-            AssignmentContext context
-    ) {
+    public double scorePair(Application a, Application b, InterviewTime time, AssignmentContext context) {
         double score = 0.0;
 
-        // 가능 시간 위반 (이론상 여기까지 오면 거의 없음)
+        // 가능 시간 위반
         if (!context.isAvailable(a, time) || !context.isAvailable(b, time)) {
             score += weight.unavailablePenalty;
         }
@@ -46,11 +41,7 @@ public class ScoringModelV2 implements ScoringModel {
     }
 
     @Override
-    public double scoreSingle(
-            Application a,
-            InterviewTime time,
-            AssignmentContext context
-    ) {
+    public double scoreSingle(Application a, InterviewTime time, AssignmentContext context) {
         double score = 0.0;
 
         if (!context.isAvailable(a, time)) {
@@ -63,15 +54,14 @@ public class ScoringModelV2 implements ScoringModel {
         return score;
     }
 
-    private double timeCompactnessScore(
-            InterviewTime candidate,
-            AssignmentContext context
-    ) {
-        // 같은 날짜에 이미 배정된 시간들
-        List<InterviewTime> assignedTimes =
-                context.getAssignedTimesOnDate(candidate.getDate());
+    private double timeCompactnessScore(InterviewTime candidate, AssignmentContext context) {
 
-        if (assignedTimes.isEmpty()) return 0.0;
+        // 같은 날짜에 이미 배정된 시간들
+        List<InterviewTime> assignedTimes = context.getAssignedTimesOnDate(candidate.getDate());
+
+        if (assignedTimes.isEmpty()) {
+            return 0.0;
+        }
 
         return assignedTimes.stream()
                 .mapToDouble(t -> {
