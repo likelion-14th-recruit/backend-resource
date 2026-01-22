@@ -3,6 +3,7 @@ package org.likelion.recruit.resource.interview.repository.impl;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
+import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.dto.query.InterviewTimeQueryDto;
 import org.likelion.recruit.resource.interview.repository.custom.InterviewTimeRepositoryCustom;
 
@@ -24,6 +25,17 @@ public class InterviewTimeRepositoryImpl implements InterviewTimeRepositoryCusto
                 interviewTime.startTime,
                 interviewTime.endTime))
                 .from(interviewTime)
+                .fetch();
+    }
+
+    @Override
+    public List<InterviewTime> findAllOrderByTime(){
+        return queryFactory.select(interviewTime)
+                .from(interviewTime)
+                .orderBy(
+                        interviewTime.date.asc(),
+                        interviewTime.startTime.asc()
+                )
                 .fetch();
     }
 }

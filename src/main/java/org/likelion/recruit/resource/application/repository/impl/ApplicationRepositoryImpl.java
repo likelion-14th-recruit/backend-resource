@@ -8,6 +8,7 @@ import com.querydsl.jpa.impl.JPAQuery;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
+import org.likelion.recruit.resource.application.domain.Application.PassStatus;
 import org.likelion.recruit.resource.application.domain.QApplication;
 import org.likelion.recruit.resource.application.dto.command.ApplicationSearchCommand;
 import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
@@ -23,7 +24,9 @@ import org.springframework.data.support.PageableExecutionUtils;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static org.likelion.recruit.resource.application.domain.QApplication.application;
 import static org.likelion.recruit.resource.interview.domain.QInterviewAvailable.interviewAvailable;
@@ -92,11 +95,22 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
         return PageableExecutionUtils.getPage(mainQuery, pageable, countQuery::fetchOne);
     }
 
+    @Override
+    public Set<Application> findInterviewTargets() {
+        return new HashSet<>(queryFactory.select(application)
+                .from(application)
+                .where(
+                        application.submitted.eq(true),
+                        application.passStatus.eq(PassStatus.DOCUMENT_PASSED)
+                )
+                .fetch());
+    }
+
     private BooleanExpression partEq(Part part) {
         return part == null ? null : application.part.eq(part);
     }
 
-    private BooleanExpression passStatusEq(Application.PassStatus passStatus) {
+    private BooleanExpression passStatusEq(PassStatus passStatus) {
         return passStatus == null ? null : application.passStatus.eq(passStatus);
     }
 
