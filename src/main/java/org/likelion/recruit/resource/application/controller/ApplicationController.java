@@ -5,9 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationSearchCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
+import org.likelion.recruit.resource.application.dto.command.PassStatusUpdateCommand;
 import org.likelion.recruit.resource.application.dto.request.AnswersRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationCreateRequest;
 import org.likelion.recruit.resource.application.dto.request.ApplicationSearchRequest;
+import org.likelion.recruit.resource.application.dto.request.PassStatusUpdateRequest;
 import org.likelion.recruit.resource.application.dto.response.*;
 import org.likelion.recruit.resource.application.dto.result.*;
 import org.likelion.recruit.resource.application.service.command.AnswerCommandService;
@@ -151,5 +153,17 @@ public class ApplicationController {
     public ResponseEntity<ApiResponse<Void>> submitApplication(@PathVariable("application-public-id") String publicId) {
         applicationCommandService.submitApplication(publicId);
         return ResponseEntity.ok(ApiResponse.success("지원서가 성공적으로 제출되었습니다."));
+    }
+
+    /**
+     * passStatus 변경
+     */
+    @PatchMapping("/applications/{application-public-id}/pass-status")
+    public ResponseEntity<ApiResponse<Void>> updatePassStatus(
+            @PathVariable("application-public-id") String publicId,
+            @RequestBody PassStatusUpdateRequest request){
+
+        applicationCommandService.updatePassStatus(publicId, PassStatusUpdateCommand.from(request));
+        return ResponseEntity.ok(ApiResponse.success("지원 결과를 변경하였습니다."));
     }
 }

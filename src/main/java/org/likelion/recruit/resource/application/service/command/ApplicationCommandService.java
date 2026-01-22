@@ -5,6 +5,7 @@ import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.domain.Question;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
 import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
+import org.likelion.recruit.resource.application.dto.command.PassStatusUpdateCommand;
 import org.likelion.recruit.resource.application.repository.AnswerRepository;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
 import org.likelion.recruit.resource.application.repository.QuestionRepository;
@@ -114,5 +115,12 @@ public class ApplicationCommandService {
             case FRONTEND, BACKEND -> Question.Type.DEVELOPMENT;
             case PRODUCT_DESIGN -> Question.Type.PRODUCT_DESIGN;
         };
+    }
+
+    public void updatePassStatus(String publicId, PassStatusUpdateCommand command){
+        Application application = applicationRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+        Application.PassStatus newStatus = Application.PassStatus.valueOf(command.passStatus().toUpperCase());
+        application.updatePassStatus(newStatus);
     }
 }
