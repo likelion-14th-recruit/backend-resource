@@ -15,11 +15,10 @@ import org.likelion.recruit.resource.application.domain.Question;
 import org.likelion.recruit.resource.application.dto.result.AnswersResult;
 import org.likelion.recruit.resource.application.repository.AnswerRepository;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
-import org.likelion.recruit.resource.common.domain.Part;
+import org.likelion.recruit.resource.common.init.ApplicationFixture;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.util.ReflectionTestUtils;
 
 @ExtendWith(MockitoExtension.class)
 class AnswerQueryServiceTest {
