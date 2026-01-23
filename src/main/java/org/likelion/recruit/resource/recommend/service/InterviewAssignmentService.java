@@ -14,6 +14,7 @@ import org.likelion.recruit.resource.recommend.version.engine.v1.AssignmentEngin
 import org.likelion.recruit.resource.recommend.version.engine.v2.AssignmentEngineV2;
 import org.likelion.recruit.resource.recommend.version.engine.v2.ScoringModelV2;
 import org.likelion.recruit.resource.recommend.dto.result.AssignmentResult;
+import org.likelion.recruit.resource.recommend.version.engine.v3.dto.request.EvaluationResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
