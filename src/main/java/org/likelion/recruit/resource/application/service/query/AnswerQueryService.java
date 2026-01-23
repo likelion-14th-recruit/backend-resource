@@ -27,8 +27,8 @@ public class AnswerQueryService {
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
 
-        List<Answer> answers = answerRepository.findAllByApplication(application);
+        List<Answer> answers = answerRepository.findAllByApplicationWithQuestion(application);
 
-        return AnswersResult.from(application, answers);
+        return AnswersResult.from(answers);
     }
 }
