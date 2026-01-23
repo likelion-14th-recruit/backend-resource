@@ -16,7 +16,6 @@ public interface AnswerRepository extends JpaRepository<Answer, Long> {
     @Query("select a from Answer a " +
             "join fetch a.question " +
             "where a.application = :application")
-
     List<Answer> findAllByApplicationWithQuestion(@Param("application") Application application);
 
     @Query("select count(a) from Answer a where a.application = :application " +
