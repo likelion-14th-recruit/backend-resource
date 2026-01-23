@@ -22,6 +22,8 @@ import static org.assertj.core.api.Assertions.assertThat;
         "spring.datasource.url=jdbc:postgresql://localhost:5432/likelion14th",
         "spring.datasource.username=postgres",
         "spring.datasource.password=20200129",
+        "spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect",
+        "spring.jpa.hibernate.ddl-auto=none"
 })
 @Import(QuerydslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
