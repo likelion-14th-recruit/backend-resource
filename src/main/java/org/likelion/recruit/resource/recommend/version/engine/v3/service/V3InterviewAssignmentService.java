@@ -1,4 +1,4 @@
-package org.likelion.recruit.resource.recommend.service;
+package org.likelion.recruit.resource.recommend.version.engine.v3.service;
 
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
@@ -8,13 +8,11 @@ import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepo
 import org.likelion.recruit.resource.interview.repository.InterviewTimeRepository;
 import org.likelion.recruit.resource.recommend.context.AssignmentContext;
 import org.likelion.recruit.resource.recommend.version.engine.AssignmentEngine;
-import org.likelion.recruit.resource.recommend.version.engine.ScoringModel;
 import org.likelion.recruit.resource.recommend.version.engine.ScoringWeight;
-import org.likelion.recruit.resource.recommend.version.engine.v1.AssignmentEngineV1;
-import org.likelion.recruit.resource.recommend.version.engine.v2.AssignmentEngineV2;
-import org.likelion.recruit.resource.recommend.version.engine.v2.ScoringModelV2;
-import org.likelion.recruit.resource.recommend.dto.result.AssignmentResult;
-import org.likelion.recruit.resource.recommend.version.engine.v3.dto.request.EvaluationResult;
+import org.likelion.recruit.resource.recommend.version.engine.v3.assembler.WeightTuningRequestAssembler;
+import org.likelion.recruit.resource.recommend.version.engine.v3.dto.request.WeightTuningRequest;
+import org.likelion.recruit.resource.recommend.version.engine.v3.dto.requestCommon.Objective;
+import org.likelion.recruit.resource.recommend.version.engine.v3.dto.requestCommon.SearchSpace;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,50 +20,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-@Service
 @RequiredArgsConstructor
+@Service
 @Transactional
-public class InterviewAssignmentService {
+public class V3InterviewAssignmentService {
 
-    private static final int V3_TRY_COUNT = 500;
-
+    private final AssignmentEngine assignmentEngine; // V2.1 bean
+    private final WeightTuningRequestAssembler requestAssembler;
     private final ApplicationRepository applicationRepository;
     private final InterviewTimeRepository interviewTimeRepository;
     private final InterviewAvailableRepository interviewAvailableRepository;
-    private final AssignmentEngine assignmentEngine;
 
-    public AssignmentResult assignInterviewV1() {
 
-        AssignmentContext context = buildAssignmentContext();
-
-        // 배정 엔진 선택 및 실행
-        AssignmentEngine assignmentEngine = new AssignmentEngineV1();
-        assignmentEngine.assign(context);
-
-        return AssignmentResult.from(context);
-    }
-
-    public AssignmentResult assignInterviewV2() {
-
-        AssignmentContext context = buildAssignmentContext();
-
-        // 배정 엔진 선택 및 실행
-        ScoringModel scoringModel = new ScoringModelV2(ScoringWeight.defaultWeight());
-
-        AssignmentEngine assignmentEngine = new AssignmentEngineV2(scoringModel);
-        assignmentEngine.assign(context);
-
-        return AssignmentResult.from(context);
-    }
-
-    public AssignmentResult assignInterviewV21() {
-
+    public WeightTuningRequest buildV3Request(ScoringWeight currentWeight, Objective objective, SearchSpace searchSpace) {
         AssignmentContext context = buildAssignmentContext();
 
         assignmentEngine.assign(context);
 
-        return AssignmentResult.from(context);
+        int assignedApps = context.getAssignedApplications().size();
+        int unassignedApps = context.getUnAssignedApplications().size();
+
+        long nullSlots = context.getInterviewTimes().stream()
+                .filter(t -> context.getAssignedApplications(t) == null)
+                .count();
+
+        long filledSlots = context.getInterviewTimes().stream()
+                .filter(t -> {
+                    Set<Application> s = context.getAssignedApplications(t);
+                    return s != null && !s.isEmpty();
+                })
+                .count();
+
+        System.out.println("assignedApps=" + assignedApps);
+        System.out.println("unassignedApps=" + unassignedApps);
+        System.out.println("nullSlots=" + nullSlots);
+        System.out.println("filledSlots=" + filledSlots);
+
+        return requestAssembler.assemble(context, currentWeight, objective, searchSpace);
     }
+
 
     private AssignmentContext buildAssignmentContext(){
         // 배정 대상 지원자 조회
@@ -84,6 +77,4 @@ public class InterviewAssignmentService {
         // AssignmentContext 생성
         return new AssignmentContext(applications, interviewTimes, availabilityMap);
     }
-
-
 }

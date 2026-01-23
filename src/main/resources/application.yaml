@@ -32,3 +32,7 @@ solapi:
   api-key: ${SOLAPI_API_KEY}
   api-secret: ${SOLAPI_API_SECRET}
   sender: ${SOLAPI_SENDER_NUMBER}
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}

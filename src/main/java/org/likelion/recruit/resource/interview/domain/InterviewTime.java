@@ -40,6 +40,6 @@ public class InterviewTime extends BaseTimeEntity {
 
     public boolean isImmediatelyBefore(InterviewTime other) {
         return this.getDate().equals(other.getDate())
-                && this.getEndTime().plusMinutes(10).equals(other.getStartTime());
+                && this.getEndTime().plusMinutes(5).equals(other.getStartTime());
     }
 }

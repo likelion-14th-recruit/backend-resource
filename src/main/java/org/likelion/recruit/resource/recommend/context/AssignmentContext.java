@@ -100,6 +100,9 @@ public class AssignmentContext {
         return interviewTimes;
     }
 
+    public Set<Application> getAssignedApplications() {
+        return assignedApplications;
+    }
 
     /**
      *  상태 변경 메서드
