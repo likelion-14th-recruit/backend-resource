@@ -8,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
-import java.util.Set;
 
 public interface ApplicationRepository extends JpaRepository<Application,Long>, ApplicationRepositoryCustom {
 
@@ -23,8 +22,5 @@ public interface ApplicationRepository extends JpaRepository<Application,Long>, 
 
     @Query("select ap.id from Application ap where ap.publicId = :publicId")
     Optional<Long> findIdByPublicId(@Param("publicId") String publicId);
-
-
-
 
 }

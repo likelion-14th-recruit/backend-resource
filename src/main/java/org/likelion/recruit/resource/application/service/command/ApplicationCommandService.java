@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import static org.likelion.recruit.resource.common.domain.Part.*;
 
 @Service
@@ -85,6 +86,7 @@ public class ApplicationCommandService {
         validateNotAlreadySubmitted(application);
         validateInterviewTimeSelection(application);
         validateApplicationCompleteness(application);
+
         application.submit();
     }
 
@@ -102,10 +104,13 @@ public class ApplicationCommandService {
 
     private void validateApplicationCompleteness(Application application) {
         Question.Type specificType = mapToQuestionType(application.getPart());
-        long totalRequired = questionRepository.countByType(specificType)
-                + questionRepository.countByType(Question.Type.COMMON);
-        long totalAnswers = answerRepository.countByApplication(application);
-        if (totalRequired != totalAnswers) {
+        List<Question.Type> requiredTypes = List.of(Question.Type.COMMON, specificType);
+
+        long totalRequired = questionRepository.countByTypeIn(requiredTypes);
+
+        long validAnswers = answerRepository.countByApplicationAndQuestionTypeIn(application, requiredTypes);
+
+        if (totalRequired != validAnswers) {
             throw new BusinessException(ErrorCode.APPLICATION_INCOMPLETE);
         }
     }

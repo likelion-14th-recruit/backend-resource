@@ -13,7 +13,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class AnswersResult {
-    private String applicationPublicId;
     private List<AnswerInfo> answers;
 
     @Getter
@@ -30,9 +29,8 @@ public class AnswersResult {
         }
     }
 
-    public static AnswersResult from(Application application, List<Answer> answers) {
+    public static AnswersResult from(List<Answer> answers) {
         return AnswersResult.builder()
-                .applicationPublicId(application.getPublicId())
                 .answers(answers.stream()
                         .map(AnswerInfo::from)
                         .toList())
