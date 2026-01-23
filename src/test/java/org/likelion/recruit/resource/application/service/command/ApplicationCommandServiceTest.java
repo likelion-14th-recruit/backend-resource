@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.likelion.recruit.resource.application.domain.Application;
-import org.likelion.recruit.resource.application.domain.Question;
 import org.likelion.recruit.resource.application.repository.AnswerRepository;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
 import org.likelion.recruit.resource.application.repository.QuestionRepository;
@@ -22,7 +21,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -59,17 +58,16 @@ class ApplicationCommandServiceTest {
         // given
         given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(application));
         given(interviewAvailableRepository.existsByApplication(application)).willReturn(true);
-
-        // 전공 질문 3개 + 공통 질문 2개 = 총 5개라고 가정
-        given(questionRepository.countByType(Question.Type.DEVELOPMENT)).willReturn(3L);
-        given(questionRepository.countByType(Question.Type.COMMON)).willReturn(2L);
-        given(answerRepository.countByApplication(application)).willReturn(5L);
+        given(questionRepository.countByTypeIn(anyList())).willReturn(5L);
+        given(answerRepository.countByApplicationAndQuestionTypeIn(eq(application), anyList()))
+                .willReturn(5L);
 
         // when
         applicationCommandService.submitApplication(publicId);
 
         // then
         assertThat(application.isSubmitted()).isTrue();
+        assertThat(application.getSubmittedAt()).isNotNull();
     }
 
     @Test
@@ -91,9 +89,9 @@ class ApplicationCommandServiceTest {
         // given
         given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(application));
         given(interviewAvailableRepository.existsByApplication(application)).willReturn(true);
-
-        given(questionRepository.countByType(any())).willReturn(3L); // 질문은 총 3개인데
-        given(answerRepository.countByApplication(application)).willReturn(2L); // 답변은 2개뿐이라면?
+        given(questionRepository.countByTypeIn(anyList())).willReturn(5L);
+        given(answerRepository.countByApplicationAndQuestionTypeIn(eq(application), anyList()))
+                .willReturn(4L);
 
         // when & then
         assertThatThrownBy(() -> applicationCommandService.submitApplication(publicId))
