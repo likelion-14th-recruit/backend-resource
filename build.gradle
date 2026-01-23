@@ -51,6 +51,9 @@ dependencies {
     // OpenAI
     implementation 'com.openai:openai-java:4.16.1'
 
+    // Excel
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
+
     // message API
     implementation 'com.solapi:sdk:1.0.3'
 }

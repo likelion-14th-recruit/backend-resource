@@ -7,12 +7,15 @@ import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepository;
 import org.likelion.recruit.resource.interview.repository.InterviewTimeRepository;
 import org.likelion.recruit.resource.recommend.context.AssignmentContext;
+import org.likelion.recruit.resource.recommend.dto.response.InterviewAssignmentResponse;
+import org.likelion.recruit.resource.recommend.dto.result.AssignmentResult;
 import org.likelion.recruit.resource.recommend.version.engine.AssignmentEngine;
 import org.likelion.recruit.resource.recommend.version.engine.ScoringWeight;
 import org.likelion.recruit.resource.recommend.version.engine.v3.assembler.WeightTuningRequestAssembler;
 import org.likelion.recruit.resource.recommend.version.engine.v3.dto.request.WeightTuningRequest;
 import org.likelion.recruit.resource.recommend.version.engine.v3.dto.requestCommon.Objective;
 import org.likelion.recruit.resource.recommend.version.engine.v3.dto.requestCommon.SearchSpace;
+import org.likelion.recruit.resource.recommend.version.engine.v3.dto.response.TuningAssignmentContextResponse;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,12 +54,33 @@ public class V3InterviewAssignmentService {
                 })
                 .count();
 
-        System.out.println("assignedApps=" + assignedApps);
-        System.out.println("unassignedApps=" + unassignedApps);
-        System.out.println("nullSlots=" + nullSlots);
-        System.out.println("filledSlots=" + filledSlots);
-
         return requestAssembler.assemble(context, currentWeight, objective, searchSpace);
+    }
+
+    public TuningAssignmentContextResponse buildV3AssigmentContext(ScoringWeight currentWeight, Objective objective, SearchSpace searchSpace) {
+        AssignmentContext context = buildAssignmentContext();
+
+        assignmentEngine.assign(context);
+
+        int assignedApps = context.getAssignedApplications().size();
+        int unassignedApps = context.getUnAssignedApplications().size();
+
+        long nullSlots = context.getInterviewTimes().stream()
+                .filter(t -> context.getAssignedApplications(t) == null)
+                .count();
+
+        long filledSlots = context.getInterviewTimes().stream()
+                .filter(t -> {
+                    Set<Application> s = context.getAssignedApplications(t);
+                    return s != null && !s.isEmpty();
+                })
+                .count();
+
+        WeightTuningRequest assemble = requestAssembler.assemble(context, currentWeight, objective, searchSpace);
+
+        InterviewAssignmentResponse response = InterviewAssignmentResponse.from(AssignmentResult.from(context));
+
+        return TuningAssignmentContextResponse.of(assemble, response);
     }
 
 
