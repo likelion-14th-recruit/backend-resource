@@ -24,12 +24,12 @@ public class ScoringWeight {
 
     public static ScoringWeight defaultWeight() {
         return ScoringWeight.builder()
-                .samePartReward(10.0)  // 같은 파트
-                .diffPartReward(2.0)   // 다른 파트
-                .singlePenalty(-3.0)   // 혼자 면접 페널티
+                .samePartReward(11.0)  // 같은 파트
+                .diffPartReward(3.0)   // 다른 파트
+                .singlePenalty(-8.0)   // 혼자 면접 페널티
                 .unavailablePenalty(-1000.0)    // 가능 시간대 면접 아닌 경우
-                .timeCompactReward(5.0)         // 면접 시간끼리 붙어있는 정도
-                .designBackendPenalty(-7.0)     // 디자인-백엔드 페널티
+                .timeCompactReward(7.0)         // 면접 시간끼리 붙어있는 정도
+                .designBackendPenalty(-4.0)     // 디자인-백엔드 페널티
                 .build();
     }
 }

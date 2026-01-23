@@ -31,13 +31,6 @@ public class V3InterviewAssignmentService {
     private final InterviewTimeRepository interviewTimeRepository;
     private final InterviewAvailableRepository interviewAvailableRepository;
 
-//    public WeightTuningRequest buildV3Request(ScoringWeight currentWeight, Objective objective, SearchSpace searchSpace) {
-//        AssignmentContext context = buildAssignmentContext();
-//
-//        assignmentEngine.assign(context);
-//
-//        return requestAssembler.assemble(context, currentWeight, objective, searchSpace);
-//    }
 
     public WeightTuningRequest buildV3Request(ScoringWeight currentWeight, Objective objective, SearchSpace searchSpace) {
         AssignmentContext context = buildAssignmentContext();
