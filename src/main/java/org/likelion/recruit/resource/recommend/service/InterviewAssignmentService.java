@@ -6,13 +6,13 @@ import org.likelion.recruit.resource.application.repository.ApplicationRepositor
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepository;
 import org.likelion.recruit.resource.interview.repository.InterviewTimeRepository;
-import org.likelion.recruit.resource.recommend.common.context.AssignmentContext;
-import org.likelion.recruit.resource.recommend.common.engine.AssignmentEngine;
-import org.likelion.recruit.resource.recommend.common.engine.ScoringModel;
-import org.likelion.recruit.resource.recommend.common.engine.ScoringWeight;
-import org.likelion.recruit.resource.recommend.common.engine.v1.AssignmentEngineV1;
-import org.likelion.recruit.resource.recommend.common.engine.v2.AssignmentEngineV2;
-import org.likelion.recruit.resource.recommend.common.engine.v2.ScoringModelV2;
+import org.likelion.recruit.resource.recommend.context.AssignmentContext;
+import org.likelion.recruit.resource.recommend.version.engine.AssignmentEngine;
+import org.likelion.recruit.resource.recommend.version.engine.ScoringModel;
+import org.likelion.recruit.resource.recommend.version.engine.ScoringWeight;
+import org.likelion.recruit.resource.recommend.version.engine.v1.AssignmentEngineV1;
+import org.likelion.recruit.resource.recommend.version.engine.v2.AssignmentEngineV2;
+import org.likelion.recruit.resource.recommend.version.engine.v2.ScoringModelV2;
 import org.likelion.recruit.resource.recommend.dto.result.AssignmentResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,6 +25,8 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Transactional
 public class InterviewAssignmentService {
+
+    private static final int V3_TRY_COUNT = 500;
 
     private final ApplicationRepository applicationRepository;
     private final InterviewTimeRepository interviewTimeRepository;
