@@ -21,6 +21,8 @@ public interface InterviewAvailableRepository extends JpaRepository<InterviewAva
 
     boolean existsByApplication(Application application);
 
-    @EntityGraph(attributePaths = {"interviewTime"})
-    List<InterviewAvailable> findAllByApplication(Application application);
+    @Query("select ia from InterviewAvailable ia " +
+            "join fetch ia.interviewTime " +
+            "where ia.application = :application")
+    List<InterviewAvailable> findAllByApplication(@Param("application") Application application);
 }
