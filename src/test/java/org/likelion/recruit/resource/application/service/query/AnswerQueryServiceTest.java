@@ -39,24 +39,14 @@ class AnswerQueryServiceTest {
         // Given
         String targetPublicId = "app-7c4ec3c9-c31f-4e31-bd48-a4377ea63850";
 
-        Question mockQuestion = Question.create(1, "지원 동기", Question.Type.COMMON);
-        ReflectionTestUtils.setField(mockQuestion, "id", 1L);
-
-        Application mockApplication = Application.create(
-                "성민", "20200129", "01041019429", "hash123",
-                "국어국문학과", "융합소프트웨어전공", 7,
-                Application.AcademicStatus.ENROLLED, Part.BACKEND
-        );
-
-        ReflectionTestUtils.setField(mockApplication, "publicId", targetPublicId);
-
+        Application mockApplication = ApplicationFixture.createApplication(targetPublicId);
+        Question mockQuestion = ApplicationFixture.createQuestion(1L);
         Answer mockAnswer = Answer.create("열심히 하겠습니다!", mockQuestion, mockApplication);
-        List<Answer> mockAnswers = List.of(mockAnswer);
 
         given(applicationRepository.findByPublicId(targetPublicId))
                 .willReturn(Optional.of(mockApplication));
         given(answerRepository.findAllByApplicationWithQuestion(mockApplication))
-                .willReturn(mockAnswers);
+                .willReturn(List.of(mockAnswer));
 
         // When
         AnswersResult result = answerQueryService.getAnswers(targetPublicId);
@@ -64,9 +54,10 @@ class AnswerQueryServiceTest {
         // Then
         assertThat(result).isNotNull();
         assertThat(result.getAnswers()).hasSize(1);
-        assertThat(result.getAnswers().get(0).getQuestionId()).isEqualTo(1L); // ID 검증 추가 가능
+        assertThat(result.getAnswers().get(0).getQuestionId()).isEqualTo(1L);
         assertThat(result.getAnswers().get(0).getContent()).isEqualTo("열심히 하겠습니다!");
 
+        // verify
         verify(applicationRepository).findByPublicId(targetPublicId);
         verify(answerRepository).findAllByApplicationWithQuestion(mockApplication);
     }
