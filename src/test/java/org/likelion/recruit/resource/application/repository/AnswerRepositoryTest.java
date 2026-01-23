@@ -18,7 +18,11 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-@DataJpaTest
+@DataJpaTest(properties = {
+        "spring.datasource.url=jdbc:postgresql://localhost:5432/likelion14th",
+        "spring.datasource.username=postgres",
+        "spring.datasource.password=20200129",
+})
 @Import(QuerydslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class AnswerRepositoryTest {

@@ -19,8 +19,11 @@ import java.time.LocalTime;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-@DataJpaTest
+@DataJpaTest(properties = {
+        "spring.datasource.url=jdbc:postgresql://localhost:5432/likelion14th",
+        "spring.datasource.username=postgres",
+        "spring.datasource.password=20200129",
+})
 @Import(QuerydslConfig.class)
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 class InterviewAvailableRepositoryTest {
@@ -51,7 +54,6 @@ class InterviewAvailableRepositoryTest {
 
         // then
         assertThat(results).hasSize(1);
-        // Fetch Join 확인
         assertThat(results.get(0).getInterviewTime().getStartTime()).isEqualTo(LocalTime.of(10, 0));
     }
 }
