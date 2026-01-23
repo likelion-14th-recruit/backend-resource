@@ -8,19 +8,22 @@ import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ApplicationFixture {
 
     public static Application createApplication(String publicId) {
         Application app = Application.create(
-                "성민", "20200129", "01041019429", "hash123",
-                "국어국문학과", "융합소프트웨어전공", 7,
+                "김도영", "20220129", "01094294101", "hash123",
+                "국어국문학과", "융합소프트웨어전공", 5,
                 Application.AcademicStatus.ENROLLED, Part.BACKEND
         );
         ReflectionTestUtils.setField(app, "publicId", publicId);
         return app;
+    }
+
+    public static Question createQuestion() {
+        return Question.create(1, "지원 동기", Question.Type.COMMON);
     }
 
     public static Question createQuestion(Long id) {
