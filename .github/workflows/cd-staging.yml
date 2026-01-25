@@ -17,6 +17,7 @@ jobs:
           username: ${{ secrets.STAGING_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
           script: |
+              cd /home/ec2-user/deploy
               docker stop ${{ secrets.STAGING_CONTAINER_NAME }} || true
               docker rm ${{ secrets.STAGING_CONTAINER_NAME }} || true
           
