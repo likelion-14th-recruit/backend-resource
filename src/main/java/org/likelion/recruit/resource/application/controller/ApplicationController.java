@@ -32,6 +32,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -89,6 +90,18 @@ public class ApplicationController {
         return ResponseEntity.ok(ApiResponse.success(
                 "지원서 답변을 조회하였습니다.",
                 AnswersResponse.from(result)));
+    }
+
+    /**
+     * 부하테스트용 지원서 답변 조회하기 - 최적화
+     */
+    @GetMapping("/{application-public-id}/answers/refactor")
+    public ResponseEntity<ApiResponse<AnswersRefactorResponse>> getAnswersRefactor(
+            @PathVariable("application-public-id") String publicId) {
+        List<AnswersRefactorResult> results = answerQueryService.getAnswersRefactor(publicId);
+        return ResponseEntity.ok(ApiResponse.success(
+                "지원서 답변을 조회하였습니다.",
+                AnswersRefactorResponse.from(results)));
     }
 
     /**
