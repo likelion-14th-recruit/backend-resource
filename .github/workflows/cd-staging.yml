@@ -1,0 +1,26 @@
+name: cd-staging.yml
+on:
+  push:
+    branches: [ "staging" ]
+
+jobs:
+  cd-staging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Staging 서버 로그인 및 이미지 Pull 및 배포
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.STAGING_HOST }}
+          username: ${{ secrets.STAGING_USER }}
+          key: ${{ secrets.STAGING_SSH_KEY }}
+          script: |
+              docker stop ${{ secrets.STAGING_CONTAINER_NAME }} || true
+              docker rm ${{ secrets.STAGING_CONTAINER_NAME }} || true
+          
+              docker pull ${{ secrets.STAGING_DOCKERHUB_USERNAME }}/likelion-recruit-staging:latest
+          
+              docker-compose up -d
+
