@@ -1,0 +1,47 @@
+# workflow name
+name: CI Pipeline
+
+# staging 브랜치에 PR 시 작동
+on:
+  pull_request:
+    branches: ["staging"]
+
+jobs:
+  ci-staging:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: GitHub 저장소 코드를 GitHub Actions 서버로 가져오기
+        uses: actions/checkout@v3
+
+      - name: Gradle + JDK 21 + 캐시 자동 설정
+        uses:  gradle/actions/setup-gradle@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - name: Gradle 실행 권한 부여
+        run: chmod +x gradlew
+
+      - name: 빌드 및 JUnit 테스트
+        run: ./gradlew clean build --no-daemon --build-cache
+
+      - name: Docker 빌드 환경설정
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker 로그인
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.STAGING_DOCKERHUB_USERNAME }}
+          password: ${{ secrets.STAGING_DOCKERHUB_PASSWORD }}
+
+      - name: Docker image 빌드 및 푸쉬
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.STAGING_DOCKERHUB_USERNAME }}/likelion-recruit-staging:${{ github.sha }}
+            ${{ secrets.STAGING_DOCKERHUB_USERNAME }}/likelion-recruit-staging:latest  
+
+
