@@ -1,6 +1,7 @@
 package org.likelion.recruit.resource.common.exception;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
 import org.springframework.http.HttpStatus;
@@ -16,11 +17,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<?>> handleBusinessException(
-            BusinessException e) {
+            BusinessException e,
+            HttpServletRequest request) {
 
         ErrorCode errorCode = e.getErrorCode();
 
-        log.warn("[BusinessException] code={}, message={}",
+        log.warn("[BusinessException] uri = {}, code={}, message={}",
+                request.getRequestURI(),
                 errorCode.name(),
                 e.getMessage());
 
@@ -37,14 +40,15 @@ public class GlobalExceptionHandler {
     // Validation 에러 처리
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiResponse<?>> handleValidationException(
-            MethodArgumentNotValidException e) {
+            MethodArgumentNotValidException e,
+            HttpServletRequest request) {
 
         String message = e.getBindingResult()
                 .getFieldErrors()
                 .get(0)
                 .getDefaultMessage();
 
-        log.warn("[ValidationException] message={}", message);
+        log.warn("[ValidationException] uri = {}, message={}", request.getRequestURI(),message);
 
         ApiResponse<?> response = ApiResponse.error(
                 "VALIDATION_ERROR",
@@ -58,9 +62,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ApiResponse<?>> handleHttpMessageNotReadableException(
-            HttpMessageNotReadableException e) {
+            HttpMessageNotReadableException e,
+            HttpServletRequest request) {
 
-        log.warn("[HttpMessageNotReadableException] invalid request format", e);
+        log.warn("[HttpMessageNotReadableException] uri = {}, invalid request format",request.getRequestURI(), e);
 
         ApiResponse<?> response = ApiResponse.error(
                 "INVALID_REQUEST",
@@ -74,9 +79,9 @@ public class GlobalExceptionHandler {
 
     // 예상치 못한 에러 처리
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse<?>> handleException(Exception e) {
+    public ResponseEntity<ApiResponse<?>> handleException(Exception e,  HttpServletRequest request) {
 
-        log.error("[Unhandled Exception] ", e);
+        log.error("[Unhandled Exception] uri = {}",request.getRequestURI(), e);
 
         ApiResponse<?> response = ApiResponse.error(
                 "INTERNAL_SERVER_ERROR",
