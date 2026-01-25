@@ -1,7 +1,7 @@
 name: cd-staging.yml
 on:
   push:
-    branches: [ "dev" ]
+    branches: [ "staging" ]
 
 jobs:
   cd-staging:
