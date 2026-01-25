@@ -36,10 +36,10 @@ logging:
     org.hibernate.type.descriptor.sql: OFF
 
 solapi:
-  api-key: dummy
-  api-secret: dummy
-  sender: 0000000000
+  api-key: ${SOLAPI_API_KEY}
+  api-secret: ${SOLAPI_API_SECRET}
+  sender: ${SOLAPI_SENDER_NUMBER}
 
 openai:
   api:
-    key: dummy
+    key: ${OPENAI_API_KEY}
