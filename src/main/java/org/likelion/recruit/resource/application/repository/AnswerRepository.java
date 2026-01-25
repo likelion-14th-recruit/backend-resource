@@ -3,6 +3,7 @@ package org.likelion.recruit.resource.application.repository;
 import org.likelion.recruit.resource.application.domain.Answer;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.domain.Question;
+import org.likelion.recruit.resource.application.repository.custom.AnswerRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Optional;
 import java.util.List;
 
-public interface AnswerRepository extends JpaRepository<Answer, Long> {
+public interface AnswerRepository extends JpaRepository<Answer, Long>, AnswerRepositoryCustom {
     Optional<Answer> findByApplicationAndQuestion(Application application, Question question);
 
     @Query("select a from Answer a " +
