@@ -28,6 +28,18 @@ public class CacheConfig {
     }
 
     @Bean
+    public CaffeineCache projectCache() {
+        return new CaffeineCache(
+                "projects",
+                Caffeine.newBuilder()
+                        .maximumSize(100)
+                        .expireAfterWrite(7, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
+    @Bean
     public CaffeineCache hourlyCache() {
         return new CaffeineCache(
                 "otherData",
