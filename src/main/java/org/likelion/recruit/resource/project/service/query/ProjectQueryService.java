@@ -18,7 +18,7 @@ public class ProjectQueryService {
     private final ProjectRepository projectRepository;
 
     @Cacheable(
-            value = "projects",
+            value = "projectsSearch",
             key = "#command.cohort",
             condition = "#pageable.pageNumber == 0 && #pageable.pageSize == 15"
     )

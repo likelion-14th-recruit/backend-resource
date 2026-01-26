@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig {
 
     @Bean
-    public CaffeineCache executiveMembersCache() {
+    public CaffeineCache executiveMembersSearchCache() {
         return new CaffeineCache(
-                "executiveMembers",
+                "executiveMembersSearch",
                 Caffeine.newBuilder()
                         .maximumSize(4)
                         .expireAfterWrite(7, TimeUnit.DAYS)
@@ -28,11 +28,11 @@ public class CacheConfig {
     }
 
     @Bean
-    public CaffeineCache projectCache() {
+    public CaffeineCache projectsSearchCache() {
         return new CaffeineCache(
-                "projects",
+                "projectsSearch",
                 Caffeine.newBuilder()
-                        .maximumSize(100)
+                        .maximumSize(15)
                         .expireAfterWrite(7, TimeUnit.DAYS)
                         .recordStats()
                         .build()
@@ -40,16 +40,29 @@ public class CacheConfig {
     }
 
     @Bean
-    public CaffeineCache hourlyCache() {
+    public CaffeineCache applicationsSearchCache() {
         return new CaffeineCache(
-                "otherData",
+                "applicationsSearch",
                 Caffeine.newBuilder()
-                        .maximumSize(500)
+                        .maximumSize(1)
                         .expireAfterWrite(1, TimeUnit.HOURS)
                         .recordStats()
                         .build()
         );
     }
+
+    @Bean
+    public CaffeineCache interviewTimeFindAllCache() {
+        return new CaffeineCache(
+                "interviewTimeFindAll",
+                Caffeine.newBuilder()
+                        .maximumSize(4)
+                        .expireAfterWrite(7, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
 
     @Bean
     public CacheManager cacheManager(List<CaffeineCache> caches) {
