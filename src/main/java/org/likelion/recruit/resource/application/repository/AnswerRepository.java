@@ -19,8 +19,5 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>, AnswerRep
             "where a.application = :application")
     List<Answer> findAllByApplicationWithQuestion(@Param("application") Application application);
 
-    @Query("select count(a) from Answer a where a.application = :application " +
-            "and a.question.type in :types")
-    long countByApplicationAndQuestionTypeIn(@Param("application") Application application,
-                                             @Param("types") List<Question.Type> types);
+
 }

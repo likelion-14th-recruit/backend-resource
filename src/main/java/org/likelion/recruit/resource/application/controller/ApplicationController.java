@@ -162,7 +162,7 @@ public class ApplicationController {
     }
 
     /**
-     * 지원서 최종 제출 API
+     * 지원서 최종 제출하기
      */
     @PostMapping("/{application-public-id}/submit")
     public ResponseEntity<ApiResponse<Void>> submitApplication(@PathVariable("application-public-id") String publicId) {
