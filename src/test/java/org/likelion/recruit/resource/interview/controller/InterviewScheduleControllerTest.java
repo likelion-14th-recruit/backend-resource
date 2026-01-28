@@ -4,6 +4,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.likelion.recruit.resource.interview.dto.command.InterviewScheduleCommand;
 import org.likelion.recruit.resource.interview.service.command.InterviewScheduleCommandService;
+import org.likelion.recruit.resource.interview.service.query.InterviewScheduleQueryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -29,6 +30,9 @@ class InterviewScheduleControllerTest {
 
     @MockitoBean
     private InterviewScheduleCommandService interviewScheduleCommandService;
+
+    @MockitoBean
+    private InterviewScheduleQueryService interviewScheduleQueryService;
 
     @Test
     @DisplayName("날짜, 시작 시간, 종료 시간 세트가 모두 갖춰지면 성공한다.")
