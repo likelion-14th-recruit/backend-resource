@@ -16,9 +16,9 @@ import java.util.concurrent.TimeUnit;
 public class CacheConfig {
 
     @Bean
-    public CaffeineCache executiveMembersCache() {
+    public CaffeineCache executiveMembersSearchCache() {
         return new CaffeineCache(
-                "executiveMembers",
+                "executiveMembersSearch",
                 Caffeine.newBuilder()
                         .maximumSize(4)
                         .expireAfterWrite(7, TimeUnit.DAYS)
@@ -28,16 +28,65 @@ public class CacheConfig {
     }
 
     @Bean
-    public CaffeineCache hourlyCache() {
+    public CaffeineCache projectsSearchCache() {
         return new CaffeineCache(
-                "otherData",
+                "projectsSearch",
                 Caffeine.newBuilder()
-                        .maximumSize(500)
+                        .maximumSize(15)
+                        .expireAfterWrite(7, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
+    @Bean
+    public CaffeineCache applicationsSearchCache() {
+        return new CaffeineCache(
+                "applicationsSearch",
+                Caffeine.newBuilder()
+                        .maximumSize(1)
                         .expireAfterWrite(1, TimeUnit.HOURS)
                         .recordStats()
                         .build()
         );
     }
+
+    @Bean
+    public CaffeineCache interviewTimeFindAllCache() {
+        return new CaffeineCache(
+                "interviewTimeFindAll",
+                Caffeine.newBuilder()
+                        .maximumSize(4)
+                        .expireAfterWrite(7, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
+    @Bean
+    public CaffeineCache getQuestionCache() {
+        return new CaffeineCache(
+                "questions",
+                Caffeine.newBuilder()
+                        .maximumSize(3)
+                        .expireAfterWrite(7, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
+    @Bean
+    public CaffeineCache IdByPublicIdCache() {
+        return new CaffeineCache(
+                "idByPublicId",
+                Caffeine.newBuilder()
+                        .maximumSize(100)
+                        .expireAfterWrite(1, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
 
     @Bean
     public CacheManager cacheManager(List<CaffeineCache> caches) {

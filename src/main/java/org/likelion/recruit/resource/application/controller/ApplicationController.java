@@ -12,11 +12,13 @@ import org.likelion.recruit.resource.application.dto.request.ApplicationSearchRe
 import org.likelion.recruit.resource.application.dto.request.PassStatusUpdateRequest;
 import org.likelion.recruit.resource.application.dto.response.*;
 import org.likelion.recruit.resource.application.dto.result.*;
+import org.likelion.recruit.resource.application.resolver.ApplicationResolver;
 import org.likelion.recruit.resource.application.service.command.AnswerCommandService;
 import org.likelion.recruit.resource.application.service.command.ApplicationCommandService;
 import org.likelion.recruit.resource.application.service.query.AnswerQueryService;
 import org.likelion.recruit.resource.application.service.query.ApplicationQueryService;
 import org.likelion.recruit.resource.application.service.query.QuestionQueryService;
+import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
 import org.likelion.recruit.resource.common.dto.response.PageResponse;
 import org.likelion.recruit.resource.interview.dto.request.InterviewAvailableRequest;
@@ -47,6 +49,7 @@ public class ApplicationController {
     private final AnswerQueryService answerQueryService;
     private final InterviewAvailableCommandService interviewAvailableCommandService;
     private final InterviewAvailableQueryService interviewAvailableQueryService;
+    private final ApplicationResolver applicationResolver;
     /**
      * 지원서 인적사항 생성하기
      */
@@ -64,7 +67,8 @@ public class ApplicationController {
      */
     @GetMapping("/{application-public-id}/questions")
     public ResponseEntity<ApiResponse<QuestionsResponse>> getQuestions(@PathVariable("application-public-id") String publicId){
-        QuestionsResult results = questionQueryService.getQuestions(publicId);
+        Part part = applicationResolver.resolvePart(publicId);
+        QuestionsResult results = questionQueryService.getQuestions(part);
 
         return ResponseEntity.ok(ApiResponse.success("지원서 질문을 조회하였습니다.", QuestionsResponse.from(results)));
     }
@@ -75,7 +79,8 @@ public class ApplicationController {
     @PostMapping("/{application-public-id}/answers")
     public ResponseEntity<ApiResponse<AnswersRequest>> createAnswers(@PathVariable("application-public-id") String publicId,
                                                                      @RequestBody AnswersRequest req){
-        answerCommandService.createAnswers(publicId, req.getAnswers());
+        Long id = applicationResolver.resolveId(publicId);
+        answerCommandService.createAnswers(id, req.getAnswers());
 
         return ResponseEntity.ok(ApiResponse.success("지원서 답변을 저장하였습니다."));
     }
@@ -98,7 +103,8 @@ public class ApplicationController {
     @GetMapping("/{application-public-id}/answers/refactor")
     public ResponseEntity<ApiResponse<AnswersRefactorResponse>> getAnswersRefactor(
             @PathVariable("application-public-id") String publicId) {
-        List<AnswersRefactorResult> results = answerQueryService.getAnswersRefactor(publicId);
+        Long id = applicationResolver.resolveId(publicId);
+        List<AnswersRefactorResult> results = answerQueryService.getAnswersRefactor(id);
         return ResponseEntity.ok(ApiResponse.success(
                 "지원서 답변을 조회하였습니다.",
                 AnswersRefactorResponse.from(results)));
@@ -110,7 +116,8 @@ public class ApplicationController {
     @PostMapping("/{application-public-id}/interview-available")
     public ResponseEntity<ApiResponse<Void>> createInterviewAvailable(@PathVariable("application-public-id") String publicId,
                                                                       @RequestBody InterviewAvailableRequest request){
-        interviewAvailableCommandService.createInterviewAvailable(publicId, request.getInterviewTimeIds());
+        Long id = applicationResolver.resolveId(publicId);
+        interviewAvailableCommandService.createInterviewAvailable(id, request.getInterviewTimeIds());
 
         return ResponseEntity.ok(ApiResponse.success("면접 가능 시간을 저장하였습니다."));
     }
@@ -162,7 +169,7 @@ public class ApplicationController {
     }
 
     /**
-     * 지원서 최종 제출 API
+     * 지원서 최종 제출하기
      */
     @PostMapping("/{application-public-id}/submit")
     public ResponseEntity<ApiResponse<Void>> submitApplication(@PathVariable("application-public-id") String publicId) {

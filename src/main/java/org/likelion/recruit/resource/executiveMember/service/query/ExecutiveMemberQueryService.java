@@ -18,7 +18,7 @@ public class ExecutiveMemberQueryService {
     private final ExecutiveMemberRepository executiveMemberRepository;
 
     @Cacheable(
-            value = "executiveMembers",
+            value = "executiveMembersSearch",
             key = "#command.part != null ? #command.part.name() : 'ALL'"
     )
     public List<MemberSearchResult> searchMembers(MemberSearchCommand command){

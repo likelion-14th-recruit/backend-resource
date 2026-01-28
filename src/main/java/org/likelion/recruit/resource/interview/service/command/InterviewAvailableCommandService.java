@@ -28,10 +28,7 @@ public class InterviewAvailableCommandService {
      *  연관관계 다 끊어버리고 id로만 저장해버리자. (갠프)
      *  그럼 application 객체, IntervieTime 객체 불러올 필요가 없음
      * */
-    public void createInterviewAvailable(String publicId, List<Long> interviewTimeIds) {
-
-        Long applicationId = applicationRepository.findIdByPublicId(publicId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+    public void createInterviewAvailable(Long applicationId, List<Long> interviewTimeIds) {
 
         interviewAvailableRepository.deleteByApplicationId(applicationId);
 

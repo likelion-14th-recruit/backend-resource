@@ -9,6 +9,7 @@ import org.likelion.recruit.resource.application.repository.QuestionRepository;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,11 @@ public class QuestionQueryService {
     private final ApplicationRepository applicationRepository;
     private final QuestionRepository questionRepository;
 
-    public QuestionsResult getQuestions(String publicId) {
-        Part part = applicationRepository.findTypeByPublicId(publicId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
-
+    @Cacheable(
+            value = "questions",
+            key = "#part"
+    )
+    public QuestionsResult getQuestions(Part part) {
         Type type = convertToType(part);
         List<QuestionCommonDto> questions = questionRepository.getQuestions(type);
 

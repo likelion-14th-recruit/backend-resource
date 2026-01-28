@@ -21,7 +21,7 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<AnswersRefactorResult> getAnswers(String publicId){
+    public List<AnswersRefactorResult> getAnswers(Long id){
         return queryFactory.select(Projections.constructor(AnswersRefactorResult.class,
                 question.id,
                 question.questionNumber,
@@ -29,8 +29,7 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
                 ))
                 .from(answer)
                 .join(answer.question, question)
-                .join(answer.application, application)
-                .where(application.publicId.eq(publicId))
+                .where(answer.application.id.eq(id))
                 .fetch();
     }
 }

@@ -33,7 +33,7 @@ public class AnswerQueryService {
         return AnswersResult.from(answers);
     }
 
-    public List<AnswersRefactorResult> getAnswersRefactor(String publicId) {
-        return answerRepository.getAnswers(publicId);
+    public List<AnswersRefactorResult> getAnswersRefactor(Long id) {
+        return answerRepository.getAnswers(id);
     }
 }
