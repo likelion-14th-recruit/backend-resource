@@ -10,11 +10,15 @@ import org.likelion.recruit.resource.application.repository.ApplicationRepositor
 import org.likelion.recruit.resource.application.repository.QuestionRepository;
 import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
+import org.likelion.recruit.resource.common.resolver.EntityReferenceResolver;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,28 +28,52 @@ public class AnswerCommandService {
     private final ApplicationRepository applicationRepository;
     private final QuestionRepository questionRepository;
     private final AnswerRepository answerRepository;
+    private final EntityReferenceResolver referenceResolver;
 
     /**
      * 최적화 리팩토링 필요
      */
-    public void createAnswers(String publicId, List<AnswerCommand> answers) {
-        Application application = applicationRepository.findByPublicId(publicId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+    public void createAnswers(Long applicationId, List<AnswerCommand> answers) {
 
-        for (AnswerCommand answerCommand : answers) {
-            Question question = questionRepository.findById(answerCommand.getQuestionId())
-                            .orElseThrow(() -> new BusinessException(ErrorCode.QUESTION_NOT_EXISTS));
+        Application applicationRef = referenceResolver.application(applicationId);
 
-            Optional<Answer> existingAnswer =
-                    answerRepository.findByApplicationAndQuestion(application, question);
-            // 답변이 이미 존재
-            if(existingAnswer.isPresent()) {
-                existingAnswer.get().updateContent(answerCommand.getContent());
-                continue;
-            }
-            Answer newAnswer = Answer.create(answerCommand.getContent(), question, application);
-            answerRepository.save(newAnswer);
+        List<Long> questionIds = answers.stream()
+                .map(AnswerCommand::getQuestionId)
+                .distinct()
+                .toList();
+
+        List<Question> questions = questionRepository.findAllById(questionIds);
+
+        // questions 개수와 questionIds 개수와 다르면 에외
+        if (questions.size() != questionIds.size()) {
+            throw new BusinessException(ErrorCode.QUESTION_NOT_EXISTS);
         }
 
+        // map<questionId, question> 생성
+        Map<Long, Question> questionMap = questions.stream()
+                .collect(Collectors.toMap(Question::getId, Function.identity()));
+
+        // 존재하는 answer 확인
+        List<Answer> existingAnswers =
+                answerRepository.findAllByApplicationId(applicationId);
+
+        // map<QuestionId, answer> 생성, 이미 question을 불러온 상태라 영속성 컨텍스트에 담겨있음
+        Map<Long, Answer> answerMap = existingAnswers.stream()
+                .collect(Collectors.toMap(answer -> answer.getQuestion().getId(), Function.identity()));
+
+        for (AnswerCommand command : answers) {
+            Answer existing = answerMap.get(command.getQuestionId());
+
+            // 이미 답변 존재
+            if (existing != null) {
+                existing.updateContent(command.getContent());
+                continue;
+            }
+
+            Answer newAnswer = Answer.create(command.getContent(),
+                    questionMap.get(command.getQuestionId()), applicationRef);
+
+            answerRepository.save(newAnswer);
+        }
     }
 }

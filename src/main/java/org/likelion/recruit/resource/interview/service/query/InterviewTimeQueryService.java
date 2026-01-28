@@ -5,6 +5,7 @@ import org.likelion.recruit.resource.interview.dto.query.InterviewTimeDto;
 import org.likelion.recruit.resource.interview.dto.query.InterviewTimeQueryDto;
 import org.likelion.recruit.resource.interview.dto.result.InterviewTimesResult;
 import org.likelion.recruit.resource.interview.repository.InterviewTimeRepository;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +21,10 @@ public class InterviewTimeQueryService {
 
     private final InterviewTimeRepository interviewTimeRepository;
 
+    @Cacheable(
+            value = "interviewTimeFindAll",
+            key = "'ALL'"
+    )
     public List<InterviewTimesResult> findAll(){
         List<InterviewTimeQueryDto> allInterviewTimes = interviewTimeRepository.findAllInterviewTimes();
 
