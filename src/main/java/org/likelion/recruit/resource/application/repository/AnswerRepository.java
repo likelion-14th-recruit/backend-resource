@@ -12,7 +12,9 @@ import java.util.Optional;
 import java.util.List;
 
 public interface AnswerRepository extends JpaRepository<Answer, Long>, AnswerRepositoryCustom {
-    Optional<Answer> findByApplicationAndQuestion(Application application, Question question);
+    Optional<Answer> findByApplicationIdAndQuestionId(Long applicationId, Long questionId);
+
+    List<Answer> findAllByApplicationId(Long applicationId);
 
     @Query("select a from Answer a " +
             "join fetch a.question " +

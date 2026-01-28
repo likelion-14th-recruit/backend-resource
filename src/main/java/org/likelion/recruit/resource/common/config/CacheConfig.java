@@ -63,6 +63,30 @@ public class CacheConfig {
         );
     }
 
+    @Bean
+    public CaffeineCache getQuestionCache() {
+        return new CaffeineCache(
+                "questions",
+                Caffeine.newBuilder()
+                        .maximumSize(3)
+                        .expireAfterWrite(7, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
+    @Bean
+    public CaffeineCache IdByPublicIdCache() {
+        return new CaffeineCache(
+                "idByPublicId",
+                Caffeine.newBuilder()
+                        .maximumSize(100)
+                        .expireAfterWrite(1, TimeUnit.DAYS)
+                        .recordStats()
+                        .build()
+        );
+    }
+
 
     @Bean
     public CacheManager cacheManager(List<CaffeineCache> caches) {
