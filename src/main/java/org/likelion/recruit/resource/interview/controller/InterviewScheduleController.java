@@ -16,7 +16,7 @@ public class InterviewScheduleController {
 
     private final InterviewScheduleCommandService interviewScheduleCommandService;
 
-    @PostMapping("/{applicationPublicId}/interview-schedule/detail")
+    @PostMapping("/{applicationPublicId}/interview-schedule/select")
     public ResponseEntity<ApiResponse<Void>> upsertInterviewSchedule(
             @PathVariable String applicationPublicId,
             @Valid @RequestBody InterviewScheduleRequest request) {

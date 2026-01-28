@@ -48,7 +48,7 @@ class InterviewScheduleControllerTest {
                 .upsertInterviewSchedule(any(InterviewScheduleCommand.class));
 
         // When & Then
-        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/detail", publicId)
+        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/select", publicId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestJson))
                 .andExpect(status().isOk())
@@ -69,7 +69,7 @@ class InterviewScheduleControllerTest {
                 """;
 
         // When & Then
-        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/detail", publicId)
+        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/select", publicId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(dateOnlyJson))
                 .andExpect(status().isBadRequest())
@@ -92,7 +92,7 @@ class InterviewScheduleControllerTest {
                 """;
 
         // When & Then
-        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/detail", publicId)
+        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/select", publicId)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(timeOnlyJson))
                 .andExpect(status().isBadRequest())
