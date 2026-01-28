@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long>, QuestionRepositoryCustom {
-    long countByTypeIn(List<Question.Type> types);
+    List<Question> findByTypeIn(List<Question.Type> types);
 }
