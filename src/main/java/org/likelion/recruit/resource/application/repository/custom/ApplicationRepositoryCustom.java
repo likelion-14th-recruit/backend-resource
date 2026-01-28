@@ -14,6 +14,4 @@ public interface ApplicationRepositoryCustom {
     ApplicationDetailResult getDetail(String publicId, Integer passwordLength);
     Page<ApplicationSearchResult> searchApplications(ApplicationSearchCommand command, Pageable pageable);
     Set<Application> findInterviewTargets();
-    ApplicationAllDetailResult getDetail(String publicId);
-
 }

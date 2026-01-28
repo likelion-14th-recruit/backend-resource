@@ -54,6 +54,8 @@ public class ApplicationQueryService {
     }
 
     public ApplicationAllDetailResult getApplicationAllDetail(String publicId){
-        return applicationRepository.getDetail(publicId);
+        Application application = applicationRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+        return ApplicationAllDetailResult.from(application);
     }
 }

@@ -31,4 +31,18 @@ public class ApplicationAllDetailResult {
         this.semester = semester;
         this.passStatus = passStatus;
     }
+
+    public static ApplicationAllDetailResult from(Application application) {
+        return new ApplicationAllDetailResult(
+                application.getName(),
+                application.getStudentNumber(),
+                application.getPart(),
+                application.getPhoneNumber(),
+                application.getMajor(),
+                application.getDoubleMajor(),
+                application.getAcademicStatus().name(),
+                application.getSemester(),
+                application.getPassStatus()
+        );
+    }
 }

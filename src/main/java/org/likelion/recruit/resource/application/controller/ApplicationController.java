@@ -209,7 +209,7 @@ public class ApplicationController {
             @PathVariable("application-public-id") String publicId
     ){
         ApplicationAllDetailResult result = applicationQueryService.getApplicationAllDetail(publicId);
-        return ResponseEntity.ok(ApiResponse.success("지원서 인적사항을 조회하였습니다.",
+        return ResponseEntity.ok(ApiResponse.success("지원서 전체 인적사항을 조회하였습니다.",
                 ApplicationAllDetailResponse.from(result)));
     }
 
