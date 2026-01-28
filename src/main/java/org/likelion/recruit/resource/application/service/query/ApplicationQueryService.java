@@ -3,10 +3,7 @@ package org.likelion.recruit.resource.application.service.query;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.dto.command.ApplicationSearchCommand;
-import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
-import org.likelion.recruit.resource.application.dto.result.ApplicationSearchResult;
-import org.likelion.recruit.resource.application.dto.result.LoginResult;
-import org.likelion.recruit.resource.application.dto.result.PublicIdResult;
+import org.likelion.recruit.resource.application.dto.result.*;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
 import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
@@ -54,5 +51,11 @@ public class ApplicationQueryService {
 
     public Page<ApplicationSearchResult> searchApplications(ApplicationSearchCommand command, Pageable pageable){
         return applicationRepository.searchApplications(command, pageable);
+    }
+
+    public ApplicationAllDetailResult getApplicationAllDetail(String publicId){
+        Application application = applicationRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+        return ApplicationAllDetailResult.from(application);
     }
 }
