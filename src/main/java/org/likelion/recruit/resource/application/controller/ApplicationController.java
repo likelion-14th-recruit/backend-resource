@@ -201,4 +201,17 @@ public class ApplicationController {
         return ResponseEntity.ok(ApiResponse.success("지원자 면접가능 시간 상세 조회하였습니다.",InterviewAvailableDetailResponse.from(result)));
     }
 
+    /**
+     * 지원서 인적사항 전체 조회
+     */
+    @GetMapping("/{application-public-id}/detail")
+    public ResponseEntity<ApiResponse<ApplicationAllDetailResponse>> getApplicationAllDetail(
+            @PathVariable("application-public-id") String publicId
+    ){
+        ApplicationAllDetailResult result = applicationQueryService.getApplicationAllDetail(publicId);
+        return ResponseEntity.ok(ApiResponse.success("지원서 전체 인적사항을 조회하였습니다.",
+                ApplicationAllDetailResponse.from(result)));
+    }
+
+
 }
