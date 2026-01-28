@@ -3,13 +3,23 @@ package org.likelion.recruit.resource.application.repository;
 import org.likelion.recruit.resource.application.domain.Answer;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.domain.Question;
+import org.likelion.recruit.resource.application.repository.custom.AnswerRepositoryCustom;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.util.Optional;
 import java.util.List;
 
-public interface AnswerRepository extends JpaRepository<Answer, Long> {
-    Optional<Answer> findByApplicationAndQuestion(Application application, Question question);
-    List<Answer> findAllByApplication(Application application);
-    long countByApplication(Application application);
+public interface AnswerRepository extends JpaRepository<Answer, Long>, AnswerRepositoryCustom {
+    Optional<Answer> findByApplicationIdAndQuestionId(Long applicationId, Long questionId);
+
+    List<Answer> findAllByApplicationId(Long applicationId);
+
+    @Query("select a from Answer a " +
+            "join fetch a.question " +
+            "where a.application = :application")
+    List<Answer> findAllByApplicationWithQuestion(@Param("application") Application application);
+
+
 }

@@ -3,6 +3,7 @@ package org.likelion.recruit.resource.application.service.query;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Answer;
 import org.likelion.recruit.resource.application.domain.Application;
+import org.likelion.recruit.resource.application.dto.result.AnswersRefactorResult;
 import org.likelion.recruit.resource.application.dto.result.AnswersResult;
 import org.likelion.recruit.resource.application.repository.AnswerRepository;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
@@ -27,8 +28,12 @@ public class AnswerQueryService {
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
 
-        List<Answer> answers = answerRepository.findAllByApplication(application);
+        List<Answer> answers = answerRepository.findAllByApplicationWithQuestion(application);
 
-        return AnswersResult.from(application, answers);
+        return AnswersResult.from(answers);
+    }
+
+    public List<AnswersRefactorResult> getAnswersRefactor(Long id) {
+        return answerRepository.getAnswers(id);
     }
 }

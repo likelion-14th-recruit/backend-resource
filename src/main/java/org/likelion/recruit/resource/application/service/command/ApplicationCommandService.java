@@ -1,6 +1,7 @@
 package org.likelion.recruit.resource.application.service.command;
 
 import lombok.RequiredArgsConstructor;
+import org.likelion.recruit.resource.application.domain.Answer;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.domain.Question;
 import org.likelion.recruit.resource.application.dto.command.ApplicationCreateCommand;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import static org.likelion.recruit.resource.common.domain.Part.*;
 
 @Service
@@ -79,35 +81,41 @@ public class ApplicationCommandService {
     }
 
     public void submitApplication(String publicId) {
-        Application application = applicationRepository.findByPublicId(publicId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+        Application application = getValidatedApplication(publicId);
 
-        validateNotAlreadySubmitted(application);
-        validateInterviewTimeSelection(application);
         validateApplicationCompleteness(application);
+
         application.submit();
     }
 
-    private void validateNotAlreadySubmitted(Application application) {
+    private Application getValidatedApplication(String publicId) {
+        Application application = applicationRepository.findByPublicId(publicId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+
         if (application.isSubmitted()) {
             throw new BusinessException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
-    }
 
-    private void validateInterviewTimeSelection(Application application) {
         if (!interviewAvailableRepository.existsByApplication(application)) {
             throw new BusinessException(ErrorCode.INTERVIEW_TIME_NOT_EXISTS);
         }
+
+        return application;
     }
 
     private void validateApplicationCompleteness(Application application) {
-        Question.Type specificType = mapToQuestionType(application.getPart());
-        long totalRequired = questionRepository.countByType(specificType)
-                + questionRepository.countByType(Question.Type.COMMON);
-        long totalAnswers = answerRepository.countByApplication(application);
-        if (totalRequired != totalAnswers) {
-            throw new BusinessException(ErrorCode.APPLICATION_INCOMPLETE);
-        }
+        List<Question> questions = getRequiredQuestions(application.getPart());
+
+        List<Answer> answers = answerRepository.findAllByApplicationWithQuestion(application);
+
+        validateAllRequiredQuestionsAnswered(questions, answers);
+    }
+
+
+    private List<Question> getRequiredQuestions(Part part) {
+        Question.Type specificType = mapToQuestionType(part);
+
+        return questionRepository.findByTypeIn(List.of(Question.Type.COMMON, specificType));
     }
 
     private Question.Type mapToQuestionType(Part part) {
@@ -115,6 +123,31 @@ public class ApplicationCommandService {
             case FRONTEND, BACKEND -> Question.Type.DEVELOPMENT;
             case PRODUCT_DESIGN -> Question.Type.PRODUCT_DESIGN;
         };
+    }
+
+    private boolean isAnswered(Question question, List<Answer> answers) {
+        return answers.stream()
+                .filter(a -> a.getQuestion().getId().equals(question.getId()))
+                .anyMatch(a -> hasText(a.getContent()));
+    }
+
+    private boolean hasText(String str) {
+        return str != null && !str.trim().isEmpty();
+    }
+
+    private boolean isMandatory(Question question) {
+        return switch (question.getType()) {
+            case COMMON, PRODUCT_DESIGN -> true;
+            case DEVELOPMENT -> false;
+        };
+    }
+
+    private void validateAllRequiredQuestionsAnswered(List<Question> questions, List<Answer> answers) {
+        for (Question question : questions) {
+            if (isMandatory(question) && !isAnswered(question, answers)) {
+                throw new BusinessException(ErrorCode.APPLICATION_INCOMPLETE);
+            }
+        }
     }
 
     public void updatePassStatus(String publicId, PassStatusUpdateCommand command){

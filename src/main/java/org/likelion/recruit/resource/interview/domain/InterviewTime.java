@@ -37,4 +37,9 @@ public class InterviewTime extends BaseTimeEntity {
     public static InterviewTime create(LocalDate date, LocalTime startTime) {
         return new InterviewTime(date, startTime);
     }
+
+    public boolean isImmediatelyBefore(InterviewTime other) {
+        return this.getDate().equals(other.getDate())
+                && this.getEndTime().plusMinutes(5).equals(other.getStartTime());
+    }
 }

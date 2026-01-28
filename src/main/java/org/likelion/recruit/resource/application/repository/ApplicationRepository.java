@@ -23,7 +23,4 @@ public interface ApplicationRepository extends JpaRepository<Application,Long>, 
     @Query("select ap.id from Application ap where ap.publicId = :publicId")
     Optional<Long> findIdByPublicId(@Param("publicId") String publicId);
 
-
-
-
 }

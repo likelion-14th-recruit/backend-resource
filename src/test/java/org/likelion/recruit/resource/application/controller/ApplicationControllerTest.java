@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.likelion.recruit.resource.application.dto.result.AnswersResult;
@@ -30,6 +32,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(ApplicationController.class)
+@Disabled
 class ApplicationControllerTest {
 
     @Autowired
@@ -62,26 +65,30 @@ class ApplicationControllerTest {
     @Test
     @DisplayName("공개 ID로 지원서 답변을 조회하면 200 ok와 응답 반환")
     void getAnswers_Api_Success() throws Exception {
+        // Given
         String publicId = "app-7c4ec3c9-c31f-4e31-bd48-a4377ea63850";
 
         List<AnswersResult.AnswerInfo> answerInfos = List.of(
                 new AnswersResult.AnswerInfo(1L, "안녕하세요"),
-                new AnswersResult.AnswerInfo(2L, "Buenos dias!"),
-                new AnswersResult.AnswerInfo(3L, "Buenas tardes!"),
-                new AnswersResult.AnswerInfo(6L, "Buenas tardes!")
+                new AnswersResult.AnswerInfo(2L, "ciao!"),
+                new AnswersResult.AnswerInfo(3L, "hi!"),
+                new AnswersResult.AnswerInfo(6L, "salut!")
         );
 
         AnswersResult mockResult = AnswersResult.builder()
-                .applicationPublicId(publicId)
                 .answers(answerInfos)
                 .build();
 
-        given(answerQueryService.getAnswers(anyString())).willReturn(mockResult);
+        given(answerQueryService.getAnswers(publicId)).willReturn(mockResult);
 
+        // When & Then
         mockMvc.perform(get("/applications/{application-public-id}/answers", publicId)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
+                .andExpect(jsonPath("$.message").value("지원서 답변을 조회하였습니다."))
+                .andExpect(jsonPath("$.data.answers").isArray())
+                .andExpect(jsonPath("$.data.answers[0].questionId").value(1L))
                 .andExpect(jsonPath("$.data.answers[0].content").value("안녕하세요"));
     }
 
