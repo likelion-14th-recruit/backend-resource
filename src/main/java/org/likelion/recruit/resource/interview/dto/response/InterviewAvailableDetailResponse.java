@@ -7,6 +7,7 @@ import org.likelion.recruit.resource.interview.domain.InterviewAvailable;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.dto.result.InterviewAvailableDetailResult;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ public class InterviewAvailableDetailResponse {
     @AllArgsConstructor
     public static class DateGroup {
         private String date;
+        private DayOfWeek dayOfWeek;
         private List<TimeItem> times;
     }
 
@@ -54,16 +56,20 @@ public class InterviewAvailableDetailResponse {
 
         List<DateGroup> groups =
                 grouped.entrySet().stream()
-                        .map(entry -> new DateGroup(
-                                entry.getKey().toString(),
-                                entry.getValue().stream()
-                                        .map(time -> new TimeItem(
-                                                time.getId(),
-                                                time.getStartTime().toString(),
-                                                time.getEndTime().toString()
-                                        ))
-                                        .toList()
-                        ))
+                        .map(entry -> {
+                            LocalDate date = entry.getKey();
+                            return new DateGroup(
+                                    date.toString(),
+                                    date.getDayOfWeek(),
+                                    entry.getValue().stream()
+                                            .map(time -> new TimeItem(
+                                                    time.getId(),
+                                                    time.getStartTime().toString(),
+                                                    time.getEndTime().toString()
+                                            ))
+                                            .toList()
+                            );
+                        })
                         .toList();
 
         return new InterviewAvailableDetailResponse(groups);
