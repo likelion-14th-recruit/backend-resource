@@ -1,5 +1,6 @@
 package org.likelion.recruit.resource.interview.service.query;
 
+import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
 import org.likelion.recruit.resource.common.exception.BusinessException;
@@ -11,11 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class InterviewScheduleQueryService {
 
-    private InterviewScheduleRepository interviewScheduleRepository;
-    private ApplicationRepository applicationRepository;
+    private final InterviewScheduleRepository interviewScheduleRepository;
+    private final ApplicationRepository applicationRepository;
 
     public InterviewScheduleResult getInterviewSchedule(String applicationPublicId) {
 
