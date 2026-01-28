@@ -5,10 +5,10 @@ import org.likelion.recruit.resource.application.domain.Question;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.interview.domain.InterviewAvailable;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
+import org.likelion.recruit.resource.interview.dto.command.InterviewScheduleCommand;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 public class ApplicationFixture {
@@ -42,5 +42,25 @@ public class ApplicationFixture {
         InterviewAvailable available = InterviewAvailable.create(time, app);
         ReflectionTestUtils.setField(available, "id", 1L);
         return available;
+    }
+
+    public static InterviewScheduleCommand createCommand(String publicId, String place) {
+        return InterviewScheduleCommand.builder()
+                .applicationPublicId(publicId)
+                .date(LocalDate.of(2026, 1, 29))
+                .startTime(LocalTime.of(14, 0))
+                .endTime(LocalTime.of(14, 20))
+                .place(place)
+                .build();
+    }
+
+    public static InterviewScheduleCommand createCommand(String publicId, String place, LocalDate date, LocalTime startTime) {
+        return InterviewScheduleCommand.builder()
+                .applicationPublicId(publicId)
+                .date(date)
+                .startTime(startTime)
+                .endTime(startTime.plusMinutes(20))
+                .place(place)
+                .build();
     }
 }

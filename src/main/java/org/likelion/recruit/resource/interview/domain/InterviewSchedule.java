@@ -54,4 +54,9 @@ public class InterviewSchedule extends BaseTimeEntity {
     public void assignPlace(String place) {
         this.place = place;
     }
+    public void updateInterviewTime(InterviewTime interviewTime) {this.interviewTime = interviewTime;}
+    public void update(String place, InterviewTime interviewTime) {
+        this.place = place;
+        this.interviewTime = interviewTime;
+    }
 }
