@@ -11,8 +11,9 @@ public enum ErrorCode {
     //request
     INVALID_REQUEST_FORMAT(HttpStatus.BAD_REQUEST, "REQUEST 요청이 올바르지 않습니다."),
 
-    //solapi
+    //message
     SMS_SEND_FAILED(HttpStatus.INTERNAL_SERVER_ERROR, "문자 전송에 실패했습니다."),
+    DOCUMENT_PASSED_NOT_ASSIGNED_INTERVIEW_SCHEDULE(HttpStatus.INTERNAL_SERVER_ERROR, "서류 합격자 중, 인터뷰 시간을 등록 안한 분이 있습니다."),
 
     //verification
     VERIFICATION_ALREADY_COMPLETED(HttpStatus.BAD_REQUEST, "이미 인증된 전화번호입니다."),
