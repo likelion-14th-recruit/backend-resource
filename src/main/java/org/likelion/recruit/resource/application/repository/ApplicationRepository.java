@@ -1,12 +1,14 @@
 package org.likelion.recruit.resource.application.repository;
 
 import org.likelion.recruit.resource.application.domain.Application;
+import org.likelion.recruit.resource.application.domain.Application.PassStatus;
 import org.likelion.recruit.resource.application.repository.custom.ApplicationRepositoryCustom;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ApplicationRepository extends JpaRepository<Application,Long>, ApplicationRepositoryCustom {
@@ -22,5 +24,10 @@ public interface ApplicationRepository extends JpaRepository<Application,Long>, 
 
     @Query("select ap.id from Application ap where ap.publicId = :publicId")
     Optional<Long> findIdByPublicId(@Param("publicId") String publicId);
+
+
+    //메시지 전송 관련 메서드
+    @Query("select ap.phoneNumber from Application ap where ap.passStatus = :passStatus")
+    List<String> findPhoneNumbersByPassStatus(@Param("passStatus") PassStatus passStatus);
 
 }
