@@ -30,6 +30,7 @@ import java.util.Set;
 
 import static org.likelion.recruit.resource.application.domain.QApplication.application;
 import static org.likelion.recruit.resource.interview.domain.QInterviewAvailable.interviewAvailable;
+import static org.likelion.recruit.resource.interview.domain.QInterviewSchedule.interviewSchedule;
 import static org.likelion.recruit.resource.interview.domain.QInterviewTime.interviewTime;
 
 @RequiredArgsConstructor
