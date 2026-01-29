@@ -6,5 +6,5 @@ import org.likelion.recruit.resource.application.dto.result.AnswersResult;
 import java.util.List;
 
 public interface AnswerRepositoryCustom {
-    List<AnswersRefactorResult> getAnswers(String publicId);
+    List<AnswersRefactorResult> getAnswers(Long id);
 }
