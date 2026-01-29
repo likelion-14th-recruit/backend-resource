@@ -14,21 +14,22 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/applications")
+@RequestMapping("/applications/{applicationPublicId}/interview-schedule/select")
 public class InterviewScheduleController {
 
     private final InterviewScheduleCommandService interviewScheduleCommandService;
     private final InterviewScheduleQueryService interviewScheduleQueryService;
 
-    @PostMapping("/{applicationPublicId}/interview-schedule/select")
-    public ResponseEntity<ApiResponse<Void>> upsertInterviewSchedule(
+    @PostMapping
+    public ResponseEntity<ApiResponse<InterviewScheduleResponse>> upsertInterviewSchedule(
             @PathVariable String applicationPublicId,
             @Valid @RequestBody InterviewScheduleRequest request) {
         interviewScheduleCommandService.upsertInterviewSchedule(InterviewScheduleCommand.of(applicationPublicId, request));
-        return ResponseEntity.ok(ApiResponse.success("면접 관련 정보가 성공적으로 저장되었습니다."));
+        InterviewScheduleResult result = interviewScheduleQueryService.getInterviewSchedule(applicationPublicId);
+        return ResponseEntity.ok(ApiResponse.success("면접 관련 정보가 성공적으로 저장되었습니다.", InterviewScheduleResponse.from(result)));
     }
 
-    @GetMapping("/{applicationPublicId}/interview-schedule/select")
+    @GetMapping
     public ResponseEntity<ApiResponse<InterviewScheduleResponse>> getInterviewSchedule(
             @PathVariable String applicationPublicId
     ){

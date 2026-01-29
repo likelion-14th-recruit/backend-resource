@@ -7,12 +7,6 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.validation.constraints.AssertTrue;
-import java.time.LocalDate;
-import java.time.LocalTime;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 @Getter
 @NoArgsConstructor
 public class InterviewScheduleRequest {
