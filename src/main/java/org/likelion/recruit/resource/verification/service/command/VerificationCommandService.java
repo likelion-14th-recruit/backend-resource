@@ -29,7 +29,7 @@ public class VerificationCommandService {
                     .orElseThrow(() -> new BusinessException(ErrorCode.VERIFICATION_NOT_FOUND));
 
             Integer renewCode = verification.renewCode();
-            messageCommandService.sendMessage(phoneNumber, renewCode);
+            messageCommandService.sendVerificationMessage(phoneNumber, renewCode);
             return;
         }
 
@@ -37,7 +37,7 @@ public class VerificationCommandService {
         Integer code = verification.makeCode();
         verificationRepository.save(verification);
 
-        messageCommandService.sendMessage(phoneNumber, code);
+        messageCommandService.sendVerificationMessage(phoneNumber, code);
     }
 
     public void confirmVerificationCode(VerifyConfirmCommand command) {
