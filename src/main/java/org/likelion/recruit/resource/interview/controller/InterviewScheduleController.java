@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/applications/{applicationPublicId}/interview-schedule/select")
+@RequestMapping("/applications/{application-public-id}/interview-schedule/select")
 public class InterviewScheduleController {
 
     private final InterviewScheduleCommandService interviewScheduleCommandService;
