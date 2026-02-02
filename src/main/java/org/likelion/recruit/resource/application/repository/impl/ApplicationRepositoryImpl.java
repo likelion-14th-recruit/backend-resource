@@ -9,15 +9,13 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.domain.Application.PassStatus;
-import org.likelion.recruit.resource.application.domain.QApplication;
 import org.likelion.recruit.resource.application.dto.command.ApplicationSearchCommand;
+import org.likelion.recruit.resource.application.dto.query.PassedMessageTarget;
+import org.likelion.recruit.resource.application.dto.query.RejectedMessageTarget;
 import org.likelion.recruit.resource.application.dto.result.ApplicationDetailResult;
 import org.likelion.recruit.resource.application.dto.result.ApplicationSearchResult;
 import org.likelion.recruit.resource.application.repository.custom.ApplicationRepositoryCustom;
 import org.likelion.recruit.resource.common.domain.Part;
-import org.likelion.recruit.resource.interview.domain.QInterviewAvailable;
-import org.likelion.recruit.resource.interview.domain.QInterviewTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.support.PageableExecutionUtils;
@@ -104,6 +102,29 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
                         application.passStatus.eq(PassStatus.DOCUMENT_PASSED)
                 )
                 .fetch());
+    }
+
+    @Override
+    public List<RejectedMessageTarget> findRejectTargetsByPassStatus(PassStatus passStatus) {
+        return queryFactory.select(Projections.constructor(RejectedMessageTarget.class,
+                application.name,
+                application.phoneNumber
+                ))
+                .from(application)
+                .where(application.passStatus.eq(passStatus))
+                .fetch();
+    }
+
+    @Override
+    public List<PassedMessageTarget> findPassTargetsByPassStatus(PassStatus passStatus) {
+        return queryFactory.select(Projections.constructor(PassedMessageTarget.class,
+                        application.name,
+                        application.phoneNumber,
+                        application.part
+                ))
+                .from(application)
+                .where(application.passStatus.eq(passStatus))
+                .fetch();
     }
 
     private BooleanExpression partEq(Part part) {
