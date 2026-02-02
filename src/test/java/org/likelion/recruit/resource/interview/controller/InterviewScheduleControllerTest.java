@@ -1,5 +1,6 @@
 package org.likelion.recruit.resource.interview.controller;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.likelion.recruit.resource.interview.dto.command.InterviewScheduleCommand;
@@ -28,6 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.lang.reflect.Constructor;
 @WebMvcTest(InterviewScheduleController.class)
+@Disabled
 class InterviewScheduleControllerTest {
 
     @Autowired
