@@ -1,1 +1,1 @@
-SELECT FROM project;
+DELETE FROM project;
