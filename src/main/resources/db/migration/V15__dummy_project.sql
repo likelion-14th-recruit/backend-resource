@@ -6,14 +6,14 @@ VALUES
      '지하철 이용객의 쾌적한 화장실 이용을 위한 리뷰·정보 공유 서비스',
      'https://www.instagram.com/p/DS9BapNEklW/',
      NOW(),NOW()
-     ),
+    ),
     (
-     13,
-     '티킷타',
-     'https://likelion14th-recruit.s3.ap-northeast-2.amazonaws.com/project/31.png',
-     '좌석·결제·QR 입장까지 한 번에! 학생 공연을 위한 통합 관리 및 예매 서비스',
-     'https://www.instagram.com/p/DS9BR6oEsVX/',
-     NOW(), NOW()
+        13,
+        '티킷타',
+        'https://likelion14th-recruit.s3.ap-northeast-2.amazonaws.com/project/31.png',
+        '좌석·결제·QR 입장까지 한 번에! 학생 공연을 위한 통합 관리 및 예매 서비스',
+        'https://www.instagram.com/p/DS9BR6oEsVX/',
+        NOW(), NOW()
     ),
     (
         13,
