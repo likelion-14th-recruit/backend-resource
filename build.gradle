@@ -27,20 +27,55 @@ repositories {
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-flyway'
-	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'org.flywaydb:flyway-database-postgresql'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'org.postgresql:postgresql'
 	annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
 	testImplementation 'org.springframework.boot:spring-boot-starter-data-jpa-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-flyway-test'
 	testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // h2
+    testImplementation 'com.h2database:h2'
+
+    // querydsl
+    implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+    implementation 'com.querydsl:querydsl-core:5.0.0'
+    annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+    annotationProcessor 'jakarta.annotation:jakarta.annotation-api'
+    annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
+
+    // OpenAI
+    implementation 'com.openai:openai-java:4.16.1'
+
+    // Excel
+    implementation 'org.apache.poi:poi-ooxml:5.2.5'
 
     // message API
     implementation 'com.solapi:sdk:1.0.3'
+
+    // caffeine Local cache
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'com.github.ben-manes.caffeine:caffeine'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+test {
+    doFirst {
+        def dotenv = file('.env')
+        if (dotenv.exists()) {
+            dotenv.eachLine { line ->
+                if (!line.trim().isEmpty() && !line.startsWith("#")) {
+                    def (key, value) = line.split("=", 2)
+                    environment key, value
+                }
+            }
+        }
+    }
 }

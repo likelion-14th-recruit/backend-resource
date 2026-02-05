@@ -17,7 +17,7 @@
 - Spring Data JPA
 - HikariCP (JDBC Connection Pool)
 - Querydsl
-- Flyway (Database Migration) (적용해볼 예정)
+- Flyway (Database Migration)
 - PostgreSQL 16
 - GitHub Actions (CI/CD)
 - SOLAPI SMS API
@@ -41,3 +41,15 @@
 - main(배포용), dev(개발용) 브랜치는 관리자를 포함하여 직접 push를 금지합니다.
 - 따라서 오직 ISSUE 기반으로 PR 및 Merge을 진행하였습니다.
 - ci-dev, ci-main, cd-main에 실패하면 Merge를 차단하였습니다.
+
+---
+## Role & Contribution
+### 김지오
+- 프로젝트 컨벤션 및 템플릿 정립
+- 프로젝트 구조 역할 분리 설계
+- Local에서 Gihub Actions 기반 PR to Dev CI 설계
+- 도메인 모델링 및 Flyway 활용하여 DB 스키마 설계
+- querydsl를 활용한 검색 조회 기능 구현 및 성능 최적화
+- 전반적인 resource API 구현
+- 제약 조건 기반 면접 시간 배정 시스템 구현
+

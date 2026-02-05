@@ -1,0 +1,44 @@
+package org.likelion.recruit.resource.common.dto.response;
+
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import lombok.Getter;
+import org.likelion.recruit.resource.common.exception.ErrorCode;
+
+@Getter
+@JsonPropertyOrder({"success", "code", "message", "data"})
+public class ApiResponse<T> {
+    private boolean success;
+    private String code;
+    private String message;
+    private T data;
+
+    public ApiResponse(boolean success, String code, String message) {
+        this.success = success;
+        this.code = code;
+        this.message = message;
+    } // 추후 제거하고 밑의 private 생성자로 대체할 예정입니다. 참고하여 수정 바랍니다.
+
+    public ApiResponse(boolean success, String code, String message, T data) {
+        this.success = success;
+        this.code = code;
+        this.message = message;
+        this.data = data;
+    }
+
+    public static <T> ApiResponse<T> success(String message, T data) {
+        return new ApiResponse<>(true, "SUCCESS", message, data);
+    }
+
+    public static <T> ApiResponse<T> success(String message) {
+        return new ApiResponse<>(true, "SUCCESS", message, null);
+    }
+
+    public static <T> ApiResponse<T> error(String code, String message) {
+        return new ApiResponse<>(false, code, message, null);
+    }
+
+    public static <T> ApiResponse<T> error(ErrorCode errorCode) {
+        return new ApiResponse<>(false, errorCode.name(), errorCode.getMessage(), null
+        );
+    }
+}

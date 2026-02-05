@@ -1,0 +1,184 @@
+package org.likelion.recruit.resource.application.domain;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCommand;
+import org.likelion.recruit.resource.common.domain.BaseTimeEntity;
+import org.likelion.recruit.resource.common.domain.Part;
+import org.likelion.recruit.resource.common.exception.BusinessException;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
+
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Entity
+public class Application extends BaseTimeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "application_id")
+    private Long id;
+
+    @Column(nullable = false, updatable = false, unique = true, length = 40)
+    private String publicId;
+
+    @Column(nullable = false)
+    private String name;
+
+    @Column(nullable = false, unique = true)
+    private String studentNumber;
+
+    @Column(nullable = false, unique = true)
+    private String phoneNumber;
+
+    @Column(nullable = false)
+    private String passwordHash;
+
+    @Column(nullable = false)
+    private String major;
+
+    private String doubleMajor;
+
+    @Column(nullable = false)
+    private Integer semester;
+
+    private boolean submitted;
+
+    private LocalDateTime submittedAt;
+
+    /**
+     * 학적 상태
+     */
+    public enum AcademicStatus {
+        ENROLLED,               // 재학
+        ON_LEAVE,              // 휴학
+        GRADUATION_DEFERRED,     // 졸업 유예
+        GRADUATED               // 졸업
+    }
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "academic_status")
+    private AcademicStatus academicStatus;
+
+    /**
+     * 파트(백,프,기디)
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private Part part;
+
+    public enum PassStatus {
+        PENDING,                // 검토
+        DOCUMENT_FAILED,        // 1차 탈락
+        DOCUMENT_PASSED,        // 1차 합격
+        INTERVIEW_FAILED,       // 2차 탈락
+        INTERVIEW_PASSED        // 2차 합격
+    }
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private PassStatus passStatus;
+
+    /**
+     * 생성 메서드
+     */
+    private Application(String name, String studentNumber, String phoneNumber, String passwordHash,
+                       String major, String doubleMajor, Integer semester, boolean submitted,
+                       LocalDateTime submittedAt, AcademicStatus academicStatus, Part part,
+                       PassStatus passStatus) {
+        this.publicId = "app-" + UUID.randomUUID();
+        this.name = name;
+        this.studentNumber = studentNumber;
+        this.phoneNumber = phoneNumber;
+        this.passwordHash = passwordHash;
+        this.major = major;
+        this.doubleMajor = doubleMajor;
+        this.semester = semester;
+        this.submitted = submitted;
+        this.submittedAt = submittedAt;
+        this.academicStatus = academicStatus;
+        this.part = part;
+        this.passStatus = passStatus;
+    }
+
+    // 임시저장
+    public static Application create(String name, String studentNumber, String phoneNumber, String passwordHash,
+                        String major, String doubleMajor, Integer semester, AcademicStatus academicStatus, Part part){
+        return new Application(name, studentNumber, phoneNumber, passwordHash, major, doubleMajor,
+                semester, false, null, academicStatus, part, PassStatus.PENDING);
+    }
+
+    /**
+     * 비즈니스 메서드
+     */
+    public void submit(){
+        this.submitted = true;
+        this.submittedAt = LocalDateTime.now();
+    }
+
+    public void changePassword(String passwordHash){
+        this.passwordHash = passwordHash;
+    }
+
+    public void update(ApplicationUpdateCommand command) {
+        updateName(command.getName());
+        updateStudentNumber(command.getStudentNumber());
+        updateMajor(command.getMajor());
+        updateAcademicStatus(command.getAcademicStatus());
+        updateSemester(command.getSemester());
+        updatePart(command.getPart());
+
+        if(command.getHasDoubleMajor()){
+            updateDoubleMajor(command.getDoubleMajor());
+        }
+    }
+
+    private void updateName(String name) {
+        if(name != null) {
+            this.name = name;
+        }
+    }
+
+    private void updateStudentNumber(String studentNumber) {
+        if(studentNumber != null) {
+            this.studentNumber = studentNumber;
+        }
+    }
+
+    private void updateMajor(String major) {
+        if(major != null) {
+            this.major = major;
+        }
+    }
+
+    private void updateDoubleMajor(String doubleMajor) {
+        this.doubleMajor = doubleMajor;
+    }
+
+    private void updateAcademicStatus(AcademicStatus academicStatus) {
+        if(academicStatus != null) {
+            this.academicStatus = academicStatus;
+        }
+    }
+
+    private void updateSemester(Integer semester) {
+        if(semester != null) {
+            this.semester = semester;
+        }
+    }
+
+    private void updatePart(Part part) {
+        if(part != null) {
+            this.part = part;
+        }
+    }
+
+    public void updatePassStatus(PassStatus passStatus) {
+        if(passStatus != null) {
+            this.passStatus = passStatus;
+        }
+    }
+}

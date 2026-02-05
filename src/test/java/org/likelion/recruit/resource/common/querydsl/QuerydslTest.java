@@ -1,0 +1,46 @@
+package org.likelion.recruit.resource.common.querydsl;
+
+import com.querydsl.jpa.impl.JPAQueryFactory;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import org.likelion.recruit.resource.common.config.QuerydslConfig;
+import org.likelion.recruit.resource.common.domain.Part;
+import org.likelion.recruit.resource.executiveMember.domain.ExecutiveMember;
+import org.likelion.recruit.resource.executiveMember.domain.Position;
+import org.likelion.recruit.resource.executiveMember.domain.QExecutiveMember;
+import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.likelion.recruit.resource.executiveMember.domain.QExecutiveMember.executiveMember;
+
+@DataJpaTest
+@Import(QuerydslConfig.class)
+class QuerydslTest {
+
+    @PersistenceContext
+    private EntityManager em;
+
+    @Test
+    void contextLoads() {
+        ExecutiveMember member = ExecutiveMember.create("이름", 14, "url",
+                Part.BACKEND, Position.PRESIDENT);
+
+        em.persist(member);
+
+        JPAQueryFactory queryFactory = new JPAQueryFactory(em);
+
+        ExecutiveMember result = queryFactory.selectFrom(executiveMember)
+                .where(executiveMember.name.eq("이름"))
+                .fetchOne();
+
+        assertThat(result.getName()).isEqualTo("이름");
+    }
+
+}
