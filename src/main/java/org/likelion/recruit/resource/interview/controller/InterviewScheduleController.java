@@ -22,7 +22,7 @@ public class InterviewScheduleController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<InterviewScheduleResponse>> upsertInterviewSchedule(
-            @PathVariable String applicationPublicId,
+            @PathVariable("application-public-id") String applicationPublicId,
             @Valid @RequestBody InterviewScheduleRequest request) {
         interviewScheduleCommandService.upsertInterviewSchedule(InterviewScheduleCommand.of(applicationPublicId, request));
         InterviewScheduleResult result = interviewScheduleQueryService.getInterviewSchedule(applicationPublicId);
@@ -31,7 +31,7 @@ public class InterviewScheduleController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<InterviewScheduleResponse>> getInterviewSchedule(
-            @PathVariable String applicationPublicId
+            @PathVariable("application-public-id") String applicationPublicId
     ){
         InterviewScheduleResult result = interviewScheduleQueryService.getInterviewSchedule(applicationPublicId);
 
