@@ -19,7 +19,7 @@ public class ProjectQueryService {
 
     @Cacheable(
             value = "projectsSearch",
-            key = "#command.cohort != null ? #command.cohort : 'ALL'",
+            key = "#command.cohort",
             condition = "#pageable.pageNumber == 0 && #pageable.pageSize == 15"
     )
     public Slice<ProjectSearchResult> searchProjects(ProjectSearchCommand command, Pageable pageable){
