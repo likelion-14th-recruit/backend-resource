@@ -15,4 +15,11 @@ public interface AnswerRepository extends JpaRepository<Answer, Long>, AnswerRep
     Optional<Answer> findByApplicationIdAndQuestionId(Long applicationId, Long questionId);
 
     List<Answer> findAllByApplicationId(Long applicationId);
+
+    @Query("select a from Answer a " +
+            "join fetch a.question " +
+            "where a.application = :application")
+    List<Answer> findAllByApplicationWithQuestion(@Param("application") Application application);
+
+
 }
