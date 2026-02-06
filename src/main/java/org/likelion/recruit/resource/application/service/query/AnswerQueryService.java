@@ -28,9 +28,9 @@ public class AnswerQueryService {
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
 
-        List<Answer> answers = answerRepository.findAllByApplicationWithQuestion(application);
+        List<AnswersResult.AnswerInfo> answerInfos = answerRepository.findAnswersByApplication(application.getId());
 
-        return AnswersResult.from(answers);
+        return AnswersResult.of(answerInfos);
     }
 
     public List<AnswersRefactorResult> getAnswersRefactor(Long id) {
