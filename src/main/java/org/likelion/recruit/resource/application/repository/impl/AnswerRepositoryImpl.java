@@ -7,6 +7,7 @@ import org.likelion.recruit.resource.application.domain.QAnswer;
 import org.likelion.recruit.resource.application.domain.QQuestion;
 import org.likelion.recruit.resource.application.dto.result.AnswersRefactorResult;
 import org.likelion.recruit.resource.application.dto.result.AnswersResult;
+import org.likelion.recruit.resource.application.dto.result.QAnswersResult_AnswerInfo;
 import org.likelion.recruit.resource.application.repository.custom.AnswerRepositoryCustom;
 
 import java.util.List;
@@ -30,6 +31,19 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
                 .from(answer)
                 .join(answer.question, question)
                 .where(answer.application.id.eq(id))
+                .fetch();
+    }
+
+    @Override
+    public List<AnswersResult.AnswerInfo> findAnswersByApplication(Long applicationId) {
+        return queryFactory
+                .select(new QAnswersResult_AnswerInfo(
+                        question.id,
+                        answer.content
+                ))
+                .from(answer)
+                .join(answer.question, question)
+                .where(answer.application.id.eq(applicationId))
                 .fetch();
     }
 }
