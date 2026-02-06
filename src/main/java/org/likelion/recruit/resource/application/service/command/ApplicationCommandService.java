@@ -154,7 +154,7 @@ public class ApplicationCommandService {
 
     private boolean isAnswered(Question question, List<Answer> answers) {
         return answers.stream()
-                .filter(a -> a.getQuestion().getId().equals(question.getId()))
+                .filter(a -> a.getQuestion().getQuestionNumber().equals(question.getQuestionNumber()))
                 .anyMatch(a -> hasText(a.getContent()));
     }
 
