@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AnswerRepositoryCustom {
     List<AnswersRefactorResult> getAnswers(Long id);
+    List<AnswersResult.AnswerInfo> findAnswersByApplication(Long applicationId);
 }
