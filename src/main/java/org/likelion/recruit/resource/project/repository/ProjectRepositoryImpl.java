@@ -25,7 +25,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryCustom {
         List<ProjectSearchResult> mainQuery = queryFactory.select(Projections.constructor(ProjectSearchResult.class,
                         project.imageUrl,
                         project.name,
-                        project.cohort,
                         project.description,
                         project.instagramUrl)
                 )
