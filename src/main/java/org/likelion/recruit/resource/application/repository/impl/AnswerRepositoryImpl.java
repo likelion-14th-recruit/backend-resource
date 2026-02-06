@@ -44,15 +44,15 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
                 .select(Projections.constructor(AnswerInfo.class,
                         question.id,
                         answer.content
-                ))
-                .from(question)
-                .leftJoin(answer)
-                .on(answer.application.id.eq(id)
-                        .and(answer.question.questionNumber.eq(question.questionNumber)))
-                .where(
-                        question.type.eq(Type.COMMON).or(question.type.eq(type))
+                    )
                 )
-                .orderBy(question.questionNumber.asc())
+                .from(answer)
+                .join(answer.question, question)
+                .where(
+                        answer.application.id.eq(id),
+                        question.type.eq(Type.COMMON)
+                                .or(question.type.eq(type))
+                )
                 .fetch();
     }
 }
