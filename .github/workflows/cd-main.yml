@@ -18,10 +18,10 @@ jobs:
           key: ${{ secrets.MAIN_SSH_KEY }}
           script: |
             cd /home/ubuntu/deploy
-            docker stop ${{ secrets.MAIN_CONTAINER_NAME }} || true
-            docker rm ${{ secrets.MAIN_CONTAINER_NAME }} || true
-            
-            docker pull ${{ secrets.MAIN_DOCKERHUB_USERNAME }}/likelion-recruit-main:latest
-            
-            docker-compose up -d
 
+#            docker stop ${{ secrets.MAIN_CONTAINER_NAME }} || true
+#            docker rm ${{ secrets.MAIN_CONTAINER_NAME }} || true
+#            docker pull ${{ secrets.MAIN_DOCKERHUB_USERNAME }}/likelion-recruit-main:latest
+#            docker-compose up -d
+
+            ./deploy.sh
