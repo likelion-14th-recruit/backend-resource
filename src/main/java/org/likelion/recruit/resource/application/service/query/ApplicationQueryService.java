@@ -40,6 +40,10 @@ public class ApplicationQueryService {
             throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
 
+        if(application.isSubmitted()){
+            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
+        }
+
         Integer passwordLength = password.length();
 
         return LoginResult.of(application.getPublicId(), phoneNumber, passwordLength);

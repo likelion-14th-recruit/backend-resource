@@ -91,7 +91,9 @@ public class ApplicationController {
     @GetMapping("/{application-public-id}/answers")
     public ResponseEntity<ApiResponse<AnswersResponse>> getAnswers(
             @PathVariable("application-public-id") String publicId) {
-        AnswersResult result = answerQueryService.getAnswers(publicId);
+        Part part = applicationResolver.resolvePart(publicId);
+        Long id = applicationResolver.resolveId(publicId);
+        AnswersResult result = answerQueryService.getAnswers(id, part);
         return ResponseEntity.ok(ApiResponse.success(
                 "지원서 답변을 조회하였습니다.",
                 AnswersResponse.from(result)));
@@ -212,6 +214,5 @@ public class ApplicationController {
         return ResponseEntity.ok(ApiResponse.success("지원서 전체 인적사항을 조회하였습니다.",
                 ApplicationAllDetailResponse.from(result)));
     }
-
 
 }
