@@ -7,8 +7,7 @@ import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.repository.custom.InterviewAvailableRepositoryCustom;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 import java.util.*;
 
 import static org.likelion.recruit.resource.application.domain.QApplication.application;
@@ -53,6 +52,15 @@ public class InterviewAvailableRepositoryImpl implements InterviewAvailableRepos
                         interviewAvailable.interviewTime.id.eq(interviewTimeId)
                 )
                 .fetchFirst() != null;
+    }
+
+    @Override
+    public List<Long> findInterviewAvailableIdsByApplicationId(Long applicationId) {
+        return queryFactory
+                .select(interviewAvailable.interviewTime.id)
+                .from(interviewAvailable)
+                .where(interviewAvailable.application.id.eq(applicationId))
+                .fetch();
     }
 
 }

@@ -17,6 +17,7 @@ public interface ApplicationRepository extends JpaRepository<Application,Long>, 
     boolean existsByPhoneNumberAndPasswordHash(String phoneNumber, String passwordHash);
     Optional<Application> findByPublicId(String publicId);
     Optional<Application> findByPhoneNumber(String phoneNumber);
+    boolean existsByPhoneNumberAndSubmitted(String phoneNumber, boolean submitted);
 
     @Query("select ap.part from Application ap where ap.publicId = :publicId")
     Optional<Part> findTypeByPublicId(@Param("publicId") String publicId);

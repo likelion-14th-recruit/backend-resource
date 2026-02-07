@@ -41,7 +41,11 @@ public class ApplicationCommandService {
 
         // 상황 1. 지원서가 있는데 새로 생성하는 경우  verified=true, application 존재
         // 상황 3. 지원서 찾기에서 인증번호 새로 받고 다시 생성 누른 경우 verified=false, application 존재
-        if (applicationRepository.existsByPhoneNumber(phoneNumber)) {
+        if(applicationRepository.existsByPhoneNumberAndSubmitted(phoneNumber, true)){
+            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
+        }
+
+        if(applicationRepository.existsByPhoneNumberAndSubmitted(phoneNumber, false)){
             throw new BusinessException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
@@ -113,17 +117,19 @@ public class ApplicationCommandService {
 
 
     private List<Question> getRequiredQuestions(Part part) {
-        Question.Type specificType = mapToQuestionType(part);
-
-        return questionRepository.findByTypeIn(List.of(Question.Type.COMMON, specificType));
-    }
-
-    private Question.Type mapToQuestionType(Part part) {
         return switch (part) {
-            case FRONTEND, BACKEND -> Question.Type.DEVELOPMENT;
-            case PRODUCT_DESIGN -> Question.Type.PRODUCT_DESIGN;
+            case BACKEND, FRONTEND ->
+                    questionRepository.findByTypeInOrderByQuestionNumberAsc(
+                            List.of(Question.Type.COMMON)
+                    );
+
+            case PRODUCT_DESIGN ->
+                    questionRepository.findByTypeInOrderByQuestionNumberAsc(
+                            List.of(Question.Type.COMMON, Question.Type.PRODUCT_DESIGN)
+                    );
         };
     }
+
 
     private boolean isAnswered(Question question, List<Answer> answers) {
         return answers.stream()
@@ -135,16 +141,11 @@ public class ApplicationCommandService {
         return str != null && !str.trim().isEmpty();
     }
 
-    private boolean isMandatory(Question question) {
-        return switch (question.getType()) {
-            case COMMON, PRODUCT_DESIGN -> true;
-            case DEVELOPMENT -> false;
-        };
-    }
-
-    private void validateAllRequiredQuestionsAnswered(List<Question> questions, List<Answer> answers) {
-        for (Question question : questions) {
-            if (isMandatory(question) && !isAnswered(question, answers)) {
+    private void validateAllRequiredQuestionsAnswered(
+            List<Question> requiredQuestions,
+            List<Answer> answers) {
+        for (Question question : requiredQuestions) {
+            if (!isAnswered(question, answers)) {
                 throw new BusinessException(ErrorCode.APPLICATION_INCOMPLETE);
             }
         }

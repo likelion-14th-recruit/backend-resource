@@ -24,9 +24,9 @@ public class InterviewAvailableQueryService {
         Application application = applicationRepository.findByPublicId(applicationPublicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
 
-        List<InterviewAvailable> availables = interviewAvailableRepository.findAllByApplication(application);
+        List<Long> timeIds = interviewAvailableRepository.findInterviewAvailableIdsByApplicationId(application.getId());
 
-        return InterviewAvailableResult.from(availables);
+        return new InterviewAvailableResult(timeIds);
     }
 
     public InterviewAvailableDetailResult getInterviewAvailableDetail(String applicationPublicId) {

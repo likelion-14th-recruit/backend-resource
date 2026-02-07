@@ -5,9 +5,14 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.QAnswer;
 import org.likelion.recruit.resource.application.domain.QQuestion;
+import org.likelion.recruit.resource.application.domain.Question;
+import org.likelion.recruit.resource.application.domain.Question.Type;
 import org.likelion.recruit.resource.application.dto.result.AnswersRefactorResult;
 import org.likelion.recruit.resource.application.dto.result.AnswersResult;
+import org.likelion.recruit.resource.application.dto.result.AnswersResult.AnswerInfo;
+import org.likelion.recruit.resource.application.dto.result.QAnswersResult_AnswerInfo;
 import org.likelion.recruit.resource.application.repository.custom.AnswerRepositoryCustom;
+import org.likelion.recruit.resource.common.domain.Part;
 
 import java.util.List;
 
@@ -30,6 +35,24 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
                 .from(answer)
                 .join(answer.question, question)
                 .where(answer.application.id.eq(id))
+                .fetch();
+    }
+
+    @Override
+    public List<AnswerInfo> findAnswersByApplication(Long id, Type type) {
+        return queryFactory
+                .select(Projections.constructor(AnswerInfo.class,
+                        question.id,
+                        answer.content
+                    )
+                )
+                .from(answer)
+                .join(answer.question, question)
+                .where(
+                        answer.application.id.eq(id),
+                        question.type.eq(Type.COMMON)
+                                .or(question.type.eq(type))
+                )
                 .fetch();
     }
 }

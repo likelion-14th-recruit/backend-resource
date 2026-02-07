@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface QuestionRepository extends JpaRepository<Question, Long>, QuestionRepositoryCustom {
-    List<Question> findByTypeIn(List<Question.Type> types);
+    List<Question> findByTypeInOrderByQuestionNumberAsc(List<Question.Type> types);
 }

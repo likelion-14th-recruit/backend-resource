@@ -15,6 +15,8 @@ import org.likelion.recruit.resource.interview.repository.InterviewScheduleRepos
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.likelion.recruit.resource.common.exception.ErrorCode.NOT_AVAILABLE_INTERVIEW_TIME;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -57,6 +59,6 @@ public class InterviewScheduleCommandService {
                         command.getEndTime()
                 )
                 .map(InterviewAvailable::getInterviewTime)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_AVAILABLE_INTERVIEW_TIME));
+                .orElseThrow(() -> new BusinessException(NOT_AVAILABLE_INTERVIEW_TIME));
     }
 }
