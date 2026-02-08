@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import static org.likelion.recruit.resource.common.domain.Part.*;
 
@@ -41,7 +42,11 @@ public class ApplicationCommandService {
 
         // 상황 1. 지원서가 있는데 새로 생성하는 경우  verified=true, application 존재
         // 상황 3. 지원서 찾기에서 인증번호 새로 받고 다시 생성 누른 경우 verified=false, application 존재
-        if (applicationRepository.existsByPhoneNumber(phoneNumber)) {
+        if(applicationRepository.existsByPhoneNumberAndSubmitted(phoneNumber, true)){
+            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
+        }
+
+        if(applicationRepository.existsByPhoneNumberAndSubmitted(phoneNumber, false)){
             throw new BusinessException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
@@ -89,18 +94,40 @@ public class ApplicationCommandService {
     }
 
     private Application getValidatedApplication(String publicId) {
+        validateSubmissionPeriod();
+
+        return validateApplicationStatus(publicId);
+    }
+
+    private void validateSubmissionPeriod() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.of(2026, 3, 6, 0, 30, 0);
+
+        if (now.isAfter(deadline) || now.isEqual(deadline)) {
+            throw new BusinessException(ErrorCode.APPLICATION_SUBMISSION_EXPIRED);
+        }
+    }
+
+    private Application validateApplicationStatus(String publicId) {
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
 
-        if (application.isSubmitted()) {
-            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_EXISTS);
-        }
+        checkAlreadySubmitted(application);
+        checkInterviewTimeSelected(application);
 
+        return application;
+    }
+
+    private void checkAlreadySubmitted(Application application) {
+        if (application.isSubmitted()) {
+            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
+        }
+    }
+
+    private void checkInterviewTimeSelected(Application application) {
         if (!interviewAvailableRepository.existsByApplication(application)) {
             throw new BusinessException(ErrorCode.INTERVIEW_TIME_NOT_EXISTS);
         }
-
-        return application;
     }
 
     private void validateApplicationCompleteness(Application application) {
@@ -113,17 +140,19 @@ public class ApplicationCommandService {
 
 
     private List<Question> getRequiredQuestions(Part part) {
-        Question.Type specificType = mapToQuestionType(part);
-
-        return questionRepository.findByTypeIn(List.of(Question.Type.COMMON, specificType));
-    }
-
-    private Question.Type mapToQuestionType(Part part) {
         return switch (part) {
-            case FRONTEND, BACKEND -> Question.Type.DEVELOPMENT;
-            case PRODUCT_DESIGN -> Question.Type.PRODUCT_DESIGN;
+            case BACKEND, FRONTEND ->
+                    questionRepository.findByTypeInOrderByQuestionNumberAsc(
+                            List.of(Question.Type.COMMON)
+                    );
+
+            case PRODUCT_DESIGN ->
+                    questionRepository.findByTypeInOrderByQuestionNumberAsc(
+                            List.of(Question.Type.COMMON, Question.Type.PRODUCT_DESIGN)
+                    );
         };
     }
+
 
     private boolean isAnswered(Question question, List<Answer> answers) {
         return answers.stream()
@@ -135,16 +164,11 @@ public class ApplicationCommandService {
         return str != null && !str.trim().isEmpty();
     }
 
-    private boolean isMandatory(Question question) {
-        return switch (question.getType()) {
-            case COMMON, PRODUCT_DESIGN -> true;
-            case DEVELOPMENT -> false;
-        };
-    }
-
-    private void validateAllRequiredQuestionsAnswered(List<Question> questions, List<Answer> answers) {
-        for (Question question : questions) {
-            if (isMandatory(question) && !isAnswered(question, answers)) {
+    private void validateAllRequiredQuestionsAnswered(
+            List<Question> requiredQuestions,
+            List<Answer> answers) {
+        for (Question question : requiredQuestions) {
+            if (!isAnswered(question, answers)) {
                 throw new BusinessException(ErrorCode.APPLICATION_INCOMPLETE);
             }
         }

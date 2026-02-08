@@ -27,11 +27,13 @@ public enum ErrorCode {
     INTERVIEW_NOT_SCHEDULED(HttpStatus.BAD_REQUEST, "면접 일정이 확정되지 않았습니다."),
 
     //application
+    APPLICATION_ALREADY_SUBMITTED(HttpStatus.UNAUTHORIZED, "이미 제출한 지원서가 있습니다."),
     APPLICATION_ALREADY_EXISTS(HttpStatus.CONFLICT, "이미 지원서가 존재합니다."),
     APPLICATION_NOT_EXISTS(HttpStatus.NOT_FOUND, "지원서가 존재하지 않습니다."),
     QUESTION_NOT_EXISTS(HttpStatus.NOT_FOUND, "질문이 존재하지 않습니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 올바르지 않습니다."),
-    APPLICATION_INCOMPLETE(HttpStatus.BAD_REQUEST, "모든 필수 질문에 답변해야 제출이 가능합니다.");
+    APPLICATION_INCOMPLETE(HttpStatus.BAD_REQUEST, "모든 필수 질문에 답변해야 제출이 가능합니다."),
+    APPLICATION_SUBMISSION_EXPIRED(HttpStatus.BAD_REQUEST, "지원서 제출 기간이 종료되었습니다.");
     private final HttpStatus status;
     private final String message;
 }
