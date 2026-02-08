@@ -24,4 +24,5 @@ jobs:
 #            docker pull ${{ secrets.MAIN_DOCKERHUB_USERNAME }}/likelion-recruit-main:latest
 #            docker-compose up -d
 
+            chmod +x deploy.sh
             ./deploy.sh

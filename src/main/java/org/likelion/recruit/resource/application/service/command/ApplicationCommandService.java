@@ -20,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import static org.likelion.recruit.resource.common.domain.Part.*;
 
@@ -93,18 +94,40 @@ public class ApplicationCommandService {
     }
 
     private Application getValidatedApplication(String publicId) {
+        validateSubmissionPeriod();
+
+        return validateApplicationStatus(publicId);
+    }
+
+    private void validateSubmissionPeriod() {
+        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime deadline = LocalDateTime.of(2026, 3, 6, 0, 30, 0);
+
+        if (now.isAfter(deadline) || now.isEqual(deadline)) {
+            throw new BusinessException(ErrorCode.APPLICATION_SUBMISSION_EXPIRED);
+        }
+    }
+
+    private Application validateApplicationStatus(String publicId) {
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
 
-        if (application.isSubmitted()) {
-            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_EXISTS);
-        }
+        checkAlreadySubmitted(application);
+        checkInterviewTimeSelected(application);
 
+        return application;
+    }
+
+    private void checkAlreadySubmitted(Application application) {
+        if (application.isSubmitted()) {
+            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
+        }
+    }
+
+    private void checkInterviewTimeSelected(Application application) {
         if (!interviewAvailableRepository.existsByApplication(application)) {
             throw new BusinessException(ErrorCode.INTERVIEW_TIME_NOT_EXISTS);
         }
-
-        return application;
     }
 
     private void validateApplicationCompleteness(Application application) {
