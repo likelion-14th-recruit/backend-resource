@@ -1,10 +1,12 @@
 package org.likelion.recruit.resource.application.repository;
 
+import jakarta.persistence.LockModeType;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.domain.Application.PassStatus;
 import org.likelion.recruit.resource.application.repository.custom.ApplicationRepositoryCustom;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -30,5 +32,10 @@ public interface ApplicationRepository extends JpaRepository<Application,Long>, 
     //메시지 전송 관련 메서드
     @Query("select ap.phoneNumber from Application ap where ap.passStatus = :passStatus")
     List<String> findPhoneNumbersByPassStatus(@Param("passStatus") PassStatus passStatus);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select a from Application a where a.publicId = :publicId")
+    Optional<Application> findByPublicIdForUpdate(@Param("publicId") String publicId);
+
 
 }

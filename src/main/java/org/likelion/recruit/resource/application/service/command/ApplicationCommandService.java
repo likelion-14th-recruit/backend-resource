@@ -22,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import static org.likelion.recruit.resource.common.domain.Part.*;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -86,36 +86,34 @@ public class ApplicationCommandService {
     }
 
     public void submitApplication(String publicId) {
-        Application application = getValidatedApplication(publicId);
 
-        validateApplicationCompleteness(application);
+        Application application = applicationRepository
+                .findByPublicIdForUpdate(publicId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
+
+        validateSubmittable(application);
 
         application.submit();
     }
 
-    private Application getValidatedApplication(String publicId) {
+    private void validateSubmittable(Application application) {
         validateSubmissionPeriod();
-
-        return validateApplicationStatus(publicId);
+        validateApplication(application);
+        validateApplicationCompleteness(application);
     }
 
     private void validateSubmissionPeriod() {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime deadline = LocalDateTime.of(2026, 3, 6, 0, 30, 0);
 
-        if (now.isAfter(deadline) || now.isEqual(deadline)) {
+        if (!now.isBefore(deadline)) {
             throw new BusinessException(ErrorCode.APPLICATION_SUBMISSION_EXPIRED);
         }
     }
 
-    private Application validateApplicationStatus(String publicId) {
-        Application application = applicationRepository.findByPublicId(publicId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
-
+    private void validateApplication(Application application) {
         checkAlreadySubmitted(application);
         checkInterviewTimeSelected(application);
-
-        return application;
     }
 
     private void checkAlreadySubmitted(Application application) {
