@@ -41,7 +41,11 @@ public class ApplicationCommandService {
 
         // 상황 1. 지원서가 있는데 새로 생성하는 경우  verified=true, application 존재
         // 상황 3. 지원서 찾기에서 인증번호 새로 받고 다시 생성 누른 경우 verified=false, application 존재
-        if (applicationRepository.existsByPhoneNumber(phoneNumber)) {
+        if(applicationRepository.existsByPhoneNumberAndSubmitted(phoneNumber, true)){
+            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
+        }
+
+        if(applicationRepository.existsByPhoneNumberAndSubmitted(phoneNumber, false)){
             throw new BusinessException(ErrorCode.APPLICATION_ALREADY_EXISTS);
         }
 
