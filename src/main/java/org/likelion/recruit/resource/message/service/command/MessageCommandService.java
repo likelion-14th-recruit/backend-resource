@@ -4,12 +4,17 @@ import com.solapi.sdk.SolapiClient;
 import com.solapi.sdk.message.model.Message;
 import com.solapi.sdk.message.service.DefaultMessageService;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.dto.query.DocumentPassedMessageTarget;
 import org.likelion.recruit.resource.application.dto.query.PassedMessageTarget;
 import org.likelion.recruit.resource.application.dto.query.RejectedMessageTarget;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
+import org.likelion.recruit.resource.message.domain.MessageLog;
+import org.likelion.recruit.resource.message.domain.MessageLog.MessageStatus;
+import org.likelion.recruit.resource.message.domain.MessageLog.MessageType;
+import org.likelion.recruit.resource.message.repository.MessageLogRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +22,11 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class MessageCommandService {
 
     private DefaultMessageService messageService;
+    private final MessageLogRepository messageLogRepository;
 
     @Value("${solapi.sender}")
     private String senderNumber;
@@ -42,9 +49,19 @@ public class MessageCommandService {
         msg.setTo(phoneNumber);
         msg.setText("[서강대학교 멋쟁이사자처럼] 본인확인 인증 번호는 [" + code + "] 입니다.");
 
+        // 메시지 로그 생성
+        MessageLog messageLog = MessageLog.create(MessageType.VERIFICATION, senderNumber, phoneNumber);
+
         try {
             messageService.send(msg);
+            messageLog.send();
         } catch (Exception e) {
+            messageLog.sendFailed();
+        } finally {
+            messageLogRepository.save(messageLog);
+        }
+
+        if (messageLog.getMessageStatus() == MessageStatus.FAILED) {
             throw new BusinessException(ErrorCode.SMS_SEND_FAILED);
         }
     }
@@ -74,10 +91,17 @@ public class MessageCommandService {
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
+            MessageLog messageLog =
+                    MessageLog.create(MessageType.DOCUMENT_PASSED, senderNumber, target.getPhoneNumber());
+
             try {
                 messageService.send(msg);
+                messageLog.send();
             } catch (Exception e) {
-                throw new BusinessException(ErrorCode.SMS_SEND_FAILED);
+                messageLog.sendFailed();
+            }
+            finally {
+                messageLogRepository.save(messageLog);
             }
         }
     }
@@ -97,10 +121,17 @@ public class MessageCommandService {
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
+            MessageLog messageLog =
+                    MessageLog.create(MessageType.DOCUMENT_FAILED, senderNumber, target.getPhoneNumber());
+
             try {
                 messageService.send(msg);
+                messageLog.send();
             } catch (Exception e) {
-                throw new BusinessException(ErrorCode.SMS_SEND_FAILED);
+                messageLog.sendFailed();
+            }
+            finally {
+                messageLogRepository.save(messageLog);
             }
         }
     }
@@ -126,10 +157,17 @@ public class MessageCommandService {
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
+            MessageLog messageLog =
+                    MessageLog.create(MessageType.INTERVIEW_PASSED, senderNumber, target.getPhoneNumber());
+
             try {
                 messageService.send(msg);
+                messageLog.send();
             } catch (Exception e) {
-                throw new BusinessException(ErrorCode.SMS_SEND_FAILED);
+                messageLog.sendFailed();
+            }
+            finally {
+                messageLogRepository.save(messageLog);
             }
         }
     }
@@ -149,10 +187,17 @@ public class MessageCommandService {
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
+            MessageLog messageLog =
+                    MessageLog.create(MessageType.INTERVIEW_FAILED, senderNumber, target.getPhoneNumber());
+
             try {
                 messageService.send(msg);
+                messageLog.send();
             } catch (Exception e) {
-                throw new BusinessException(ErrorCode.SMS_SEND_FAILED);
+                messageLog.sendFailed();
+            }
+            finally {
+                messageLogRepository.save(messageLog);
             }
         }
     }
