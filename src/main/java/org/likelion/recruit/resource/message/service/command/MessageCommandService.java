@@ -47,7 +47,7 @@ public class MessageCommandService {
         Message msg = new Message();
         msg.setFrom(senderNumber);
         msg.setTo(phoneNumber);
-        msg.setText("[서강대학교 멋쟁이사자처럼] 본인확인 인증 번호는 [" + code + "] 입니다.");
+        msg.setText("[멋쟁이사자처럼 서강대학교] 본인확인 인증 번호는 [" + code + "] 입니다.");
 
         // 메시지 로그 생성
         MessageLog messageLog = MessageLog.create(MessageType.VERIFICATION, senderNumber, phoneNumber);
@@ -72,7 +72,8 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교 14기 서류전형 결과 안내]\n\n" +
+            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
+                    "[14기 서류전형 결과 안내]\n\n" +
                     "안녕하세요 " + target.getName() + "님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "저희 14기 모집에 관심을 가지고 소중한 지원서를 제출해 주셔서 진심으로 감사드립니다.\n\n" +
                     "축하드립니다! 멋쟁이사자처럼 서강대학교 14기 서류 전형에 합격하셨음을 알려드립니다. 이하 최종 면접 과정에 대한 안내드리겠습니다.\n\n" +
@@ -87,7 +88,7 @@ public class MessageCommandService {
                     "- 대표 : 010-6264-7243\n" +
                     "- 부대표 : 010-9338-5848, 010-3076-2799\n" +
                     "- 인스타그램 : @likelion_sg\n\n" +
-                    "다시 한번 축하드리며, 면접에서 좋은 결과 있으시길 응원하겠습니다.\n" +
+                    "다시 한번 축하드리며, 면접에서 좋은 결과 있으시길 응원하겠습니다.\n\n" +
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
@@ -112,12 +113,12 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교 14기 면접 결과 안내]\n\n" +
-                    "안녕하세요" + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
+            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
+                    "[14기 서류전형 결과 안내]\n\n" +
+                    "안녕하세요 " + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "저희 14기 모집에 관심을 가지고 소중한 지원서를 제출해 주셔서 진심으로 감사드립니다.\n\n" +
                     "보내주신 지원서를 신중히 검토하였으나, 한정된 인원으로 인해 아쉽게도 이번 14기 과정에서는 함께하지 못하게 되었다는 소식을 전해드립니다.\n" +
-                    "모든 지원자분과 함께하지 못해 운영진 또한 매우 아쉬운 마음입니다. 비록 이번에는 연이 닿지 않았지만, 지원자님이 보여주신 열정을 진심으로 응원하겠습니다.\n\n" +
-                    "다시 한번 지원해 주셔서 감사합니다.\n" +
+                    "지원자분과 함께 활동하지 못해 저희 또한 매우 아쉬울 따름입니다. 이번에는 함께하지 못하게 되었지만, 앞으로의 모든 도전과 앞날을 진심으로 응원하겠습니다. 다시 한번 지원해 주셔서 감사합니다.\n\n" +
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
@@ -143,8 +144,9 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교 14기 면접 결과 안내]\n\n" +
-                    "안녕하세요" + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
+            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
+                    "[14기 최종 결과 안내]\n\n" +
+                    "안녕하세요 " + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "축하드립니다! 멋쟁이사자처럼 서강대학교 14기 " + part + " 파트 최종 합격하셨음을 알려드립니다.\n" +
                     "14기 아기사자 활동을 시작하기 앞서 첫 번째 공지사항을 전달드립니다.\n\n" +
                     "1. 정규 세션 시간\n" +
@@ -153,7 +155,7 @@ public class MessageCommandService {
                     "- 일시 : 3월 16일 (월) 19:00시\n" +
                     "- 장소 : 공덕 ICT COC - 마포 프론트원 6층\n\n" +
                     "다시 한번 멋쟁이사자처럼 서강대학교 14기의 일원이 되신 것을 환영합니다! 지원서와 면접에서 보여주신 열정을 이제는 동료들과 함께 실제 서비스로 구현하며 멋진 성장을 이뤄나가시길 기대하겠습니다.\n" +
-                    "다가오는 OT에서 설레는 마음으로 뵙겠습니다. 감사합니다!\n" +
+                    "다가오는 OT에서 설레는 마음으로 뵙겠습니다. 감사합니다!\n\n" +
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
@@ -178,12 +180,13 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교 14기 최종 결과 안내]\n\n" +
-                    "안녕하세요" + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
+            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
+                    "[14기 최종 결과 안내]\n\n" +
+                    "안녕하세요 " + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "바쁜 일정 중에도 시간을 내어 최종 면접에 참석해 주셔서 진심으로 감사드립니다.\n\n" +
                     "면접을 통해 지원자님의 열정을 직접 느낄 수 있어 운영진에게도 매우 뜻깊은 시간이었습니다. 다만, 한정된 선발 인원으로 인해 아쉽게도 이번 14기 과정에서는 최종적으로 함께하지 못하게 되었습니다.\n" +
                     "모든 분과 함께하지 못해 운영진 또한 아쉬운 마음이 큽니다. 비록 이번에는 연이 닿지 않았지만, 지원자님이 보여주신 뜨거운 도전을 진심으로 응원하겠습니다.\n\n" +
-                    "다시 한번 지원해 주셔서 감사합니다.\n" +
+                    "다시 한번 지원해 주셔서 감사합니다.\n\n" +
                     "멋쟁이사자처럼 서강대학교 14기 운영진 드림"
             );
 
