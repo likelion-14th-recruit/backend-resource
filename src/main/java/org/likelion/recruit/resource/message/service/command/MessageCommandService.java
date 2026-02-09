@@ -47,7 +47,7 @@ public class MessageCommandService {
         Message msg = new Message();
         msg.setFrom(senderNumber);
         msg.setTo(phoneNumber);
-        msg.setText("[멋쟁이사자처럼 서강대학교] 본인확인 인증 번호는 [" + code + "] 입니다.");
+        msg.setText("[멋쟁이사자처럼 서강대학교]\n" + "본인확인 인증 번호는 [" + code + "] 입니다.");
 
         // 메시지 로그 생성
         MessageLog messageLog = MessageLog.create(MessageType.VERIFICATION, senderNumber, phoneNumber);
@@ -72,8 +72,8 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
-                    "[14기 서류전형 결과 안내]\n\n" +
+            msg.setSubject("[멋쟁이사자처럼 서강대학교]");
+            msg.setText("14기 서류전형 결과 안내\n\n" +
                     "안녕하세요 " + target.getName() + "님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "저희 14기 모집에 관심을 가지고 소중한 지원서를 제출해 주셔서 진심으로 감사드립니다.\n\n" +
                     "축하드립니다! 멋쟁이사자처럼 서강대학교 14기 서류 전형에 합격하셨음을 알려드립니다. 이하 최종 면접 과정에 대한 안내드리겠습니다.\n\n" +
@@ -113,8 +113,8 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
-                    "[14기 서류전형 결과 안내]\n\n" +
+            msg.setSubject("[멋쟁이사자처럼 서강대학교]");
+            msg.setText("14기 서류전형 결과 안내\n\n" +
                     "안녕하세요 " + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "저희 14기 모집에 관심을 가지고 소중한 지원서를 제출해 주셔서 진심으로 감사드립니다.\n\n" +
                     "보내주신 지원서를 신중히 검토하였으나, 한정된 인원으로 인해 아쉽게도 이번 14기 과정에서는 함께하지 못하게 되었다는 소식을 전해드립니다.\n" +
@@ -144,8 +144,8 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
-                    "[14기 최종 결과 안내]\n\n" +
+            msg.setSubject("[멋쟁이사자처럼 서강대학교]");
+            msg.setText("14기 최종 결과 안내\n\n" +
                     "안녕하세요 " + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "축하드립니다! 멋쟁이사자처럼 서강대학교 14기 " + part + " 파트 최종 합격하셨음을 알려드립니다.\n" +
                     "14기 아기사자 활동을 시작하기 앞서 첫 번째 공지사항을 전달드립니다.\n\n" +
@@ -180,8 +180,8 @@ public class MessageCommandService {
             Message msg = new Message();
             msg.setFrom(senderNumber);
             msg.setTo(target.getPhoneNumber());
-            msg.setText("[멋쟁이사자처럼 서강대학교]\n" +
-                    "[14기 최종 결과 안내]\n\n" +
+            msg.setSubject("[멋쟁이사자처럼 서강대학교]");
+            msg.setText("14기 최종 결과 안내\n\n" +
                     "안녕하세요 " + target.getName() +"님, 멋쟁이사자처럼 서강대학교 14기 운영진입니다.\n" +
                     "바쁜 일정 중에도 시간을 내어 최종 면접에 참석해 주셔서 진심으로 감사드립니다.\n\n" +
                     "면접을 통해 지원자님의 열정을 직접 느낄 수 있어 운영진에게도 매우 뜻깊은 시간이었습니다. 다만, 한정된 선발 인원으로 인해 아쉽게도 이번 14기 과정에서는 최종적으로 함께하지 못하게 되었습니다.\n" +
