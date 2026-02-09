@@ -8,6 +8,7 @@ import org.likelion.recruit.resource.application.dto.command.ApplicationUpdateCo
 import org.likelion.recruit.resource.common.domain.BaseTimeEntity;
 import org.likelion.recruit.resource.common.domain.Part;
 import org.likelion.recruit.resource.common.exception.BusinessException;
+import org.likelion.recruit.resource.common.exception.ErrorCode;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -114,10 +115,14 @@ public class Application extends BaseTimeEntity {
     /**
      * 비즈니스 메서드
      */
-    public void submit(){
+    public void submit() {
+        if (this.submitted) {
+            throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
+        }
         this.submitted = true;
         this.submittedAt = LocalDateTime.now();
     }
+
 
     public void changePassword(String passwordHash){
         this.passwordHash = passwordHash;
