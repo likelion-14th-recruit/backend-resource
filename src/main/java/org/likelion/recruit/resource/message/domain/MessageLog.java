@@ -4,15 +4,12 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.common.domain.BaseTimeEntity;
-
-import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class Message extends BaseTimeEntity {
+public class MessageLog extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -42,14 +39,14 @@ public class Message extends BaseTimeEntity {
     private String receiver;
 
     // 생성 메서드
-    private Message(MessageType messageType, MessageStatus messageStatus, String receiver) {
+    private MessageLog(MessageType messageType, MessageStatus messageStatus, String receiver) {
         this.messageType = messageType;
         this.messageStatus = messageStatus;
         this.receiver = receiver;
     }
 
-    public static Message create(MessageType messageType, String receiver) {
-        return new Message(messageType, MessageStatus.PENDING, receiver);
+    public static MessageLog create(MessageType messageType, String receiver) {
+        return new MessageLog(messageType, MessageStatus.PENDING, receiver);
     }
 
     // 비즈니스 로직
