@@ -35,18 +35,22 @@ public class MessageLog extends BaseTimeEntity {
     @Enumerated(EnumType.STRING)
     private MessageStatus messageStatus;
 
+    @Column(nullable = false, name = "sender_phone_number")
+    private String sender;
+
     @Column(nullable = false, name = "receiver_phone_number")
     private String receiver;
 
     // 생성 메서드
-    private MessageLog(MessageType messageType, MessageStatus messageStatus, String receiver) {
+    private MessageLog(MessageType messageType, MessageStatus messageStatus, String sender, String receiver) {
         this.messageType = messageType;
         this.messageStatus = messageStatus;
+        this.sender = sender;
         this.receiver = receiver;
     }
 
-    public static MessageLog create(MessageType messageType, String receiver) {
-        return new MessageLog(messageType, MessageStatus.PENDING, receiver);
+    public static MessageLog create(MessageType messageType, String sender, String receiver) {
+        return new MessageLog(messageType, MessageStatus.PENDING, sender, receiver);
     }
 
     // 비즈니스 로직
