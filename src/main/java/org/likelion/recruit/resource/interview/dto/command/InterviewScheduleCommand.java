@@ -13,7 +13,6 @@ public class InterviewScheduleCommand {
     private String applicationPublicId;
     private LocalDate date;
     private LocalTime startTime;
-    private LocalTime endTime;
     private String place;
 
     public static InterviewScheduleCommand of(String publicId, InterviewScheduleRequest request) {
@@ -21,7 +20,6 @@ public class InterviewScheduleCommand {
                 .applicationPublicId(publicId)
                 .date(request.getDate())
                 .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
                 .place(request.getPlace())
                 .build();
     }

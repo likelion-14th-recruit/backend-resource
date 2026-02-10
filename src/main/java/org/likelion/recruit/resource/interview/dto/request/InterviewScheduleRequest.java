@@ -12,11 +12,10 @@ import java.time.LocalTime;
 public class InterviewScheduleRequest {
     private LocalDate date;
     private LocalTime startTime;
-    private LocalTime endTime;
     private String place;
 
-    @AssertTrue(message = "면접 날짜와 시작/종료 시간은 모두 입력해야 저장 가능합니다.")
+    @AssertTrue(message = "면접 날짜와 시작 시간은 필수 입력 항목입니다.")
     public boolean isValid() {
-        return date != null && startTime != null && endTime != null;
+        return date != null && startTime != null;
     }
 }
