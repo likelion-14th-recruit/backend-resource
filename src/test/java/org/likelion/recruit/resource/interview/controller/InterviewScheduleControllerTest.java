@@ -44,20 +44,20 @@ class InterviewScheduleControllerTest {
     @MockitoBean
     private InterviewScheduleQueryService interviewScheduleQueryService;
 
-    private InterviewScheduleResult createMockResult(LocalDate date, LocalTime start, LocalTime end, String place) throws Exception {
+    private InterviewScheduleResult createMockResult(LocalDate date, LocalTime start, String place) throws Exception {
         Constructor<InterviewScheduleResult> constructor = InterviewScheduleResult.class.getDeclaredConstructor();
         constructor.setAccessible(true);
         InterviewScheduleResult result = constructor.newInstance();
 
         ReflectionTestUtils.setField(result, "date", date);
         ReflectionTestUtils.setField(result, "startTime", start);
-        ReflectionTestUtils.setField(result, "endTime", end);
+        ReflectionTestUtils.setField(result, "endTime", start.plusMinutes(20));
         ReflectionTestUtils.setField(result, "place", place);
         return result;
     }
 
     @Test
-    @DisplayName("날짜, 시작 시간, 종료 시간 세트가 모두 갖춰지면 저장 후 최신 데이터를 반환한다.")
+    @DisplayName("날짜, 시작 시간이 갖춰지면 저장 후 최신 데이터를 반환한다.")
     void upsertInterviewSchedule_FullSet_Success() throws Exception {
         // Given
         String publicId = "app-test-1234";
@@ -88,12 +88,14 @@ class InterviewScheduleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success").value(true))
                 .andExpect(jsonPath("$.data.date").value("2026-01-29"))
+                .andExpect(jsonPath("$.data.startTime").value("14:00:00"))
+                .andExpect(jsonPath("$.data.endTime").value("14:20:00"))
                 .andExpect(jsonPath("$.data.place").value("J201"))
                 .andDo(print());
     }
 
     @Test
-    @DisplayName("날짜(요일)만 선택하고 시간 정보가 누락되면 VALIDATION_ERROR(400)가 발생한다.")
+    @DisplayName("날짜(요일)만 선택하고 시작 시간 정보가 누락되면 VALIDATION_ERROR(400)가 발생한다.")
     void upsertInterviewSchedule_DateOnly_Fail() throws Exception {
         String publicId = "app-test-1234";
         String dateOnlyJson = """
@@ -108,7 +110,7 @@ class InterviewScheduleControllerTest {
                         .content(dateOnlyJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.message").value("면접 날짜와 시작/종료 시간은 모두 입력해야 저장 가능합니다."));
+                .andExpect(jsonPath("$.message").value("면접 날짜와 시작 시간은 필수 입력 항목입니다."));
     }
 
     @Test
@@ -127,6 +129,6 @@ class InterviewScheduleControllerTest {
                         .content(timeOnlyJson))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.message").value("면접 날짜와 시작/종료 시간은 모두 입력해야 저장 가능합니다."));
+                .andExpect(jsonPath("$.message").value("면접 날짜와 시작 시간은 필수 입력 항목입니다."));
     }
 }
