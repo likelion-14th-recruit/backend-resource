@@ -1,134 +1,110 @@
 package org.likelion.recruit.resource.interview.controller;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.likelion.recruit.resource.application.domain.Application;
+import org.likelion.recruit.resource.application.repository.ApplicationRepository;
+import org.likelion.recruit.resource.common.exception.BusinessException;
+import org.likelion.recruit.resource.interview.domain.InterviewSchedule;
+import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.dto.command.InterviewScheduleCommand;
-import org.likelion.recruit.resource.interview.dto.result.InterviewScheduleResult;
+import org.likelion.recruit.resource.interview.repository.InterviewScheduleRepository;
+import org.likelion.recruit.resource.interview.repository.InterviewTimeRepository;
 import org.likelion.recruit.resource.interview.service.command.InterviewScheduleCommandService;
-import org.likelion.recruit.resource.interview.service.query.InterviewScheduleQueryService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
-import org.springframework.http.MediaType;
-import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.test.web.servlet.MockMvc;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.mockito.Mockito.*;
+import java.util.Optional;
 
-
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.lang.reflect.Constructor;
-@WebMvcTest(InterviewScheduleController.class)
-@Disabled
+@ExtendWith(MockitoExtension.class)
 class InterviewScheduleControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
-
-    @MockitoBean
-    private org.springframework.data.jpa.mapping.JpaMetamodelMappingContext jpaMetamodelMappingContext;
-
-    @MockitoBean
+    @InjectMocks
     private InterviewScheduleCommandService interviewScheduleCommandService;
 
-    @MockitoBean
-    private InterviewScheduleQueryService interviewScheduleQueryService;
+    @Mock
+    private InterviewScheduleRepository interviewScheduleRepository;
 
-    private InterviewScheduleResult createMockResult(LocalDate date, LocalTime start, String place) throws Exception {
-        Constructor<InterviewScheduleResult> constructor = InterviewScheduleResult.class.getDeclaredConstructor();
-        constructor.setAccessible(true);
-        InterviewScheduleResult result = constructor.newInstance();
+    @Mock
+    private InterviewTimeRepository interviewTimeRepository;
 
-        ReflectionTestUtils.setField(result, "date", date);
-        ReflectionTestUtils.setField(result, "startTime", start);
-        ReflectionTestUtils.setField(result, "endTime", start.plusMinutes(20));
-        ReflectionTestUtils.setField(result, "place", place);
-        return result;
+    @Mock
+    private ApplicationRepository applicationRepository;
+
+    @Test
+    @DisplayName("서버에 등록된 면접 시간이라면, 지원자 선택 여부와 상관없이 일정을 성공적으로 확정한다.")
+    void upsertInterviewSchedule_Success() {
+        // Given
+        String publicId = "app-test-123";
+        InterviewScheduleCommand command = createCommand(publicId, LocalDate.of(2026, 3, 9), LocalTime.of(18, 0));
+
+        Application mockApplication = mock(Application.class);
+        InterviewTime mockTime = mock(InterviewTime.class);
+
+        given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(mockApplication));
+        given(interviewTimeRepository.findByDateAndStartTime(any(), any())).willReturn(Optional.of(mockTime));
+        given(interviewScheduleRepository.findByApplication(mockApplication)).willReturn(Optional.empty());
+
+        // When
+        interviewScheduleCommandService.upsertInterviewSchedule(command);
+
+        // Then
+        verify(interviewScheduleRepository, times(1)).save(any(InterviewSchedule.class));
     }
 
     @Test
-    @DisplayName("날짜, 시작 시간이 갖춰지면 저장 후 최신 데이터를 반환한다.")
-    void upsertInterviewSchedule_FullSet_Success() throws Exception {
+    @DisplayName("이미 일정이 존재하는 지원자의 경우, 새로운 정보로 업데이트(Update)를 수행한다.")
+    void upsertInterviewSchedule_Update_Success() {
         // Given
-        String publicId = "app-test-1234";
-        String requestJson = """
-                {
-                    "date": "2026-01-29",
-                    "startTime": "14:00:00",
-                    "place": "J201"
-                }
-                """;
+        String publicId = "app-test-123";
+        InterviewScheduleCommand command = createCommand(publicId, LocalDate.of(2026, 3, 9), LocalTime.of(18, 0));
 
-        willDoNothing().given(interviewScheduleCommandService)
-                .upsertInterviewSchedule(any(InterviewScheduleCommand.class));
+        Application mockApplication = mock(Application.class);
+        InterviewTime mockTime = mock(InterviewTime.class);
+        InterviewSchedule existingSchedule = mock(InterviewSchedule.class);
 
-        InterviewScheduleResult mockResult = createMockResult(
-                LocalDate.of(2026, 1, 29),
-                LocalTime.of(14, 0),
-                "J201"
-        );
+        given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(mockApplication));
+        given(interviewTimeRepository.findByDateAndStartTime(any(), any())).willReturn(Optional.of(mockTime));
+        given(interviewScheduleRepository.findByApplication(mockApplication)).willReturn(Optional.of(existingSchedule));
 
-        given(interviewScheduleQueryService.getInterviewSchedule(publicId))
-                .willReturn(mockResult);
+        // When
+        interviewScheduleCommandService.upsertInterviewSchedule(command);
+
+        // Then
+        verify(existingSchedule, times(1)).updateInterviewTime(mockTime);
+        verify(interviewScheduleRepository, never()).save(any());
+    }
+
+    @Test
+    @DisplayName("서버에 존재하지 않는 시간대로 확정하려 하면 예외가 발생한다.")
+    void upsertInterviewSchedule_InvalidTime_Fail() {
+        // Given
+        String publicId = "app-test-123";
+        InterviewScheduleCommand command = createCommand(publicId, LocalDate.of(2099, 1, 1), LocalTime.of(0, 0));
+
+        given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(mock(Application.class)));
+        given(interviewTimeRepository.findByDateAndStartTime(any(), any())).willReturn(Optional.empty());
 
         // When & Then
-        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/select", publicId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(requestJson))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success").value(true))
-                .andExpect(jsonPath("$.data.date").value("2026-01-29"))
-                .andExpect(jsonPath("$.data.startTime").value("14:00:00"))
-                .andExpect(jsonPath("$.data.endTime").value("14:20:00"))
-                .andExpect(jsonPath("$.data.place").value("J201"))
-                .andDo(print());
+        assertThatThrownBy(() -> interviewScheduleCommandService.upsertInterviewSchedule(command))
+                .isInstanceOf(BusinessException.class);
     }
 
-    @Test
-    @DisplayName("날짜(요일)만 선택하고 시작 시간 정보가 누락되면 VALIDATION_ERROR(400)가 발생한다.")
-    void upsertInterviewSchedule_DateOnly_Fail() throws Exception {
-        String publicId = "app-test-1234";
-        String dateOnlyJson = """
-                {
-                    "date": "2026-01-29",
-                    "place": "J201"
-                }
-                """;
-
-        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/select", publicId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(dateOnlyJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.message").value("면접 날짜와 시작 시간은 필수 입력 항목입니다."));
-    }
-
-    @Test
-    @DisplayName("날짜 없이 시간 정보만 입력된 경우 VALIDATION_ERROR(400)가 발생한다.")
-    void upsertInterviewSchedule_TimeOnly_Fail() throws Exception {
-        String publicId = "app-test-1234";
-        String timeOnlyJson = """
-                {
-                    "startTime": "14:00:00",
-                    "place": "J201"
-                }
-                """;
-
-        mockMvc.perform(post("/applications/{applicationPublicId}/interview-schedule/select", publicId)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(timeOnlyJson))
-                .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.code").value("VALIDATION_ERROR"))
-                .andExpect(jsonPath("$.message").value("면접 날짜와 시작 시간은 필수 입력 항목입니다."));
+    private InterviewScheduleCommand createCommand(String publicId, LocalDate date, LocalTime start) {
+        return InterviewScheduleCommand.builder()
+                .applicationPublicId(publicId)
+                .date(date)
+                .startTime(start)
+                .place("J201")
+                .build();
     }
 }
