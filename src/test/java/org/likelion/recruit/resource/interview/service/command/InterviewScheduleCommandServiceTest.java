@@ -1,8 +1,6 @@
 package org.likelion.recruit.resource.interview.service.command;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.likelion.recruit.resource.common.init.ApplicationFixture.createCommand;
-import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -15,15 +13,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.likelion.recruit.resource.application.domain.Application;
 import org.likelion.recruit.resource.application.repository.ApplicationRepository;
 import org.likelion.recruit.resource.common.exception.BusinessException;
-import org.likelion.recruit.resource.interview.domain.InterviewAvailable;
 import org.likelion.recruit.resource.interview.domain.InterviewSchedule;
 import org.likelion.recruit.resource.interview.domain.InterviewTime;
 import org.likelion.recruit.resource.interview.dto.command.InterviewScheduleCommand;
-import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepository;
 import org.likelion.recruit.resource.interview.repository.InterviewScheduleRepository;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.likelion.recruit.resource.interview.repository.InterviewTimeRepository;
+
+import java.time.LocalDate;
+import java.time.LocalTime;
+
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class InterviewScheduleCommandServiceTest {
@@ -35,27 +38,24 @@ class InterviewScheduleCommandServiceTest {
     private InterviewScheduleRepository interviewScheduleRepository;
 
     @Mock
-    private InterviewAvailableRepository interviewAvailableRepository;
+    private InterviewTimeRepository interviewTimeRepository;
 
     @Mock
     private ApplicationRepository applicationRepository;
 
     @Test
-    @DisplayName("날짜와 시간 세트가 모두 있고 지원자가 선택한 시간 내라면, 일정을 성공적으로 확정(저장)한다.")
-    void upsertInterviewSchedule_FullSet_Success() {
+    @DisplayName("서버에 등록된 면접 시간이라면, 지원자 선택 여부와 상관없이 일정을 성공적으로 확정한다.")
+    void upsertInterviewSchedule_Success() {
         // Given
-        String publicId = "app-test-1234";
-        InterviewScheduleCommand command = createCommand(publicId, "J201"); // 날짜/시간 포함된 픽스처
+        String publicId = "app-test-123";
+        InterviewScheduleCommand command = createCommand(publicId, LocalDate.of(2026, 3, 9), LocalTime.of(18, 0));
 
-        Application application = mock(Application.class);
-        InterviewAvailable available = mock(InterviewAvailable.class);
-        InterviewTime interviewTime = mock(InterviewTime.class);
+        Application mockApplication = mock(Application.class);
+        InterviewTime mockTime = mock(InterviewTime.class);
 
-        given(applicationRepository.findByPublicId(anyString())).willReturn(Optional.of(application));
-        given(interviewAvailableRepository.findByApplicationAndDateTime(any(), any(), any(), any()))
-                .willReturn(Optional.of(available));
-        given(available.getInterviewTime()).willReturn(interviewTime);
-        given(interviewScheduleRepository.findByApplication(any())).willReturn(Optional.empty());
+        given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(mockApplication));
+        given(interviewTimeRepository.findByDateAndStartTime(any(), any())).willReturn(Optional.of(mockTime));
+        given(interviewScheduleRepository.findByApplication(mockApplication)).willReturn(Optional.empty());
 
         // When
         interviewScheduleCommandService.upsertInterviewSchedule(command);
@@ -66,46 +66,48 @@ class InterviewScheduleCommandServiceTest {
 
     @Test
     @DisplayName("이미 일정이 존재하는 지원자의 경우, 새로운 정보로 업데이트(Update)를 수행한다.")
-    void upsertInterviewSchedule_Update_Existing() {
+    void upsertInterviewSchedule_Update_Success() {
         // Given
-        String publicId = "app-test-1234";
-        InterviewScheduleCommand command = createCommand(publicId, "새로운 장소");
+        String publicId = "app-test-123";
+        InterviewScheduleCommand command = createCommand(publicId, LocalDate.of(2026, 3, 9), LocalTime.of(18, 0));
 
-        Application application = mock(Application.class);
+        Application mockApplication = mock(Application.class);
+        InterviewTime mockTime = mock(InterviewTime.class);
         InterviewSchedule existingSchedule = mock(InterviewSchedule.class);
-        InterviewAvailable available = mock(InterviewAvailable.class);
-        InterviewTime interviewTime = mock(InterviewTime.class);
 
-        given(applicationRepository.findByPublicId(anyString())).willReturn(Optional.of(application));
-        given(interviewAvailableRepository.findByApplicationAndDateTime(any(), any(), any(), any()))
-                .willReturn(Optional.of(available));
-        given(available.getInterviewTime()).willReturn(interviewTime);
-        given(interviewScheduleRepository.findByApplication(any())).willReturn(Optional.of(existingSchedule));
+        given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(mockApplication));
+        given(interviewTimeRepository.findByDateAndStartTime(any(), any())).willReturn(Optional.of(mockTime));
+        given(interviewScheduleRepository.findByApplication(mockApplication)).willReturn(Optional.of(existingSchedule));
 
         // When
         interviewScheduleCommandService.upsertInterviewSchedule(command);
 
         // Then
-        verify(existingSchedule, times(1)).assignPlace(eq("새로운 장소"));
-        verify(existingSchedule, times(1)).updateInterviewTime(any());
-        verify(interviewScheduleRepository, times(0)).save(any());
+        verify(existingSchedule, times(1)).updateInterviewTime(mockTime);
+        verify(interviewScheduleRepository, never()).save(any());
     }
 
     @Test
-    @DisplayName("지원자가 선택하지 않은 날짜/시간 조합으로 확정하려 하면 예외가 발생한다.")
-    void upsertInterviewSchedule_Fail_Not_Available() {
+    @DisplayName("서버에 존재하지 않는 시간대로 확정하려 하면 예외가 발생한다.")
+    void upsertInterviewSchedule_InvalidTime_Fail() {
         // Given
-        String publicId = "app-test-1234";
-        InterviewScheduleCommand command = createCommand(publicId, "J201");
+        String publicId = "app-test-123";
+        InterviewScheduleCommand command = createCommand(publicId, LocalDate.of(2099, 1, 1), LocalTime.of(0, 0));
 
-        Application application = mock(Application.class);
-        given(applicationRepository.findByPublicId(anyString())).willReturn(Optional.of(application));
-        given(interviewAvailableRepository.findByApplicationAndDateTime(any(), any(), any(), any()))
-                .willReturn(Optional.empty());
+        given(applicationRepository.findByPublicId(publicId)).willReturn(Optional.of(mock(Application.class)));
+        given(interviewTimeRepository.findByDateAndStartTime(any(), any())).willReturn(Optional.empty());
 
         // When & Then
         assertThatThrownBy(() -> interviewScheduleCommandService.upsertInterviewSchedule(command))
-                .isInstanceOf(BusinessException.class)
-                .hasMessageContaining("지원자가 선택한 면접 가능 시간이 아닙니다.");
+                .isInstanceOf(BusinessException.class);
+    }
+
+    private InterviewScheduleCommand createCommand(String publicId, LocalDate date, LocalTime start) {
+        return InterviewScheduleCommand.builder()
+                .applicationPublicId(publicId)
+                .date(date)
+                .startTime(start)
+                .place("J201")
+                .build();
     }
 }
