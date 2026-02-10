@@ -65,7 +65,6 @@ class InterviewScheduleControllerTest {
                 {
                     "date": "2026-01-29",
                     "startTime": "14:00:00",
-                    "endTime": "14:20:00",
                     "place": "J201"
                 }
                 """;
@@ -76,7 +75,6 @@ class InterviewScheduleControllerTest {
         InterviewScheduleResult mockResult = createMockResult(
                 LocalDate.of(2026, 1, 29),
                 LocalTime.of(14, 0),
-                LocalTime.of(14, 20),
                 "J201"
         );
 
@@ -120,7 +118,6 @@ class InterviewScheduleControllerTest {
         String timeOnlyJson = """
                 {
                     "startTime": "14:00:00",
-                    "endTime": "14:20:00",
                     "place": "J201"
                 }
                 """;
