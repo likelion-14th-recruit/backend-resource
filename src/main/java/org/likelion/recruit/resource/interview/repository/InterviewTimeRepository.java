@@ -12,4 +12,6 @@ import java.util.Optional;
 public interface InterviewTimeRepository extends JpaRepository<InterviewTime, Long>, InterviewTimeRepositoryCustom {
     @Query("select it.id from InterviewTime it where it.date = :date and it.startTime = :startTime")
     Optional<Long> findIdByDateAndStartTime(LocalDate date, LocalTime startTime);
+
+    Optional<InterviewTime> findByDateAndStartTime(LocalDate date, LocalTime startTime);
 }

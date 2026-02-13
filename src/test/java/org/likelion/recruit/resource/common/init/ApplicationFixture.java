@@ -49,7 +49,6 @@ public class ApplicationFixture {
                 .applicationPublicId(publicId)
                 .date(LocalDate.of(2026, 1, 29))
                 .startTime(LocalTime.of(14, 0))
-                .endTime(LocalTime.of(14, 20))
                 .place(place)
                 .build();
     }
@@ -59,7 +58,6 @@ public class ApplicationFixture {
                 .applicationPublicId(publicId)
                 .date(date)
                 .startTime(startTime)
-                .endTime(startTime.plusMinutes(20))
                 .place(place)
                 .build();
     }
