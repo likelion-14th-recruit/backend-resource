@@ -23,7 +23,6 @@ public enum ErrorCode {
 
     //interview
     INTERVIEW_TIME_NOT_EXISTS(HttpStatus.NOT_FOUND, "인터뷰 시간이 존재하지 않습니다."),
-    NOT_AVAILABLE_INTERVIEW_TIME(HttpStatus.BAD_REQUEST, "지원자가 선택한 면접 가능 시간이 아닙니다."),
     INTERVIEW_NOT_SCHEDULED(HttpStatus.BAD_REQUEST, "면접 일정이 확정되지 않았습니다."),
 
     //application

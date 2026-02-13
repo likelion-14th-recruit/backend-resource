@@ -86,7 +86,6 @@ public class ApplicationCommandService {
     }
 
     public void submitApplication(String publicId) {
-
         Application application = applicationRepository
                 .findByPublicIdForUpdate(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
