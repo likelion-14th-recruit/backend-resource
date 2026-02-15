@@ -18,6 +18,9 @@ public class CorsConfig {
         config.addAllowedOrigin("http://localhost:3000");
         config.addAllowedOrigin("http://localhost:5173");
 
+        //배포 환경
+        config.addAllowedOrigin("https://www.likelion14-sogang.co.kr");
+
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
         config.setAllowCredentials(true);
