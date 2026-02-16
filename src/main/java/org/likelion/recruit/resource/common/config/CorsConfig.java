@@ -20,6 +20,7 @@ public class CorsConfig {
 
         //배포 환경
         config.addAllowedOrigin("https://www.likelion14-sogang.co.kr");
+        config.addAllowedOrigin("https://likelion14-sogang.co.kr");
 
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
