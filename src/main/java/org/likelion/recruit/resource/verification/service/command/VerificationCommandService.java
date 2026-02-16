@@ -47,7 +47,7 @@ public class VerificationCommandService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.VERIFICATION_NOT_FOUND));
 
         if (verification.isVerified()) {
-            throw new BusinessException(ErrorCode.VERIFICATION_ALREADY_COMPLETED);
+            return;
         }
         if (verification.getCode() == null ||
                 !verification.getCode().equals(command.getCode())) {
