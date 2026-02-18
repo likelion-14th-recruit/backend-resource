@@ -1,6 +1,8 @@
 package org.likelion.recruit.resource.verification.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.likelion.recruit.resource.application.service.command.ApplicationCommandService;
+import org.likelion.recruit.resource.application.service.query.ApplicationQueryService;
 import org.likelion.recruit.resource.common.dto.response.ApiResponse;
 import org.likelion.recruit.resource.verification.dto.command.VerifyConfirmCommand;
 import org.likelion.recruit.resource.verification.dto.command.VerifyPhoneCommand;
@@ -19,12 +21,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class VerificationController {
 
     private final VerificationCommandService verificationCommandService;
-
+    private final ApplicationQueryService applicationQueryService;
     /**
-     * 인증 코드 전송하기
+     * 지원서 생성하기 - 인증 코드 전송하기
      */
     @PostMapping
     public ResponseEntity<ApiResponse<Void>> sendVerificationCode(@RequestBody VerifyPhoneRequest req) {
+        verificationCommandService.sendVerificationCode(VerifyPhoneCommand.from(req));
+
+        return ResponseEntity.ok(ApiResponse.success("인증번호 발송에 성공하였습니다."));
+    }
+
+    /**
+     * 지원서 수정하기 - 인증 코드 전송하기
+     */
+    @PostMapping("/application-modification")
+    public ResponseEntity<ApiResponse<Void>> sendVerificationCodeInApplicationModification(@RequestBody VerifyPhoneRequest req) {
+        applicationQueryService.checkApplication(VerifyPhoneCommand.from(req));
         verificationCommandService.sendVerificationCode(VerifyPhoneCommand.from(req));
 
         return ResponseEntity.ok(ApiResponse.success("인증번호 발송에 성공하였습니다."));
