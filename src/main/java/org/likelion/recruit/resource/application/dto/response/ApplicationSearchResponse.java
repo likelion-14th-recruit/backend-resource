@@ -22,7 +22,7 @@ public class ApplicationSearchResponse {
                 .applicationPublicId(result.getApplicationPublicId())
                 .name(result.getName())
                 .studentNumber(result.getStudentNumber())
-                .academicStatus(result.getAcademicStatus())
+                .academicStatus(result.getAcademicStatus().toString())
                 .phoneNumber(result.getPhoneNumber())
                 .part(result.getPart().toString())
                 .passStatus(result.getPassStatus().toString())
