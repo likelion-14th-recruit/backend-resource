@@ -9,6 +9,7 @@ import org.likelion.recruit.resource.common.exception.BusinessException;
 import org.likelion.recruit.resource.common.exception.ErrorCode;
 import org.likelion.recruit.resource.common.util.PhoneNumberUtils;
 import org.likelion.recruit.resource.interview.repository.InterviewAvailableRepository;
+import org.likelion.recruit.resource.verification.dto.command.VerifyPhoneCommand;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +41,7 @@ public class ApplicationQueryService {
             throw new BusinessException(ErrorCode.INVALID_PASSWORD);
         }
 
-        if(application.isSubmitted()){
+        if (application.isSubmitted()) {
             throw new BusinessException(ErrorCode.APPLICATION_ALREADY_SUBMITTED);
         }
 
@@ -53,13 +54,21 @@ public class ApplicationQueryService {
         return applicationRepository.getDetail(publicId, passwordLength);
     }
 
-    public Page<ApplicationSearchResult> searchApplications(ApplicationSearchCommand command, Pageable pageable){
+    public Page<ApplicationSearchResult> searchApplications(ApplicationSearchCommand command, Pageable pageable) {
         return applicationRepository.searchApplications(command, pageable);
     }
 
-    public ApplicationAllDetailResult getApplicationAllDetail(String publicId){
+    public ApplicationAllDetailResult getApplicationAllDetail(String publicId) {
         Application application = applicationRepository.findByPublicId(publicId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.APPLICATION_NOT_EXISTS));
         return ApplicationAllDetailResult.from(application);
+    }
+
+    public void checkApplication(VerifyPhoneCommand command) {
+        String phoneNumber = PhoneNumberUtils.normalize(command.getPhoneNumber());
+
+        if (!applicationRepository.existsByPhoneNumber(phoneNumber)) {
+            throw new  BusinessException(ErrorCode.APPLICATION_NOT_EXISTS);
+        }
     }
 }
