@@ -12,6 +12,7 @@ public class ApplicationSearchResponse {
     private String applicationPublicId;
     private String name;
     private String studentNumber;
+    private String academicStatus;
     private String phoneNumber;
     private String part;
     private String passStatus;
@@ -21,6 +22,7 @@ public class ApplicationSearchResponse {
                 .applicationPublicId(result.getApplicationPublicId())
                 .name(result.getName())
                 .studentNumber(result.getStudentNumber())
+                .academicStatus(result.getAcademicStatus())
                 .phoneNumber(result.getPhoneNumber())
                 .part(result.getPart().toString())
                 .passStatus(result.getPassStatus().toString())
