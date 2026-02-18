@@ -58,6 +58,7 @@ public class ApplicationRepositoryImpl implements ApplicationRepositoryCustom {
                         application.publicId,
                         application.name,
                         application.studentNumber,
+                        application.academicStatus,
                         application.phoneNumber,
                         application.part,
                         application.passStatus
