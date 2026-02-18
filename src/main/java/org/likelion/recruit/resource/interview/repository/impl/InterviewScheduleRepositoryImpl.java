@@ -34,7 +34,9 @@ public class InterviewScheduleRepositoryImpl implements InterviewScheduleReposit
                 .join(interviewSchedule.interviewTime, interviewTime)
                 .where(
                     application.passStatus.eq(Application.PassStatus.DOCUMENT_PASSED),
-                        application.id.in(documentPassedIds)
+                        application.id.in(documentPassedIds),
+                        interviewSchedule.place.isNotNull(),
+                        interviewSchedule.interviewTime.isNotNull()
                 )
                 .fetch();
     }
