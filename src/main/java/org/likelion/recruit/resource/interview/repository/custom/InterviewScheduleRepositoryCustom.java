@@ -5,5 +5,5 @@ import org.likelion.recruit.resource.application.dto.query.DocumentPassedMessage
 import java.util.List;
 
 public interface InterviewScheduleRepositoryCustom {
-    List<DocumentPassedMessageTarget> findDocumentPassedMessageTargets();
+    List<DocumentPassedMessageTarget> findDocumentPassedMessageTargets(List<Long> documentPassedIds);
 }

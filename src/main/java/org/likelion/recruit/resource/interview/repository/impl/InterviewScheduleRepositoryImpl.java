@@ -20,7 +20,7 @@ public class InterviewScheduleRepositoryImpl implements InterviewScheduleReposit
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<DocumentPassedMessageTarget> findDocumentPassedMessageTargets(){
+    public List<DocumentPassedMessageTarget> findDocumentPassedMessageTargets(List<Long> documentPassedIds) {
         return queryFactory.select(Projections.constructor(DocumentPassedMessageTarget.class,
                         application.name,
                         application.phoneNumber,
@@ -33,7 +33,8 @@ public class InterviewScheduleRepositoryImpl implements InterviewScheduleReposit
                 .join(interviewSchedule.application, application)
                 .join(interviewSchedule.interviewTime, interviewTime)
                 .where(
-                    application.passStatus.eq(Application.PassStatus.DOCUMENT_PASSED)
+                    application.passStatus.eq(Application.PassStatus.DOCUMENT_PASSED),
+                        application.id.in(documentPassedIds)
                 )
                 .fetch();
     }
