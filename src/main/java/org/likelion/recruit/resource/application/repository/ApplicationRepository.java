@@ -30,8 +30,10 @@ public interface ApplicationRepository extends JpaRepository<Application,Long>, 
 
 
     //메시지 전송 관련 메서드
-    @Query("select ap.phoneNumber from Application ap where ap.passStatus = :passStatus")
-    List<String> findPhoneNumbersByPassStatus(@Param("passStatus") PassStatus passStatus);
+    @Query("select ap.id from Application ap where ap.passStatus = :passStatus")
+    List<Long> findIdByPassStatus(@Param("passStatus") PassStatus passStatus);
+
+
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select a from Application a where a.publicId = :publicId")

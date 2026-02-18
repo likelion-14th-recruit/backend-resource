@@ -43,12 +43,12 @@ public class ApplicationMessageCommandService {
 
 
     private Integer sendDocumentPassedMessages() {
+        List<Long> documentPassedIds =
+                applicationRepository.findIdByPassStatus(Application.PassStatus.DOCUMENT_PASSED);
 
-        List<String> documentPassedPhones =
-                applicationRepository.findPhoneNumbersByPassStatus(Application.PassStatus.DOCUMENT_PASSED);
-        List<DocumentPassedMessageTarget> targets = interviewScheduleRepository.findDocumentPassedMessageTargets();
+        List<DocumentPassedMessageTarget> targets = interviewScheduleRepository.findDocumentPassedMessageTargets(documentPassedIds);
 
-        if (documentPassedPhones.size() != targets.size()) {
+        if (documentPassedIds.size() != targets.size()) {
             throw new BusinessException(ErrorCode.DOCUMENT_PASSED_NOT_ASSIGNED_INTERVIEW_SCHEDULE);
         }
         messageCommandService.sendDocumentPassedMessages(targets);
