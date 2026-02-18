@@ -1,6 +1,8 @@
 package org.likelion.recruit.resource.interview.repository.impl;
 
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.likelion.recruit.resource.application.domain.Application;
@@ -35,10 +37,16 @@ public class InterviewScheduleRepositoryImpl implements InterviewScheduleReposit
                 .where(
                     application.passStatus.eq(Application.PassStatus.DOCUMENT_PASSED),
                         application.id.in(documentPassedIds),
-                        interviewSchedule.place.isNotNull(),
+                        placeValid(),
                         interviewSchedule.interviewTime.isNotNull()
+
                 )
                 .fetch();
+    }
+
+    private BooleanExpression placeValid() {
+        return interviewSchedule.place.isNotNull()
+                .and(Expressions.stringTemplate("TRIM({0})", interviewSchedule.place).ne(""));
     }
 
 }
