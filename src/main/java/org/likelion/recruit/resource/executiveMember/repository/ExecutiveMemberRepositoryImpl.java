@@ -33,7 +33,8 @@ public class ExecutiveMemberRepositoryImpl implements ExecutiveMemberCustom {
                         partEq(command.getPart())
                 )
                 .orderBy(
-                        getPositionOrder(command.getPart()),
+                        positionOrder(),
+                        partOrder(),
                         executiveMember.name.asc()
                 )
                 .fetch();
@@ -43,20 +44,22 @@ public class ExecutiveMemberRepositoryImpl implements ExecutiveMemberCustom {
         return partCond != null ? executiveMember.part.eq(partCond) : null;
     }
 
-    private OrderSpecifier<Integer> getPositionOrder(Part partFilter) {
-
-        if (partFilter == null) {
-            return new CaseBuilder()
-                    .when(executiveMember.position.eq(Position.PRESIDENT)).then(1)
-                    .when(executiveMember.position.eq(Position.VICE_PRESIDENT)).then(2)
-                    .when(executiveMember.position.eq(Position.PART_LEADER)).then(3)
-                    .otherwise(4)
-                    .asc();
-        }
-
+    private OrderSpecifier<Integer> positionOrder() {
         return new CaseBuilder()
-                .when(executiveMember.position.eq(Position.PART_LEADER)).then(1)
-                .otherwise(2)
+                .when(executiveMember.position.eq(Position.PRESIDENT)).then(Position.PRESIDENT.getPriority())
+                .when(executiveMember.position.eq(Position.VICE_PRESIDENT)).then(Position.VICE_PRESIDENT.getPriority())
+                .when(executiveMember.position.eq(Position.PART_LEADER)).then(Position.PART_LEADER.getPriority())
+                .when(executiveMember.position.eq(Position.MEMBER)).then(Position.MEMBER.getPriority())
+                .otherwise(99)
+                .asc();
+    }
+
+    private OrderSpecifier<Integer> partOrder() {
+        return new CaseBuilder()
+                .when(executiveMember.part.eq(Part.BACKEND)).then(0)
+                .when(executiveMember.part.eq(Part.FRONTEND)).then(1)
+                .when(executiveMember.part.eq(Part.PRODUCT_DESIGN)).then(2)
+                .otherwise(99)
                 .asc();
     }
 }
