@@ -26,7 +26,7 @@ public class ApplicationCreateCommand {
                 .studentNumber(req.getStudentNumber())
                 .phoneNumber(req.getPhoneNumber())
                 .password(req.getPassword())
-                .major(req.getMajor())
+                .major(req.getDoubleMajor())
                 .doubleMajor(req.getMajor())
                 .semester(req.getSemester())
                 .academicStatus(req.getAcademicStatus())
