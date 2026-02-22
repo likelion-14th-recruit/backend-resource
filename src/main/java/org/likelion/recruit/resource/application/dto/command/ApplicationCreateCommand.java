@@ -20,6 +20,7 @@ public class ApplicationCreateCommand {
     private Application.AcademicStatus academicStatus;
     private Part part;
 
+
     public static ApplicationCreateCommand from(ApplicationCreateRequest req) {
         return ApplicationCreateCommand.builder()
                 .name(req.getName())
