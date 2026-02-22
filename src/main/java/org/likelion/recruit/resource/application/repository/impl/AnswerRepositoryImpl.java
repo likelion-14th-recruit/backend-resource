@@ -47,15 +47,13 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
                 ))
                 .from(question)
                 .leftJoin(answer)
-                .on(
-                        answer.application.id.eq(id)
-                                .and(answer.question.questionNumber.eq(question.questionNumber))
-                                .and(question.type.eq(Type.COMMON))
-                )
+                .on(answer.application.id.eq(id)
+                        .and(answer.question.questionNumber.eq(question.questionNumber)))
                 .where(
                         question.type.eq(Type.COMMON).or(question.type.eq(type))
                 )
                 .orderBy(question.questionNumber.asc())
                 .fetch();
+
     }
 }
