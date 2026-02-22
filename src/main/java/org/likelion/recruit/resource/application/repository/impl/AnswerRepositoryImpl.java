@@ -40,6 +40,8 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
 
     @Override
     public List<AnswerInfo> findAnswersByApplication(Long id, Type type) {
+
+
         return queryFactory
                 .select(Projections.constructor(AnswerInfo.class,
                         question.id,
@@ -48,12 +50,12 @@ public class AnswerRepositoryImpl implements AnswerRepositoryCustom {
                 .from(question)
                 .leftJoin(answer)
                 .on(
-                        answer.application.id.eq(id)
-                                .and(answer.question.questionNumber.eq(question.questionNumber))
-                                .and(question.type.eq(Type.COMMON))
+                        answer.application.id.eq(id),
+                        answer.question.id.eq(question.id)
                 )
                 .where(
-                        question.type.eq(Type.COMMON).or(question.type.eq(type))
+                        question.type.eq(Type.COMMON)
+                                .or(question.type.eq(type))
                 )
                 .orderBy(question.questionNumber.asc())
                 .fetch();
