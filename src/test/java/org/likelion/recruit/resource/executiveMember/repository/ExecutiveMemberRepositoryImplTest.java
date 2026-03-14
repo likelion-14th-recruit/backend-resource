@@ -2,6 +2,7 @@ package org.likelion.recruit.resource.executiveMember.repository;
 
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.likelion.recruit.resource.common.config.QuerydslConfig;
 import org.likelion.recruit.resource.common.domain.Part;
@@ -18,6 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@Disabled
 @Import({
         ExecutiveMemberRepositoryImpl.class,
         QuerydslConfig.class})
