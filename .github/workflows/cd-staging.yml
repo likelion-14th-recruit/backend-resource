@@ -17,7 +17,7 @@ jobs:
           username: ${{ secrets.VDI_USER }}
           password: ${{ secrets.VDI_PASSWORD }}
           script: |
-              cd /home/ec2-user/deploy
+              cd ~/deploy
               docker stop ${{ secrets.STAGING_CONTAINER_NAME }} || true
               docker rm ${{ secrets.STAGING_CONTAINER_NAME }} || true
           
