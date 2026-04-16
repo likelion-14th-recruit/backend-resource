@@ -13,9 +13,9 @@ jobs:
       - name: Staging 서버 로그인 및 이미지 Pull 및 배포
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.STAGING_HOST }}
-          username: ${{ secrets.STAGING_USER }}
-          key: ${{ secrets.STAGING_SSH_KEY }}
+          host: ${{ secrets.VDI_HOST }}
+          username: ${{ secrets.VDI_USER }}
+          password: ${{ secrets.VDI_PASSWORD }}
           script: |
               cd /home/ec2-user/deploy
               docker stop ${{ secrets.STAGING_CONTAINER_NAME }} || true
