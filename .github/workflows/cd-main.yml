@@ -14,9 +14,9 @@ jobs:
       - name: Main 서버 로그인, 이미지 PULL 및 배포
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.MAIN_HOST }}
-          username: ${{ secrets.MAIN_USER }}
-          key: ${{ secrets.MAIN_SSH_KEY }}
+          host: ${{ secrets.VDI_HOST }}
+          username: ${{ secrets.VDI_USER }}
+          password: ${{ secrets.VDI_PASSWORD }}
           script: |
             cd /home/ubuntu/deploy
             chmod +x deploy.sh
