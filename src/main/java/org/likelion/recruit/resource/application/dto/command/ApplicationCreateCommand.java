@@ -20,6 +20,7 @@ public class ApplicationCreateCommand {
     private Application.AcademicStatus academicStatus;
     private Part part;
 
+
     public static ApplicationCreateCommand from(ApplicationCreateRequest req) {
         return ApplicationCreateCommand.builder()
                 .name(req.getName())
@@ -27,7 +28,7 @@ public class ApplicationCreateCommand {
                 .phoneNumber(req.getPhoneNumber())
                 .password(req.getPassword())
                 .major(req.getMajor())
-                .doubleMajor(req.getMajor())
+                .doubleMajor(req.getDoubleMajor())
                 .semester(req.getSemester())
                 .academicStatus(req.getAcademicStatus())
                 .part(req.getPart())

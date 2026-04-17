@@ -103,7 +103,7 @@ public class ApplicationCommandService {
 
     private void validateSubmissionPeriod() {
         LocalDateTime now = LocalDateTime.now();
-        LocalDateTime deadline = LocalDateTime.of(2026, 3, 6, 0, 30, 0);
+        LocalDateTime deadline = LocalDateTime.of(2026, 3, 7, 0, 30, 0);
 
         if (!now.isBefore(deadline)) {
             throw new BusinessException(ErrorCode.APPLICATION_SUBMISSION_EXPIRED);
